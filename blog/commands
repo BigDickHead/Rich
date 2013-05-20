@@ -16,3 +16,6 @@ tsocks            Shell wrapper to use of the tsocks library to transparently al
 proxychains
 warden            FreeBSD. The jail management program.
 ntpdate
+
+iconv             转码文件内容
+convmv            转码文件名(不支持gb18030)
