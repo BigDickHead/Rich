@@ -19,3 +19,5 @@ ntpdate
 
 iconv             转码文件内容
 convmv            转码文件名(不支持gb18030)
+
+dpkg -l           list those software that already installed.
