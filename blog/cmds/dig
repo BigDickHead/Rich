@@ -1,0 +1,15 @@
+#用 dig 查看反向解析
+
+dig -x 210.52.83.228 @DNS_SERVER
+
+#查找一个域的授权 dns 服务器
+
+dig xmgd.com. +nssearch
+
+#从根服务器开始追踪一个域名的解析过程
+
+dig xmgd.com +trace 
+
+
+##zone transfer
+dig @DNS_SERVER -t AXFR target.com

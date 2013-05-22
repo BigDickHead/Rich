@@ -21,3 +21,14 @@ iconv             转码文件内容
 convmv            转码文件名(不支持gb18030)
 
 dpkg -l           list those software that already installed.
+
+host -t ns target.com              //nameserver
+host -t mx target.com              //mail exchange
+host -l target.com DNS_SERVER      //zone transfer
+
+dig @DNS_SERVER -t AXFR target.com      //zone transfer
+
+
+//rpmbuild
+rpmbuild --rebuild http://nmap.org/dist/nmap-4.68-1.src.rpm
+rpm -vhU nmap-4.68.1.i386.rpm

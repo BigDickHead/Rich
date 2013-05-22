@@ -1,0 +1,18 @@
+//nameserver
+host -t ns target.com DNS_SERVER
+
+//mail exchange
+host -t mx target.com DNS_SERVER
+
+//-a is equivalent to -v -t ANY
+host -a target.com DNS_SERVER
+
+//
+host -t soa target.com DNS_SERVER
+
+
+//zone transfer
+host -l target.com DNS_SERVER
+
+Exp:
+host -l qq.com ns1.qq.com
