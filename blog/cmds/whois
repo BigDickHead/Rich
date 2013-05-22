@@ -1,7 +1,9 @@
 whois 207.171.166.49
 
 
-whois -h whois.arin.net @qq.com
+whois -h whois.arin.net @qq.com                 //show all the ARIN contracts with email address at qq.com
+whois -h whois.arin.net "n baidu*"              //show all the netblock handles starting with baidu
+whois -h whois.arin.net "o baidu*"              //show all the organizational names starting with baidu
 
 
 whois qq.com
