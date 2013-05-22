@@ -1,0 +1,5 @@
+nmblookup -A IP_addr
+获得IP_addr对应的NetBIOS名
+
+
+nbtscan
