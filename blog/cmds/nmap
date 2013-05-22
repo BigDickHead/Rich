@@ -1,0 +1,8 @@
+nmap -sS -p- -PS22,80,113,33334 -PA80,113,21000 -PU19000 -PE -A -T4 -oA avatartcpscan-121503 6.209.24.0/24
+
+http://www.unspecific.com/nmap/
+
+
+//This option also comes in handy when scanning private networks.
+//--dns-servers called "DNS proxying"
+nmap -sL 192.168.1.1/24 --dns-servers ns1.target.com,ns2.target.com
