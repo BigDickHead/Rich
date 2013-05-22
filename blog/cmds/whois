@@ -1,6 +1,9 @@
 whois 207.171.166.49
 
 
+whois -h whois.arin.net @qq.com
+
+
 whois qq.com
 
 results:
