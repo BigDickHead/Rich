@@ -1,2 +1,0 @@
-Wmic /node:"[full machine name]" /USER:"[domain]\[username]" PATH win32_terminalservicesetting WHERE (__Class!="") CALL SetAllowTSConnections 1 
-这里的"full machine name“也可以是IP，"domain\username”也可以是本机的帐号。
