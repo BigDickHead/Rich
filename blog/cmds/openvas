@@ -1,0 +1,14 @@
+openvas-mkcert
+openvas-mkcert-client
+openvasd -c 'add_user' -u root -t Admin
+
+openvas-nvt-sync
+openvassd
+openvasmd --rebuild
+
+openvas-check-setup
+openvasmd -p 9390 -a 127.0.0.1
+openvasad -p 9393 -a 127.0.0.1
+gsad --http-only --listen=127.0.0.1 -p 9392
+
+firefox http://127.0.0.1:9392

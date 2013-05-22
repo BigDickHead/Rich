@@ -4,6 +4,7 @@ smbclient -L 198.168.0.1 -U username%password
  
 2,像FTP客户端一样使用smbclient
 smbclient //192.168.0.1/tmp  -U username%password
+smbclient //192.168.0.1/C$   -U administartor
  
 执行smbclient命令成功后，进入smbclient环境，出现提示符： smb:\>
 smb:\>?             //获得帮助

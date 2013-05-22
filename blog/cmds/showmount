@@ -1,0 +1,4 @@
+查看特定NFS服务器上可用的文件系统
+
+showmount -a hostname
+showmount -e hostname   //显示mount点然后使用mount命令到本地

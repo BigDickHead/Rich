@@ -261,3 +261,7 @@ Hydra (http://www.thc.org) starting at 2007-07-27 21:51:46
 ...
 
 yet another reason to adjust your file & printer sharing configurations when you take your computer on the road (especially if you share your My Documents folder)
+
+
+其中:
+lsaaddacctrights, 账户的SeInteractiveLogonRight 和 SeNetworkLogonRight 权限分别允许用户通过shell或gui登录

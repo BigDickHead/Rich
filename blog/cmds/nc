@@ -1,0 +1,18 @@
+sbd, socat, ncat, nc, cryptcat
+
+victim: 85.64.226.117   3030
+proxy:  85.64.228.230   8080
+
+
+1, nc -nvv 85.64.228.230 8080
+   CONNECT 85.64.226.117:3030 HTTP/1.0
+
+
+2, proxytunnel -a 80 -p 85.64.228.230:8080 -d 85.64.226.117:3030
+   nc -v 127.0.0.1 80
+
+
+3, plink, ssh
+
+
+nc -vv -L -p 80 -e "openssl s_client -quiet -connect victim.com:443"

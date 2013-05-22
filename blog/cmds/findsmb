@@ -1,0 +1,5 @@
+ list info about machines that respond to SMB name queries on a subnet
+
+ nbtscan
+ nmblookup -A IP
+ findsmb

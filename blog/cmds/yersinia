@@ -1,0 +1,9 @@
+# yersinia -G   //GTK 方式
+# yersinia -I   //交互方式
+# yersinia -D   //Daemon方式
+
+
+***************************************
+Interactive 方式需要 export LANG=en_US
+Daemon 方式需要 telnet localhost 12000
+User/Pass   root/root           Enable mode Pass: tomac

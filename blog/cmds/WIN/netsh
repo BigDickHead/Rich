@@ -1,0 +1,21 @@
+防火墙信息
+netsh firewall show ....
+
+显示防火墙端口配置
+netsh firewall show opmode
+
+netsh firewall set opmode enable
+
+//add a port exception for the HTTP
+netsh firewall add portopening TCP 80   HTTP enable subnet
+
+netsh firewall add portopening UDP 137  blah enable subnet
+
+netsh firewall add portopening TCP 139  blah enable subnet
+
+netsh firewall add portopening TCP 3389 blah enable any
+
+netsh firewall add portopening TCP 445  blah enable all         //445全局开放
+
+//显示打开的端口允许状态
+netsh firewall show portopening

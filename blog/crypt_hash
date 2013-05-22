@@ -1,0 +1,16 @@
+crypt密文由三部分组成
+
+$id$salt$encrypted
+
+当 id为 1 时，使用md5加密
+当 id为 5 时，使用SHA256加密
+当 id为 6 时，使用SHA512加密
+当 id为 2a时，使用BlowFish加密
+
+
+id |    Method
+___|_____________
+ 1 |    MD5
+ 2a|    BlowFish 
+ 5 |    SHA256
+ 6 |    SHA512

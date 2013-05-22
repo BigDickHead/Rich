@@ -1,0 +1,7 @@
+//查看主板序列号
+dmidecode |grep -i "serial number"
+
+//处理器信息
+dmidecode -t processor
+
+lscpu

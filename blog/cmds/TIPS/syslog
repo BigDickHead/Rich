@@ -1,0 +1,2 @@
+echo "<0> syslog" | nc -u IP 514
+yes  "<20> blah blah" | nc -s 10.0.0.1 -u IP 514

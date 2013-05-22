@@ -3,3 +3,4 @@ nmblookup -A IP_addr
 
 
 nbtscan
+findsmb

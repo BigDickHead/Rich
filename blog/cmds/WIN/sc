@@ -1,0 +1,1 @@
+sc config tlntsvr start= auto       //注意auto 前面的空格

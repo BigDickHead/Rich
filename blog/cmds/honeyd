@@ -1,0 +1,27 @@
+mkdir /var/log/honeyd
+touch /var/log/honeyd/honeyd.log
+touch /var/log/honeyd/service.log
+chown nobody.nobody /var/log/honeyd/*.log
+
+generate configure file for honeyd
+touch /etc/honeyd.conf 写入以下
+
+create windows (or whatever)
+set windows default tcp action reset
+set windows default udp actoin reset
+add windows tcp port 110 open
+add windows tcp port 80 open
+add windows tcp port 25 open
+bind 192.168.1.199 windows
+
+
+其中,192.168.1.199为要虚拟出的地址
+
+启用arpd和honeyd, or farpd
+# arpd 192.168.1.199
+# honeyd -f /etc/honeyd.conf 192.168.1.199
+
+或者vlan内使用网络号 #arpd 192.168.1.0/24
+
+或
+# honeyd -f honeyd.conf -p nmap.prints -x xprobe2.conf -a nmap.assoc -o pf.os -l /var/log/honeyd 192.168.1.199

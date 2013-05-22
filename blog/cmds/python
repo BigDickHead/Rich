@@ -1,0 +1,1 @@
+python -m SimpleHTTPServer          //工作目录在当前目录，端口8000

