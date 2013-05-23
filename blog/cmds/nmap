@@ -6,3 +6,7 @@ http://www.unspecific.com/nmap/
 //This option also comes in handy when scanning private networks.
 //--dns-servers called "DNS proxying"
 nmap -sL 192.168.1.1/24 --dns-servers ns1.target.com,ns2.target.com
+
+The -sP option sends an ICMP echo request and a TCP ACK packet to port 80 by default. Since unprivileged Unix users (or Windows users without WinPcap installed) cannot send these raw packet, a SYN packet is sent instead in those cases. The SYN packet is sent using a TCP connect system call to port 80 of the target host. When a privileged user tries to scan target on a local ethernet network, ARP requests (-PR) are used unless the --send-ip option is specified.
+
+The "-sP -PE" options specify an ICMP-only ping scan.
