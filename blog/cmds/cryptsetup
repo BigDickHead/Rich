@@ -1,0 +1,11 @@
+cryptsetup master-key-file
+1, dmsetup table --showkey /dev/mapper/file
+    5fecf...........do09
+
+2, echo "5fecf.........do09" | xxd -r -P > mykeyfile
+
+3, cryptsetup --master-key-file mykeyfile luksAddKey /dev/mapper/file
+
+4, cryptsetup luksDump /dev/loopX
+
+crypsetup luksKillSlot /dev/file 0...

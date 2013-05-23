@@ -1,0 +1,9 @@
+在linux中代表内存的两个文件是
+/dev/mem
+/proc/kcore
+
+
+dd if=/dev/mem of=./mem_file
+dd if=/proc/kcore of=./kcore_file
+
+使用nc, ftp, ssh, http 或其他传回本地分析

