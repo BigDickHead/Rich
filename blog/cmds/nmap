@@ -20,3 +20,7 @@ Viewing and increasing the ephemeral port range on Linux
 # echo "10000 65000" > /proc/sys/net/ipv4/ip_local_port_range
 # cat /proc/sys/net/ipv4/ip_local_port_range
 10000       65000
+
+
+nmap -oG port-scan-%D.gnmap 192.168.1.1/24
+The "%D" in the filename is replaced with the numeric date on which the scan was run.
