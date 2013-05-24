@@ -13,3 +13,7 @@ dig xmgd.com +trace
 
 ##zone transfer
 dig @DNS_SERVER -t AXFR target.com
+
+
+
+dig @ns1.baidu.com baidu.com. any
