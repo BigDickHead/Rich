@@ -24,3 +24,26 @@ Viewing and increasing the ephemeral port range on Linux
 
 nmap -oG port-scan-%D.gnmap 192.168.1.1/24
 The "%D" in the filename is replaced with the numeric date on which the scan was run.
+
+nmap -T4 -p80 -PN --max-rtt-timeout 200ms --initial-rtt-timeout 150ms --min-hostgroup 512 -n -oG pb-port80scan-%D.gnmap 216.163.128.0/20
+
+
+use --host-timeout to skip slow hosts.
+
+
+nmap OS detection. Test T2 sends a NULL packet to an open port. So if you see a line like T2(R=N), that system seems to support the RFC and one of these scans should work against it. If the T2 line is longer, the system violated the RFC by sending a responese and these scans won't work.
+
+TCP Window Scan (-sW)
+Window scan is exactly the same as ACK scan except that it exploits an implementation detail of certain systems to differentiate open ports from closed ones, rather than alwarys printing unfiltered when a RST is retuned. It does this by examing the TCP Window value of the RST packets returned. On some systems, open ports use a positive window size (even for RST packet) while closed ones have a zero window. Window scan sends the same bare ACK probe as ACK scan, interpreting the results as shown in following table.
+How Nmap interprets responese to a Window scan ACK
+
+| Probe Response                                            | Assigned State |
+|-----------------------------------------------------------+----------------|
+| TCP RST response with non-zero window field               | open           |
+|-----------------------------------------------------------+----------------|
+| TCP RST response with zero window field                   | closed         |
+|-----------------------------------------------------------+----------------|
+| No response received (even after retransmissions)         | filtered       |
+|-----------------------------------------------------------+----------------|
+| ICMP unreachable error (type 3, code 1, 2, 3, 9,10, or 13 | filtered       |
+|-----------------------------------------------------------+----------------|

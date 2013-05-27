@@ -1,0 +1,5 @@
+grep 上下行
+-B, --before-context=NUM  print NUM lines of leading context
+-A, --after-context=NUM   print NUM lines of trailing context
+
+grep -B 5 -A 5 something file

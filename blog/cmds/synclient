@@ -1,0 +1,5 @@
+//Disable touchpad
+synclient TouchpadOff=1
+
+//Enable touchpad
+synclient TouchpadOff=0
