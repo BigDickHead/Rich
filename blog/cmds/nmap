@@ -36,7 +36,6 @@ nmap OS detection. Test T2 sends a NULL packet to an open port. So if you see a 
 TCP Window Scan (-sW)
 Window scan is exactly the same as ACK scan except that it exploits an implementation detail of certain systems to differentiate open ports from closed ones, rather than alwarys printing unfiltered when a RST is retuned. It does this by examing the TCP Window value of the RST packets returned. On some systems, open ports use a positive window size (even for RST packet) while closed ones have a zero window. Window scan sends the same bare ACK probe as ACK scan, interpreting the results as shown in following table.
 How Nmap interprets responese to a Window scan ACK
-
 | Probe Response                                            | Assigned State |
 |-----------------------------------------------------------+----------------|
 | TCP RST response with non-zero window field               | open           |
@@ -72,3 +71,84 @@ Fundamentally, an idle scan consists of three steps that are repeated for each p
 
 nmap -PN -p- -sI www.zombie.com www.target.com
 The -PN option prevents Nmap from sending an initial ping packet to the target machine.
+Version scanning would also expose the true address, and so -sV is not specified.
+
+
+IP Protocal Scan (-sO)
+IP protocal scan allows you to determine which IP protocals (TCP, ICMP, IGMP, etc.) are supported by target machines. This isn't technically a port scan, since it cycles through IP protocal numbers rather than TCP or UDP port numbers. Yet it still uses the -p option to select scanned protocal numbers.
+| Probe Response                                                  | Assigned State                                                            |
+|-----------------------------------------------------------------+---------------------------------------------------------------------------|
+| Any response in any protocal from target host                   | open (for protocal used by response, not necessarily probe protocal)      |
+|-----------------------------------------------------------------+---------------------------------------------------------------------------|
+| ICMP protocal unreachable error (type 3, code 2)                | closed                                                                    |
+|-----------------------------------------------------------------+---------------------------------------------------------------------------|
+| Other ICMP unreachable errors (type 3, code 1, 3, 9, 10, or 13) | filtered (through they prove ICMP is open if sent from the target machine |
+|-----------------------------------------------------------------+---------------------------------------------------------------------------|
+| No response received (even after retransmissions)               | open|filtered                                                             |
+|-----------------------------------------------------------------+---------------------------------------------------------------------------|
+
+
+
+TCP FTP Bounce Scan (-b)
+nmap -PN -b username:password@server:port  target.com
+nmap -p 22,25,135 -PN -v -b xxx.xxx.xxx.xxx scanme.nmap.org         //anonymous user
+
+
+Low-level timing controls by function
+| Function                                                             | Option                                                      |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Hostgroup (batch of hosts scanned concurrently) size                 | --min-hostgroup, --max-hostgroup                            |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Number of probes launched in parallel                                | --min-parallelism, --max-parallelism                        |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Probe timeout values                                                 | --min-rtt-timeout, --max-rtt-timeout, --initial-rtt-timeout |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Maximum number of probe retransmissions allowed                      | --max-retries                                               |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Maximum time before giving up on a whole host                        | --host-timeout                                              |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Control delay inserted between each probe against an individual host | --scan-delay, --max-scan-delay                              |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Rate of probe packets sent per second                                | --min-rate, --max-rate                                      |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+| Defeat RST packet response rate by target hosts                      | --defeat-rst-ratelimit                                      |
+|----------------------------------------------------------------------+-------------------------------------------------------------|
+
+
+
+Timing templates and their effects
+|                                                | T0       | T1     | T2     | T3      |         T4 |      T5 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| Name                                           | Paranoid | Sneaky | Polite | Normal  | Aggressive |  Insane |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| min-rtt-timeout                                | 100      | 100    | 100    | 100     |        100 |      50 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| max-rtt-timeout                                | 300,000  | 15,000 | 10,000 | 10,000  |      1,250 |     300 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| initial-rtt-timeout                            | 300,000  | 15,000 | 1,000  | 1,000   |        500 |     250 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| max-retries                                    | 10       | 10     | 10     | 10      |          6 |       2 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| Initial (and minimum)scan delay (--scan-delay) | 300,000  | 15,000 | 400    | 0       |          0 |       0 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| Maximum TCP scan delay                         | 300,000  | 15,000 | 1,000  | 1,000   |         10 |       5 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| Maximum UDP scan delay                         | 300,000  | 15,000 | 1,000  | 1,000   |      1,000 |   1,000 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| host-timeout                                   | 0        | 0      | 0      | 0       |          0 | 900,000 |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| min-parallelism                                | Dynamic, not affected by timing templates                   |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| max-parallelism                                | 1        | 1      | 1      | Dynamic |    Dynamic | Dynamic |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| min-hostgroup                                  | Dynamic, not affected by timing templates                   |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| max-hostgroup                                  | Dynamic, not affected by timing templates                   |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| min-rate                                       | No minimum rate limit                                       |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| max-rate                                       | No minimum rate limit                                       |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+| defeat-rst-ratelimit                           | Not enabled by default                                      |
+|------------------------------------------------+----------+--------+--------+---------+------------+---------|
+While -T0 and -T1 may be useful for avoiding IDS alerts, they will take an extraordinarity long time to scan thousands of machines or ports. For such a long scan, you may prefer to set the exact timing values you need rather than rely on the canned -T0 and -T1 values.
