@@ -47,3 +47,52 @@ How Nmap interprets responese to a Window scan ACK
 |-----------------------------------------------------------+----------------|
 | ICMP unreachable error (type 3, code 1, 2, 3, 9,10, or 13 | filtered       |
 |-----------------------------------------------------------+----------------|
+
+
+
+TCP Maimon Scan (-sM)
+This technique is exactly the same as NULL,FIN, and Xmas scan, except that the probe is FIN/ACK. According to RFC 793(TCP), a RST packet should be generated in response to such a probe whether the port is open or closed. However, many BSD-derived systems simply drop the packet if the port is open.
+| Probe Response                                         | Assigned State |
+|--------------------------------------------------------+----------------|
+| No response received (even after retransimissions)     | open|filtered  |
+|--------------------------------------------------------+----------------|
+| TCP RST packet                                         | closed         |
+|--------------------------------------------------------+----------------|
+| ICMP unreachable error (type 3, code 1,2,3,9,10, or 13 | filtered       |
+|--------------------------------------------------------+----------------|
+The Nmap flag for a Maimon scan is -sM. While this option was quite useful in 1996.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

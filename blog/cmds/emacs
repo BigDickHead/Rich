@@ -1,0 +1,273 @@
+$ emacs --daemon
+
+Afterwards I connect to the server with either a terminal or a GUI client like this:
+
+$ emacsclient -t
+$ emacsclient -c
+
+Emacs 快捷键
+
+文件操作
+C-x C-f		find-file		打开文件，若输入/username@host:filepath可编辑FTP文件
+C-x 4 C-f       			在新窗口打开文件
+C-x 5 C-f				在一个frame中打开文件
+C-x 5 f					同上
+C-x C-v		find-alternate-file	打开一个文件，取代当前缓冲区
+C-x i					在当前缓冲区的插入点处插入文件
+C-x d					打开目录
+C-x C-r					只读打开文件
+C-x C-c		save-buffers-kill-emacs	退出Emacs
+C-x C-s		save-buffer		保存文件
+C-x C-w		write-file		另存为
+C-x s		save-some-buffers	提示逐个保存所有的缓冲区
+M-~ 					从当前缓冲区清除修改标记(退出时不会提示保存)
+C-x C-q					切换缓冲区为只读或者读写模式
+
+
+光标移动
+C-f		forward-char		前进一个字符
+C-b		backward-char		后退一个字符
+M-f		forward-word		前进一个单词
+M-b		backward-word		后退一个单词
+C-a		beginning-of-line	移动到行首
+C-e		end-of-line		移动到行尾
+M-a		backward-sentence	移动到句首
+M-e		forward-sentence	移动到句尾
+M-r					移动到中间行
+M-m		移动到当前行非空首字符
+c-p		previous-line		后退一行
+c-n		next-line		前进一行
+M-g M-g		goto-line		按行号跳转
+M-x goto-line	同上
+M-x goto-char	按字符跳转
+C-v 		scroll-up		向下翻页
+M-v		scroll-down		向上翻页
+M-<		beginning-of-buffer	缓冲区头部
+M->		end-of-buffer		缓冲区尾部
+M-{		forward-paragraph	光标向前移动一个段落
+M-}		backward-paragraph	光标向后移动一个段落
+C-l		recenter		当前行居中
+
+
+重复及反向操作
+M-N		digit-argument		重复操作N次
+C-u N		universal-argument	同上
+C-u 					重复操作随后的命令4次
+C-u C-u					重复操作随后的命令8次
+C-x ESC ESC				执行上一条历史命令
+
+
+剪切、粘帖与区域操作
+C-d		delete-char		删除光标右侧一个字符
+M-d		kill-word		删除光标右侧一个单词
+C-k		kill-line		删除一行
+M-k		kill-sentence		删除一句
+Del		delete-backward-char
+Backspace
+M-Backspace
+M-Del
+C-x Del		backward-kill-sentence
+C-x Backspace
+M--					反向命令前缀
+M-- C-k					从行首删除到光标位置
+C-@ 		set-mark-command	标记开始
+C-SPACE		同上
+M-h		mark-paragraph		标记当前段落
+C-x h		mark-whole-buffer	标记整个缓冲区中所有文字
+C-w 		kill-region		删除标记区域
+M-w		kill-region-save	复制标记区域
+C-y		yank			粘帖删除的内容
+M-y		yank-pop		粘帖更早的删除文本
+注意: C-y 可以粘帖连续C-k删除的内容；C-y M-y粘帖上一条，M-y选择粘帖内容
+C-x C-x	  	exchange-point-and-mark	交换光标位置和区域标记开头
+C-u C-SPACE				跳到标记环中的上一个标记位置
+C-u C-@					同上
+C-S--		undo			撤销
+C-x u		undo-tree		撤销树
+M-x revert-buffer			撤销自上次存盘来的所有更改
+
+
+查找替换
+C-s key		isearch-forward		向前增量搜索
+C-s 					查找下一个,ENTER 停止搜索
+C-r key		isearch-backward	反向搜索
+C-r 					查找上一个,ENTER 停止搜索
+注意:按下 C-r 后可以使用 M-n ,M-p 来使用命令历史记录
+C-g	      	keyboard-quit		取消命令的执行
+C-s C-w					以光标所在位置到下一个标点符号或空格符间的文本为关键字搜索
+C-s C-y					把从光标位置到行尾间的所有文本作为关键字搜索
+C-s M-y					把删除环中的文本复制到查找字符串中
+C-M-s		isearch-forward-regexp	向前正则搜索
+C-M-r		isearch-backward-regexp	向后正则搜索
+C-s ENTER C-w				进入**单词搜索**模式 (查找时忽略单词间的所有标点和换行符)
+C-r ENTER C-w				进入反向单词搜索模式
+M-x replace-string			从光标到 buff 尾全局字符串替换
+M-x replace-regexp			从光标到 buff 尾全局符合正则表达式的字符串替换
+M-% 		query-replace		交互替换,响应如下:
+		y 或 SPACE		确定替换当前位置,然后前进到下一个
+		n 或 DEL		不替换,前进到下一位置
+		.    			在当前位置替换后退出查询替换操作
+		,			替换并显示替换情况(按空格或 y,继续)
+		!			对后面的内容全部替换,不再询问
+		回车或 q		退出查找替换
+M-x query-replace      			同上
+M-x query-regexp			交互式正则表达式替换
+C-M-%					同上
+C-r					在进入查找/替换模式后,该命令进入递归编辑模式
+C-M-x					退出递归编辑模式,返回到查找/替换模式
+C-M-c					同上
+C-]					退出递归编辑和查找替换模式
+C-x ESC ESC				重复执行前一个命令,对所有在辅助缓冲区中有补充输入内容的一切命令都有效
+
+
+区域操作
+M-x prepend-to-buffer			将区域内容添加到缓冲区首				
+M-x append-to-buffer
+M-x copy-to-buffer
+M-x insert-buffer
+M-x append-to-file
+C-x r k		M-x kill-rectangle	删除矩形区块到删除环中
+C-x r d		    			删除矩形块但不能恢复
+C-x r y		M-x yank-rectangle	粘贴上一次删除的矩形区块,注意插入点位矩形的左上角
+C-x r t		M-x string-rectangle	用指定字符填充选定的矩形区域
+C-x r o		M-x open-rectangle	用空格插入选择的矩形块,选择的内容右移
+C-x r c		M-x clear-rectangle	用空格填充选择的矩形块
+C-x r r		M-x copy-rectangle-to-register	拷贝到寄存器中
+
+
+窗口操作
+M-x winner-mode				启动 frame 中窗口布局记忆机制,当一种窗口布局改变后,可以用
+    		C-c ← 命令恢复上一个布局
+		C-c → 恢复下一个窗口布局
+C-x 0					关闭本窗口
+C-x 1					只留下一个窗口
+C-x 2					垂直均分窗口
+C-x 3					水平均分窗口
+C-x o					切换到别的窗口
+M-NUMBER C-x o				快速切换到第 NUMBER 个窗口
+C-u NUMBER C-x o 			同上
+注意:可以使用反向操作符(同时重复多次)。
+C-x +					把所有窗口调整为同样大小
+C-x -					如果编辑缓冲区比窗口小就压缩窗口面积
+C-M-v					对下一个窗口作卷屏操作(如插入点在 minibuffer 中时可以对自动补全列
+表窗口做卷屏)
+C-M-S-v					对下一个窗口作反向卷屏操作
+C-x 4 b					在其它窗口中选择一编辑缓冲区
+C-x ^ 					纵向扩大窗口
+C-x }					横向扩大窗口
+C-x {					同上
+C-x <					向左滚动窗口
+C-x >					向右滚动窗口
+C-x b					选择当前窗口的缓冲区
+C-x 5 2 	make-frame		创建一个 frame,并把当前缓冲区内容显示在里面
+C-x 5 b 	switch-to-buffer-other-frame	 创建新 frame 并在其中显示另外一个编辑缓冲区
+C-x 5 o					移到其它 frame
+C-x 5 0					删除当前窗格
+C-x 5 r					创建窗格并查找文件,将缓冲区设为只读的
+C-x 5 f					同上,但是读写的
+
+
+段落重排
+需先先开启 auto-fill-mode,该模式下 emacs 会根据每行的字符数自动分词后换行。
+C-x f	   			   	设置每行的字符数,当一行的字符超过他时会自动换行
+M-q 		fill-paragraph		重排当前段落
+M-x fill-region				对某个文本块中的段落进行重排
+M-x fill-individal-paragraph		重排区域中各段落,这里的段落依靠各个行的缩进量,相同的缩进量为一个段落
+Ctrl+Alt+\				按照一定的代码风格格式化当前段落(用在源代码编辑时)
+
+
+缓冲区列表操作
+C-x C-b					打开缓冲区列表,切换到*Buffer List*缓冲区后可以执行以下单字符命令:
+    		d or k 标记为删除
+		~ 标记为未修改状态
+		% 标记为只读
+		m 给缓冲区加上待显示标记
+		o 立即在另外窗口中显示该编辑缓冲区,光标移到该窗口中
+		C-o 同上,但光标不移到该窗口中
+		f 在当前窗口中立即显示该编辑缓冲区的内容
+		v 显示用 m 标记的所有文件内容
+		s 保存缓冲
+		u 取消标记
+		x 执行标记的操作
+		q 退出编辑缓冲区
+M-x eval-buffer				执行*screatch*当前缓冲区中的 lisp 命令或.emacs 中的内容,或其 lisp 文件。
+
+
+书签操作
+C-x r m		M-x bookmark-set	在当前位置设置书签
+C-x r b		M-x bookmark-jump	跳转到书签
+C-x r l		M-x bookmark-menu-list	列出所有的书签,在书签列表缓冲区可以进行的操作:
+      		d 给书签加上待删除标记
+		r 对书签重命名
+		f 直接查看当前书签对应的文件
+		s 保存清单里的全部书签
+		m 给书签加待显示标记
+		v 显示所有待显示书签的内容
+		x 删除所有待删除的书签
+		u 去掉书签的标记
+		DEL 去掉上行书签的标记
+		q 退出书签清单
+M-x bookmark-rename			重命名书签
+M-x bookmard-delete			删除书签
+M-x bookmark-load			从指定文件中加载书签
+M-x bookmark-insert			将书签指向的文件的内容插到光标处
+M-x bookmard-write			把书签全部保存到指定文件中
+
+
+交换位置与大小写
+C-t		transpose-chars		交换光标当前位置和前一个位置的两字符
+M-t		transpose-words		交换量单词的位置(光标位于两单词间的空格处)
+C-x C-t		transpose-lines
+M-x transpose-sentense
+M-x transpose-paragraph
+
+
+字母大小写
+M-c		capitalize-word		把单词首字母大写
+M-u		upcase-word		把单词所有字母大写
+M-l		downcase-word		把单词所有字母小写
+M- - M-c	negtive-argument;capitalize-word	把前一个单词的首字母改为大写
+M- - M-u	negtive-argument;upcase-word		把。。单词所有字母改为大写
+M- - M-l	negtive-argument;downcase-word		把后一个。。。。。小写
+
+
+标记环缓冲区(The mark ring)
+每当你在 Emacs 中执行位置跳转命令时,emacs 就会自动把你上一个位置保存到 mark ring中。
+C-x C-x 交换当前光标位置到上一个标记位置
+C-u C-SPC 跳转到上一个标记环中的位置。Emacs 最多保留了 16 个标记环位置。
+
+
+键盘宏(keyboard macro)
+C-x (		M-x kmacro-start-macro			start defining a keyboard macro
+C-x )		M-x kmacro-end-macro			stop defining the keyboard macro
+C-x e		M-x kmacro-end-and-call-macro		execute the last keyboard macro
+C-u 37 C-x e	    					execute the keyboard macro 37 times
+M-x apply-macro-to-region-lines				applying the last-defined keyboard macro to each of the lines of a region
+M-x name-last-kbd-macro					Name the last-defined keyboard macro, 
+C-x C-k 进入宏列表,以下的操作可以在宏队列中连续进行
+基本操作
+C-n M-x kmacro-cycle-ring-next 下翻
+C-p M-x kmacro-cycle-ring-previous 上翻
+C-d M-x kmacro-delete-ring-head 删除当前宏
+C-k M-x kmacro-end-or-call-macro-repeat 运行当前宏
+命名与保存
+n (name) M-x kmacro-name-last-macro 命名
+b M-x kmacro-bind-to-key 绑定
+M-x insert-kbd-macro 在缓冲区中插入宏定义 宏编辑器
+C-e M-x kmacro-edit-macro 编辑
+e M-x edit-kbd-macro 编辑指定名称的宏
+l M-x kmacro-edit-lossage 询问执行
+q M-x kbd-macro-query 在播放宏时,将进行询问确认
+计数器
+C-i M-x kmacro-insert-counter 将宏计数器的数值插入缓冲区
+C-c M-x kmacro-set-counter 为宏计数器设置一个数值
+C-a M-x kmacro-add-counter 给宏计数器添加一个前缀参数
+C-f M-x kmacro-set-format 给宏计数器指定一个将要插入的特殊值
+
+
+目录模式
+C-x C-d		显示目录中的文件类型,相当于执行了 ls -F
+C-x d		打开目录模式
+
+
+C-x C-+ and C-x C-- to increase or decrease the buffer text size
