@@ -64,35 +64,11 @@ The Nmap flag for a Maimon scan is -sM. While this option was quite useful in 19
 
 
 
+Idle Scan (-sI)
+Fundamentally, an idle scan consists of three steps that are repeated for each port.
+1, Probe the zombie's IP ID and record it.
+2, Forge a SYN packet from the zombie and send it to the desired port on the target. Depending on the port state, the target's reaction may or may not cause the zombie's IP ID to be incremented.
+3, Probe the zombie's IP ID again. The target port state is then determined by comparing this new IP ID with the one recorded in step 1.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+nmap -PN -p- -sI www.zombie.com www.target.com
+The -PN option prevents Nmap from sending an initial ping packet to the target machine.
