@@ -1,0 +1,535 @@
+User-Agent Strings - MS IE - Full
+
+MS Explorer
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; InfoPath.1)
+
+Explanation: This string indicates the request comes from an MS InfoPath (an MS Office extra application) and means that it may be collecting data for use in a forms based application. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; Google Wireless Transcoder;)
+
+Explanation: This one is the new google service that acts as a proxy and converts web sites to a mobile format - somewhat controversial because it seems to drop its own adsense data to make it all fit better. 
+MS Internet Explorer on XBOX
+
+Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0; Xbox)
+
+Explanation: Microsoft Internet Explorer 8.0 on XBOX (masquerading as Windows 7. 
+MS Internet Explorer (MSIE) V10
+
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Win64; x64; Trident/6.0)
+
+Explanation: Microsoft Internet Explorer 10.0 on Windows 7 (64 bit) with "Enhanced Protection Mode on. Thu writes "Basically "Enhanced Protection Mode" forces IE10 to go to pure 64 bit. Previously there was a separate "64 bit" entry for Internet Explorer 9 in the start menu. Starting with IE10, there is only one and the switch between 32 bit and 64 bit can be made by switching on Enhanced Protection Mode.". 
+
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+
+Explanation: Microsoft Internet Explorer 10.0 on Windows 7 (64 bit). 
+
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)
+
+Explanation: Microsoft Internet Explorer 10.0 on Windows 8 (64 bit). Strings from Maverik Gately and Thu Win - thanks.
+
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+
+Explanation: Microsoft Internet Explorer 10.0 (Technolgy Preview) on Windows 7 (64 bit). Not a .NET in sight, must be a first. 
+MS Internet Explorer (MSIE) V9
+
+Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Win64; x64; Trident/4.0; .NET CLR 2.0.50727; SLCC2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0)
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Win64; x64; .NET CLR 2.0.50727; SLCC2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0)
+
+Explanation: Microsoft Internet Explorer 9.0 (64-bit version) on Windows 7 (64 bit) - the three strings from the top are in normal IE9 mode, in IE8 mode and IE7 mode. Two items to note. First, IE9 removes all the .net stuff (security concerns). Second, the inclusion of the Tablet PC string (indicating support for the late, unlamented Windows Tablet specification?). 
+
+Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3; Creative AutoUpdate v1.40.02)
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3; Creative AutoUpdate v1.40.02)
+
+Explanation: Microsoft Internet Explorer 9.0 (32-bit) on Windows 7 (64 bit) - the three strings from the top are in normal IE9 mode, in IE8 mode and IE7 mode. 
+
+Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+
+Explanation: Microsoft Internet Explorer 9.0 on Windows 7 Pro - Ver. 6.1.7601 SP1 Build 7601. 
+
+Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+
+Explanation: Microsoft Internet Explorer 9.0 on Windows 7 (64 bit). 
+
+Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0)
+
+Explanation: Microsoft Internet Explorer 9.0 on Windows Vista. 
+MS Internet Explorer (MSIE) V8 - V6 Hybrids/Curiosities
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; GTB6.5; Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; InfoPath.1; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C)
+
+Explanation: Microsoft IE 8.0 plus 6.x. Suspicion that it is some failed XP to Vista upgrade. Can anyone confirm? 
+MS Internet Explorer (MSIE) V8
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; chromeframe/13.0.782.218; chromeframe; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+
+Explanation: Microsoft IE 8.0 on Windows XP with Google's Chrome Frame plugin to add HTML5 features. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; GTB6.3; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; BRI/1; AskTB5.6)
+
+Explanation: Microsoft IE 8.0 on Windows 7 with the ASK (aka ASK JEEVES) toolbar that is occasionally flagged as malware. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0; .NET CLR 1.1.4322; .NET CLR 3.0.04506; eMusic DLM/4; OfficeLiveConnector.1.3; OfficeLiveConnector.1.4; OfficeLivePatch.0.0; OfficeLivePatch.1.3; SLCC1; .NET4.0C; .NET4.0E; InfoPath.3; Zune 4.7; MS-RTC LM 8; yie8)
+
+Explanation: Microsoft IE 8.0 on Windows 7. This is probably the longest string we have ever seen - but perhaps you know different. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0; InfoPath.2; InfoPath.3)
+
+Explanation: Microsoft IE 8.0.7600.16385 on Windows 7 Enterprice on Levono x61 Tablet PC. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; chromeframe; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 1.1.4322; MS-RTC LM 8; InfoPath.2)
+
+Explanation: Microsoft IE 8.0 on Windows XP. chromeframe is a google chrome plug-in for MSIE. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; GTB0.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; GACID=)
+
+Explanation: Microsoft IE 8.0 on Windows XP Pro SP3. GACID= may be .NET system security permissions: Global assembly cache identity. Can anyone confirm? 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; MDDC)
+
+Explanation: Microsoft Internet Explorer 8.0 on Windows 7 (64 bit) Dell Studio 1555. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Win64; x64; Trident/4.0; .NET CLR 2.0.50727; SLCC2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; MDDC; Tablet PC 2.0)
+
+Explanation: Microsoft Internet Explorer 8.0 on Windows 7 (64 bit mode) Dell Studio 1555. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; WOW64; Trident/4.0; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; InfoPath.2; .NET CLR 3.5.30729; .NET CLR 3.0.30729)
+
+Explanation: Microsoft Internet Explorer 8.0 on Windows Vista Ultimate (64 bit). 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; FBSMTWB; InfoPath.2; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MS-RTC LM 8)
+
+Explanation: Microsoft Internet Explorer 8.0.7000.0 Beta on Windows XP in IE7 mode (methinks) cos of the MS-RTC LM 8 string. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+
+Explanation: Microsoft Internet Explorer 8.0.6001.18702 on Windows XP Home SP3 (5.1.2600), running on a HP Pavilion dv1310 laptop. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+
+Explanation: Microsoft Internet Explorer 8 on Windows XP. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)
+
+Explanation: Microsoft Internet Explorer 8.0.7000.0 Beta on Windows 7 Ultimata 64-bit Beta. Wow. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; Media Center PC 5.0; .NET CLR 1.1.4322)
+
+Explanation: Internet Explorer 8 beta 1 (32-bit version) running on Windows Vista Ultimate x64 Edition. You can get beta 8 here. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Win64; x64; .NET CLR 2.0.50727; SLCC1; Media Center PC 5.0; .NET CLR 3.0.04506)
+
+Explanation: Internet Explorer 8 beta 1 (64-bit version) running on Windows Vista Ultimate x64 Edition. 
+
+Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; Tablet PC 2.0; InfoPath.2)
+
+Explanation: Internet Explorer 8 beta 1 IE 8 beta 1 on a Vista Business Tablet PC. 
+MS Internet Explorer (MSIE) Media Center/Media-Player
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; FunWebProducts; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506; Windows-Media-Player/10.00.00.3990)
+
+Explanation: MSIE 7 with Media Center 5.0 and Media-Player 10.x on Vista. 
+MS Internet Explorer (MSIE) with Zune 2.0
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; winfx; .NET CLR 1.1.4322; .NET CLR 2.0.50727; Zune 2.0)
+
+Explanation: MSIE 7 with Zune 2.0 on XP. 
+MS Internet Explorer (MSIE) V7
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; GTB6.4; .NET CLR 1.1.4322; FDM; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+
+Explanation: MSIE 7 running on Windows XP Pro - FDM = Free Download Manager. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.1; MS-RTC LM 8)
+
+Explanation: MSIE 7 running on Windows XP - MS-RTC LM 8 indicates MS Live meeting v 8 is installed. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; GTB6.3; InfoPath.2; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSN Optimized;US)
+
+Explanation: MSIE 7 running on Windows XP - this one has been optimized (read works OK and has lots of shiny icons) for MSN. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Meridio for Excel 5.0.251; Meridio for PowerPoint 5.0.251; Meridio for Word 5.0.251; Meridio Protocol; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.04506.648; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+
+Explanation: MSIE 7 running on Windows XP - with Meridio and a couple of .NET version. this may be the longest string we have ever seen - or do you know better? Contrast with dillo. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Avant Browser; .NET CLR 2.0.50727; Creative ZENcast v1.02.12; .NET CLR 3.0.04506.30)
+
+Explanation: MSIE 7 running on Windows XP with a podcast generating utility that comes with Creative MP3 players (ZENcast v 1.02.12). 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; InfoPath.1; .NET CLR 2.0.50727)
+
+Explanation: MSIE 7 running on Windows Vista - with MS InfoPath (part of MS Office) installed. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SU 3.1; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; .NET CLR 1.1.4322; Tablet PC 2.0; .NET CLR 3.5.21022)
+
+Explanation: MSIE 7 running on Windows Vista - what a lot of .NET versions - and MS Tablet PC emulator. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; Zune 2.0)
+
+Explanation: MSIE 7 running on Windows XP and MS Zune plug-in. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; Media Center PC 5.0; .NET CLR 1.1.4322; Windows-Media-Player/10.00.00.3990; InfoPath.2
+
+Explanation: MSIE 7 running on Windows Vista 64-bit with a ton of 'stuff'. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; MEGAUPLOAD 1.0)
+
+Explanation: MSIE 7 running on Windows XP with the megaupload toolbar. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506; Alexa Toolbar)
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)
+
+Explanation: MSIE 7 running on Windows Vista Ultimate (one of 6 versions apparently). One string with and one without the Alexa toolbar 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; InfoPath.1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; Dealio Deskball 3.0)
+
+Explanation: MSIE 7 on XP and every version of .NET known to mankind. Jaqueline also likes to shop (Dealio Deskball). 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322)
+
+Explanation: Stock MSIE 7 on XP with SP2 and the inevitable .NET. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)
+
+Explanation: MSIE 7 on XP with SP2 and the google toolbar (oh really) and every old version of .NET known to mankind. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2; WOW64; .NET CLR 2.0.50727)
+
+Explanation: 32-Bit IE 7 Final (7.0.5730.11) running in WOW64 on Windows XP 64-bit Edition SP1 with .NET Framework 2.0 installed. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2; Win64; x64; .NET CLR 2.0.50727)
+
+Explanation: 64-Bit IE 7 Final (7.0.5730.11) running on Windows XP 64-bit Edition SP1 with .NET Framework 2.0 installed. Oh the suspense of the final release is killing us. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; DOF-IE; .NET CLR 1.1.4322; DOF-IE; DOF-IE)
+
+Explanation: MSIE 7.x RC1 on XP/SP2 - the big day gets closer. 
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)
+
+Explanation: MSIE 7.x Public Beta 2 on XP - so far without a service pack (mmmm). 
+
+Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 6.0)
+
+Explanation: New Beta version of MSIE 7 (more info here at a msdn blog site announcing the string format). Running on Longhorn no less (or Longinthetooth as others - but not us - may call it). 
+
+Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 6.0 ; .NET CLR 2.0.50215; SL Commerce Client v1.0; Tablet PC 2.0
+
+Explanation: An-in-the-wild sighting for MSIE 7 - flagged by a reader as both malformed (no closing parenthesis) and attempting multiple logins (automated sign-up tool) to his site. 
+
+Mozilla/6.0 (compatible; MSIE 7.0a1; Windows NT 5.2; SV1)
+
+Explanation: This one looks a little suspicious (Mozilla/6.0 and NT 5.2) but could be an very early version - anyone know better?. 
+MS Internet Explorer (MSIE) V6.0+
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Rogers Hi·Speed Internet; (R1 1.3))
+
+Explanation: MSIE 6.x on Windows 98 (honest) with R1 1.3 = RealOne Player version 2 . 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; Business Everywhere 7.1.2; GTB6; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)
+
+Explanation: MSIE 6.x on XP with Business Everywhere which allows laptops/netbooks to use the cell (3G/EDGE) network as well wi-fi. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; NeosBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)
+
+Explanation: MSIE 6.x on XP with a skin from neos.tv who seem to specialize in the hospitality (read hotel) industry. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)
+
+Explanation: Stock MSIE 6.x on XP. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; TheFreeDictionary.com; .NET CLR 1.1.4322; .NET CLR 1.0.3705; .NET CLR 2.0.50727)
+
+Explanation: MSIE 6.x on XP with toolbar from thefreedictionary.com. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)
+
+Explanation: MSIE 6.x on Win 2003 Server - 32 bit version with SP1. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; WOW64; SV1; .NET CLR 2.0.50727)
+
+Explanation: MSIE 6.x on XP x64 (hence the 5.2 not the more normal 5.1 since apparently it is based on Win server 2003 Sp1 or rather SV1). The WOW64 is the 32 compatability layer. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; Win64; x64; SV1; .NET CLR 2.0.50727)
+
+Explanation: MSIE 6.x on XP x64. Appears to be a native 64 bit version of the above. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; XMPP Tiscali Communicator v.10.0.2; .NET CLR 2.0.50727)
+
+Explanation: MSIE 6.x on XP SP1 with the tiscali IM plug-in. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; T312461)
+
+Explanation: MSIE 6.x on Win 2K with SP4 running Louts notes 6.5. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1) Netscape/8.0.4
+
+Explanation: MSIE 6.x on XP. Any thoughts about the Netscape part - perhaps should be a mystery string?. Guess from Carl Karlsson is that it is netscape 8.x since apparently there is an option to allow switch of rendering engines - sounds like a pretty good guess to us. Thanks. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.2; Windows NT 5.1; SV1; .NET CLR 1.1.4322)
+
+Explanation: MSIE 6.x on XP. AOL branded MSIE 6.x?. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Win 9x 4.90; Creative)
+
+Explanation: MSIE 6.x on Win'98 - anyone know anything about the 'Creative' in the string? 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; FunWebProducts; .NET CLR 1.1.4322; PeoplePal 6.2)
+
+Explanation: MSIE 6.x on XP. The PeoplePal part appears to be an IE toolbar from PeoplePC, FAQ page is located here. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows XP)
+
+Explanation: Stock MSIE 6.x on XP (not 5.1) suspect someone has been doodling around with the registry. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; APC; .NET CLR 1.0.3705; .NET CLR 1.1.4322; .NET CLR 2.0.50215; InfoPath.1)
+
+Explanation: Stock MSIE 6.x on Win2K but .NET 2.x and Deepnet Explorer (a secure P2P, RSS and News reader plugin). 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Deepnet Explorer 1.5.0; .NET CLR 1.0.3705)
+
+Explanation: Stock MSIE 6.x on XP with SP1 and .NET and MS's new InfoPath Explorer plugin or addon. 
+
+Mozilla/4.0 (compatible- MSIE 6.0- Windows NT 5.1- SV1- .NET CLR 1.1.4322
+
+Explanation: Stock MSIE 6.x on XP with SP2 - note the dashes. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; WINDOWS; .NET CLR 1.1.4322)
+
+Explanation: Fairly stock MSIE 6.x on Win2k but the 'WINDOWS' part - ain't seen that before. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; Media Center PC 3.0; .NET CLR 1.0.3705; MediaCenter 5.1.2600.2180)
+
+Explanation: Nothing too special about the above string ('cept its long) but Rob Lehew writes with following info about Media Center Browser recognition:
+
+    If you're using the normal IE web browser from Windows Media Center PC..but NOT browsing from within the Media Center UI a version of "Media Center PC X.X" is added where "X.X":
+        "2.8" = Media Center 2004
+        "3.0" = Media Center 2005
+        "3.1" = Media Center 2005 + Update 1
+        "4.0" = Media Center 2005 + Update 2
+    browsing the web from within the blue Media Center UI includes the above but adds additional information in the user agent string:
+        "MediaCenter 5.1.2600.2180" = Media Center 2004 or Media Center 2005 without Update 2
+        "MediaCenter 5.1.2710.2652" = Media Center 2005 + Update 2
+
+More info. From Rob Lehew - thanks.
+
+Mozilla/4.0 (compatible; MSIE 5.01; Windows 95; MSIECrawler)
+
+Explanation: If you use the off-line content features in MSIE this string pops-out and web sites are sucked into the cache - we may be talking whole web sites here folks. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; AOL 9.0; Windows NT 5.1)
+
+Explanation: MSIE 6.x on XP in its AOL packaged form. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322; Alexa Toolbar; (R1 1.5))
+
+Explanation: MSIE 6 on XP using RealPlayers 10 Web browser (the R1 1.5 at end of string). 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Maxthon; .NET CLR 1.1.4322)
+
+Explanation: Stock MSIE 6 on XP with .NET and maxthon (ex-MyIE2). 
+
+Microsoft URL Control - 6.01.9782
+
+Explanation: Output from msinet.ocx - this one came with VB6. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322) ,gzip(gfe) (via translate.google.com)
+
+Explanation: Standard MSIE 6.0 on XP but with a little message from google reminding us what wonderful folks they are. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; Win64; AMD64)
+
+Explanation: MSIE 6.0 64 bit version (comes complete with 64 bit security bugs!) using XP 64 on the AMD64. Hot machine. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; Win64; AMD64)
+
+Explanation: MSIE 6.0 32 bit version under 32 bit emulation (WOW64) using XP 64 on the AMD64. With FreeDownloadManager (FDM). 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; Crazy Browser 2.0.0 Beta 1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)
+
+Explanation: MSIE 6.0 on XP Pro with SP2, lots of NETs and crazybrowser which provides tabbed browsing on an MSIE base - a poor man's Firefox really! 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)
+
+Explanation: Vanilla MSIE 6.0 on XP Pro with SP2. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Update a; AOL 6.0; Windows 98)
+
+Explanation: This is the AOL packaged version of MSIE 6.x on Windows 98. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; YPC 3.0.2; .NET CLR 1.1.4322; yplus 4.4.02b)
+
+Explanation: Now is this a string. MSIE 6 on XP Pro with .NET from the British Telecom - Yahoo realtionship. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; .NET CLR 2.0.40607)
+
+Explanation: MSIE 6 on XP Pro with SP2 and every version of .NET framework known to mankind. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322) Babya Discoverer 8.0:
+
+Explanation: MSIE 6 on XP. babya adds some features including a PDF maker to MSIE.! 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Crazy Browser 1.0.5)
+
+Explanation: MSIE 6 on XP. Crazy Browser adds some mozilla features to MSIE.! 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT) ::ELNSB50::000061100320025802a00111000000000507000900000000
+
+Explanation: MSIE 6 on NT 4.0. Slashdot claims it's a Earthlink customized MSIE, which sends extra info about your computer encoded in this string. Do you know better? 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; MyIE2; Deepnet Explorer)
+
+Explanation: MSIE 6 with MyIE2 (now maxthon and Deepnet Explorer is a P2P file sharing and RSS newsreader enhancement. 
+
+Mozilla/4.0 (compatible; MSIE 5.23; Macintosh; PPC) Escape 5.1.3
+
+Explanation: MSIE 5+ on the TV in a hotel from a bored contributor! 
+
+Mozilla/4.0 (compatible; MSIE 5.23; Mac_PowerPC)
+
+Explanation: Yes MSIE does run on the MAC - here's the proof. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; .NET CLR 1.0.3705; .NET CLR 1.1.4322)
+
+Explanation: This string has bit of history. We originally published it as a EudoraWeb string - since it was self identified by a site user as being that. However:
+
+We got some email about this string suggesting that it was not eudora since it had no Eudora in it. To be fair the supplier of the string also voiced some doubt since it was left to the user to identify the string. If anyone can shed some more light on this topic - please email us and we'll publish.
+
+We got some more comment which says it looks so much like a normal Win 2K that we've moved it. The suggestion is that both .NET strings are added when the MS WindowsUpdate system is used. Explanation from Matt Hair - thanks.
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+
+Explanation: MSIE 6.0 on MS Windows XP (Home?) - not a security patch in sight. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; FREE; .NET CLR 1.1.4322)
+
+Explanation: MSIE 6.0 on MS Windows XP - not too special but what is the FREE (posted to mystery strings also). 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)
+
+Explanation: MSIE 6.0 on MS Windows XP Pro - complete with NET (via Service Pack2). 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Q312461)
+
+Explanation: MSIE 6.0 on MS Windows XP
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.0.3705)
+
+Explanation: MSIE 6.0 on MS Windows XP. Go figure the difference from the one above.
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)
+
+Explanation: MSIE 6.0 on MS Win 2K SP4. 
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Win 9x 4.90)
+
+Explanation: MSIE 6.0 on MS ME
+MS Internet Explorer (MSIE) V5.5
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)
+
+Explanation:MSIE 5.5 on Windows 98. 
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0; .NET CLR 1.1.4322)
+
+Explanation:MSIE 5.5 on Windows 2K with .NET. 
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0; T312461)
+
+Explanation:MSIE 5.5 on Windows 2000. We think the T312461 is a security upgrade reference?
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 4.0)
+
+Explanation:MSIE 5.5 on MS NT 4.0
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 4.0; .NET CLR 1.0.2914)
+
+Explanation:MSIE 5.5 on MS NT 4.0 with ASP.NET SDK Beta 2
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)
+
+Explanation:MSIE 5.5 on MS Windows 2000
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows 95)
+
+Explanation:MSIE 5.5 on MS Win 95
+
+Mozilla/4.0 (compatible; MSIE 5.13; Mac_PowerPC)
+
+Explanation: MSIE 5.1 on Mac (OS8.6)
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows 95; BCD2000)
+
+Explanation: MSIE 5.5 on Windows 95 (BCD2000 = ?).
+
+Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.2)
+
+Explanation: MSIE 5.5 on Windows XP SP2 with .NET framework. If you know about infopath.2 part of the string let us know. 
+MS Internet Explorer (MSIE) V5.0+
+
+Mozilla/4.0 (compatible; MSIE 5.0; SunOS 5.10 sun4u; X11)
+
+Explanation:MSIE 5.x on SunOS 5.10. 
+
+Mozilla/4.0 (compatible; MSIE 5.22; Mac_PowerPC)
+
+Explanation:Latest MAC OS X version of MSIE. 
+
+Mozilla/4.0 (compatible; MSIE 5.0; Windows 3.1)
+
+Explanation:MSIE 5.0 on Windows 3.1. 
+
+Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)
+
+Explanation:MSIE 5.0 on MS NT 4.0
+
+Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.2)
+
+Explanation: MSIE 5.01 on Windows XP SP2 with .NET framework no less. If you know about infopath.2 part of the string let us know. 
+
+Mozilla/4.0 (compatible; MSIE 5.0; Mac_PowerPC; e504460WanadooNL)
+
+Explanation: MSIE 5.0 on a MAC?? The WannadooNL shows an example of a MSIE customisable header. This is configurable when a company choses to redistribute MSIE under their own logo using the SDK.
+
+Mozilla/4.0 (compatible; MSIE 5.0; Windows 3.1)
+
+Explanation: Yeah really MSIE 5.x on WfWG 3.11. 
+MS Internet Explorer (MSIE) V4.0+
+
+Mozilla/4.0 (compatible; MSIE 4.01; Windows NT 5.0)
+
+Explanation: MSIE 4.01 on Windows XP SP2. 
+
+Mozilla/4.0 (compatible; MSIE 4.01; Digital AlphaServer 1000A 4/233; Windows NT; Powered By 64-Bit Alpha Processor)
+
+Explanation: MSIE 4.1 on NT 4.0 on an AlphaServer (wow). We think this is the stock browser that ships with the NT 4.0 release and last time we could not use this browser to update this browser if you get our meaning. 
+MS Internet Explorer (MSIE) V3.0+
+
+Mozilla/2.0 (compatible; MSIE 3.02; Windows CE; 240x320)
+
+Explanation: MSIE 3.02 on a Pocket PC 2002. I guess the 240x320 is the available screen size. Goodness knows what DOM this baby supports. Anyone old enough to remember MSIE 3!
+
+Mozilla/2.0 (compatible; MSIE 3.0; Windows 3.1)
+
+Explanation: MSIE 3.0 on a Windows XP SP2 (honest). 
+MS Internet Explorer (MSIE) V2.0+
+
+Mozilla/1.22 (compatible; MSIE 2.0; Windows 95)
+
+Explanation: MSIE 2.0 in windows '95 - anyone remember the base version on the venerable '95. 
+
+Mozilla/1.22 (compatible; MSIE 2.0d; Windows NT)
+
+Explanation: Little suspicious that this really is MSIE 2.x. The base version on NT 4.0 as we recall was MSIE 3/4 so you would actually have to install version 2 ...mmmm. Joel Rea writes to tell us that MSIE 2 did ship with NT4.0 but that one of the SPs updated it to MSIE4 - our memories fail again. Thanks for writing Joel. BTW did you ever try to get MSIE 6 using MSIE4 - impossible. But what shipped with NT 3.51? Eric Bowman writes "No browser shipped with 3.51" This proves one only thing conclusively - Eric has a better memory than we do! Thanks for the update Eric. 
+MS Windows CE
+
+Mozilla/4.0 (compatible; MSIE 6.0; Windows CE; IEMobile 7.11)
+
+Explanation: IEMobile 7.11 on Windows CE. 

