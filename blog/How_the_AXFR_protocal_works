@@ -1,0 +1,383 @@
+D. J. Bernstein
+Internet publication
+djbdns
+
+How the AXFR protocol works
+
+I wrote this page to explain exactly how the AXFR protocol works, so that AXFR implementors can avoid interoperability
+problems.
+
+What AXFR does
+
+AXFR is a mechanism for replicating DNS data across DNS servers. If, for example, the yale.edu administrator has two DNS
+servers, a.ns.yale.edu and b.ns.yale.edu, he can edit the yale.edu data on a.ns.yale.edu, and rely on AXFR to pull the
+same data to b.ns.yale.edu.
+
+Note that there are much better DNS replication protocols. It is, of course, up to the administrator to decide on the
+location of his DNS servers, the software used for those servers, the mechanisms for replicating data among those
+servers, etc.; there is no requirement that sites replicate their data with AXFR.
+
+AXFR is also sometimes used by unauthorized third parties who want to sneak a peek at a site's data. Many years ago,
+these peeks were practically always successful, because almost all sites had promiscuous AXFR servers; these days,
+however, promiscuous AXFR servers are widely discouraged and increasingly uncommon.
+
+(From a snoop's perspective, the difference between AXFR and normal queries is that normal queries force the snoop to
+guess the relevant domain names, while AXFR reveals the domain names for free. The notion that DNS data is entirely
+public does not match the reality of private high-entropy domain names at many sites.)
+
+A few DNS parent administrators refuse to delegate names to servers that do not provide data through AXFR to the parent
+computers. This is bad practice for several reasons, but it nevertheless occurs, and it means that names managed by those
+administrators are available only to sites that run AXFR servers.
+
+The life cycle of an AXFR connection
+
+An AXFR connection may appear, at first glance, to be a typical TCP client-server connection: the AXFR client connects to
+an AXFR server on TCP port 53, sends an AXFR request, receives an AXFR response with the requested zone data, and closes
+the connection. For example, an AXFR client on b.ns.yale.edu connects to an AXFR server on a.ns.yale.edu port 53, sends
+an AXFR request naming yale.edu, receives all the yale.edu data, and closes the connection.
+
+The story is actually more complicated than this, for several reasons:
+
+  • Before sending the AXFR request, the AXFR client usually sends a preliminary SOA request to decide whether it wants
+    to see the AXFR results. This SOA request may be sent through UDP or through TCP.
+  • TCP port 53 is simultaneously used by normal (non-AXFR) DNS clients requesting data that did not fit through UDP. A
+    non-AXFR DNS client tries all queries through UDP first; however, if a UDP DNS server sets the ``TC'' bit in its
+    response, the DNS client tries the query again through TCP.
+
+A TCP-SOA AXFR client, such as named-xfer or axfr-get or dig axfr, actually works as follows. It connects to an AXFR
+server on TCP port 53. It may then send an SOA request and receive a response. It may then send an AXFR request and
+receive an AXFR response. It then closes the connection.
+
+A UDP-SOA AXFR client, such as the BIND 9 AXFR client, works as follows. It may send an SOA request to a DNS server on
+UDP port 53 and receive a response. It may then connect to an AXFR server on TCP port 53 at the same IP address, send an
+AXFR request, receive an AXFR response, and close the connection.
+
+An AXFR server is prepared for both types of AXFR clients, and for non-AXFR DNS clients requesting data that did not fit
+through UDP. After the server accepts a connection, it
+
+ 1. reads a 2-byte length,
+ 2. reads a DNS packet of that length (which may be an AXFR request, an SOA request, or another type of request),
+ 3. sends a response to that request (consisting of one or more DNS packets for AXFR requests, or exactly one DNS packet
+    for other requests, with each packet preceded by a 2-byte length),
+
+and repeats. Note that DNS packets are often not aligned with TCP packets: one DNS packet can be split across several TCP
+packets, several DNS packets can be combined into one TCP packet, etc.
+
+In theory, the AXFR server's procedure allows a client to send any number of AXFR requests and other requests in a single
+connection. In practice, current clients close the connection after the first request, except in the case of an SOA
+request followed by an AXFR request from a TCP-SOA AXFR client. Separate requests are handled in separate connections.
+
+How the preliminary SOA request is used
+
+An AXFR response can include a large volume of data for a zone. To save time, when an AXFR client already has the zone
+data on disk, it generally avoids sending AXFR requests for additional copies of the same data. It does this by checking
+the serial number in the SOA response against the serial number in the zone on disk. The precise test depends on the
+software:
+
+  • BIND 9 skips the AXFR request unless the serial number in the SOA response minus the serial number in the zone on
+    disk, modulo 2^32, is between 1 and 2^31-1 inclusive. This rule is specified in RFC 1982.
+  • BIND 8 is like BIND 9, but does not skip the AXFR request if the serial number in the SOA response is zero.
+  • axfr-get skips the AXFR request only if the two serial numbers are identical and nonzero.
+
+Clients that know beforehand that they want to do an AXFR request, for example because they don't have any previous
+copies of the zone, can skip the SOA request.
+
+These tests are the source of the rule ``The SOA serial number must increase whenever any other data changes.'' If the
+zone has changed, but the serial number in the SOA response is not increased (by an amount between 1 and 2^31-1
+inclusive, modulo 2^32), then AXFR clients may never see the new zone data.
+
+One of the flaws in the AXFR protocol is that it's actually impossible for servers to follow this rule under all
+circumstances. AXFR clients will sometimes fail to pick up changes in a zone.
+
+For example, suppose a BIND 9 AXFR client receives a zone through AXFR, and then checks for changes later. Suppose that
+there have been between 2^31 and 2^32-1 changes in the meantime. Suppose that the AXFR server uses the strategy of
+increasing the serial number by exactly 1 for each change. Result: The AXFR client will skip the AXFR request. The AXFR
+client won't receive the new data. Similar comments apply to other serial-number strategies.
+
+Sites that do not rely on AXFR can ignore serial numbers in favor of mechanisms that actually ensure accurate
+replication, such as the cryptographically strong checksums in rsync.
+
+Connection failures
+
+The AXFR protocol can fail for various reasons. For example, the TCP connection may time out or be refused. As another
+example, even if a TCP connection is opened, it could be closed immediately; perhaps the server is dropping all
+connections from the client, or does not want to devote resources to the client right now. As yet another example, even
+if an AXFR response is in progress, the connection may suddenly be closed; perhaps the server administrator forced the
+server to shut down.
+
+AXFR clients are prepared for incomplete AXFR responses, and throw them away if they occur. For example, if the
+b.ns.yale.edu DNS server receives only part of the yale.edu data from the a.ns.yale.edu DNS server, it throws that data
+away, and tries again later.
+
+Similarly, AXFR servers are prepared for sudden connection failures.
+
+AXFR clients and AXFR servers, like other network programs, impose time limits on each network operation. For example,
+axfr-get aborts its AXFR attempt if it does not receive any network data for 60 seconds.
+
+AXFR request format
+
+An AXFR request is a DNS query packet. Here are its contents:
+
+ 1. A two-byte query ID selected by the client.
+ 2. Byte \000 (meaning: query, opcode 0, not authoritative, not truncated, recursion not desired). AXFR servers can
+    reject anything else.
+ 3. Byte \000 (meaning: recursion not available, no Z bits, RCODE 0).
+ 4. Bytes \000\001 (meaning exactly one question). AXFR servers can reject anything else.
+ 5. Bytes \000\000\000\000\000\000 (meaning no answer records, no authority records, and no additional records); or
+    optionally, as an extension mechanism, something other than \000\000\000\000\000\000.
+ 6. The name of the requested zone, in the usual RFC 1035 domain-name format.
+ 7. Bytes \000\374 (meaning query type AXFR). This distinguishes AXFR requests from non-AXFR queries.
+ 8. Bytes \000\001 (meaning Internet query class). AXFR servers can reject anything else, including the silly alternative
+    \000\377. In theory, AXFR could also be used to transfer zones in non-Internet classes, but this document restricts
+    attention to Internet servers.
+ 9. Optionally, as an extension mechanism, answer records and authority records and additional records (as counted by the
+    six bytes mentioned above), communicating extra information from the client to the server.
+10. Optionally, as a Microsoft extension, bytes \115 and \123 (meaning that the client accepts multiple answers per
+    packet, as discussed below).
+
+Many servers simply extract the query ID and zone name, stop parsing bytes after the \000\374\000\001, and ignore the
+possibility of extensions. It is the responsibility of extended AXFR clients to preserve compatibility with unextended
+AXFR servers.
+
+AXFR responses
+
+AXFR servers can respond to AXFR requests by sending one or more DNS packets containing the requested zone data. AXFR
+servers can also respond by sending one DNS packet explicitly rejecting the AXFR request. AXFR servers can also close
+connections at any time, as discussed earlier.
+
+An AXFR rejection can be distinguished from zone data in several ways. For example:
+
+  • Its RCODE is nonzero.
+  • It does not have an answer record.
+  • It does not have an SOA record for the requested zone.
+
+BIND 9 uses the RCODE test, and the BIND company's ``AXFR clarifications'' demand that every AXFR client use the same
+test. However, this is not necessary for interoperability. axfr-get uses a different test.
+
+Server implementations vary in their preferred methods of indicating errors. Here are some issues for implementors to
+consider:
+
+  • It is possible to indicate syntax errors with RCODE 1. However, experience indicates that client bugs leading to
+    syntax errors also frequently lead to extremely dangerous synchronization errors, so it is safer to close the
+    connection in this case.
+  • The BIND company's ``AXFR clarifications'' tell implementors to use RCODE 9 to indicate that the AXFR server does not
+    have the requested zone. However, RCODE 9 is an optional extension to the DNS protocol; DNS clients are not required
+    to, and often do not, understand it.
+  • The BIND company's ``AXFR clarifications'' state that clients can interpret a closed connection as a policy-based
+    refusal. This is simply wrong. Closed connections, just like RCODE 2 (server failure), happen for a much wider
+    variety of reasons.
+
+In its ``AXFR clarifications,'' the BIND company demands that errors be indicated by explicit packets rather than closed
+connections. This requirement is useless (RCODE 2 is just as uninformative as a closed connection), not necessary for
+interoperability (clients have to handle closed connections anyway), and impossible to implement. The notion that BIND 9
+never closes a connection is ludicrous.
+
+Sometimes a server will start sending zone data successfully, but then encounter an error (such as a disk failure) before
+completing the AXFR response. In this case, closing the connection is by far the safest strategy.
+
+Zone contents
+
+A zone is a series of DNS records, starting with an SOA record for the requested name, continuing with any number of
+non-SOA records, and concluding with a repetition of exactly the same SOA record. (RFC 1034, which says that all of the
+records for the zone name are repeated, is wrong.) The zone data is complete when the SOA record appears again.
+
+An AXFR server sends a zone by sending a series of DNS packets containing all the records in the zone, in the format
+shown below. Note that an AXFR response can, and almost always does, include more than one DNS packet, unlike a normal
+DNS response. AXFR clients parse the DNS packets to determine the end of the response.
+
+It is the responsibility of the AXFR server to ensure that a zone is retrieved atomically. If the zone changes during an
+AXFR response, the AXFR server must finish sending the original zone (concluding with the original SOA with the original
+serial number), or abort the transfer (which may mean that the zone is never successfully transferred, if changes are
+frequent).
+
+Here is the format for each DNS packet:
+
+ 1. Two bytes. AXFR servers must repeat the client's query ID in these two bytes; otherwise some AXFR clients reject the
+    data. On the other hand, AXFR clients must not check these bytes; some AXFR servers use \000\000 instead of the
+    client's query ID. The BIND company's ``AXFR clarifications'' tell implementors to check the query ID in the first
+    packet; this is a bad idea, and it is certainly not necessary for interoperability.
+ 2. Byte \204 (meaning: response, opcode 0, authoritative, not truncated, recursion not desired), or, optionally, \205 if
+    the client used byte \001. named-xfer rejects responses that do not have at least bits \204.
+ 3. Byte \000 (meaning: recursion not available, no Z bits, RCODE 0), or, optionally, \200.
+ 4. Bytes \000\000 (meaning no questions), or \000\001 (meaning one question).
+ 5. Two bytes, normally \000\001, indicating the number of answer records below.
+ 6. Bytes \000\000 (meaning no authority records).
+ 7. Bytes \000\000 (meaning no additional records).
+ 8. If one question was indicated above: the name of the requested zone, in the usual RFC 1035 domain-name format; bytes
+    \000 and \374 (meaning query type AXFR); and bytes \000 and \001 (meaning Internet query class).
+ 9. Answer records in the usual RFC 1035 format. There is always at least one answer record; there is normally exactly
+    one answer record.
+
+axfrdns never includes the question. BIND 9 includes the question in the first packet but not in subsequent packets. The
+BIND company's ``AXFR clarifications'' tell implementors to use the BIND 9 strategy, but this has no benefits; it is
+certainly not necessary for interoperability.
+
+axfr-get reads records through the end of the packet. BIND 9 reads only the records in the answer section. Both of these
+parsing mechanisms work properly, because the authority section and the additional section are empty. The BIND company's
+``AXFR clarifications'' demand that implementors use the BIND 9 parsing mechanism, but this has no benefits; it is
+certainly not necessary for interoperability.
+
+WARNING: A huge number of AXFR client installations do not support more than one answer record per packet. Consequently,
+AXFR servers must send one answer record per packet. (On the bright side, this is also the easiest strategy to
+implement.)
+
+The BIND company, demonstrating an astonishing disregard for interoperability, changed BIND to start sending multiple
+answer records per packet by default, even though they were perfectly aware that this breaks many deployed clients.
+Consequently, AXFR clients must accept multiple answer records per packet.
+
+(The BIND company's excuse, namely bandwidth, displays an equally astonishing lack of perspective. AXFR traffic is a tiny
+part of DNS traffic, and DNS traffic is a tiny part of total web traffic. In the unlikely event that there's any site
+that actually cares about AXFR bandwidth: You should be using gzipped rsync, not this primitive AXFR protocol.)
+
+Repeated records in a zone
+
+Whenever BIND 8 includes an NS record in a zone, it immediately includes a copy of the relevant glue records, even if
+this means repeating glue records. For example, the address of a.root-servers.net is repeated in the February 2003 root
+zone from b.root-servers.net:
+
+     @ 1D IN SOA A.ROOT-SERVERS.NET NSTLD.VERISIGN-GRS.COM ...
+       6D IN NS A.ROOT-SERVERS.NET
+     A.ROOT-SERVERS.NET 5w6d16h IN A 198.41.0.4
+     ...
+     mil 1D IN NS A.ROOT-SERVERS.NET
+     A.ROOT-SERVERS.NET 5w6d16h IN A 198.41.0.4
+     ...
+     @ 1D IN SOA A.ROOT-SERVERS.NET NSTLD.VERISIGN-GRS.COM ...
+
+AXFR clients remove all repeated records in zones received through AXFR. (Note to Bert: Sorting times essentially linear
+time, not quadratic time.)
+
+The BIND company's ``AXFR clarifications'' tell AXFR servers to avoid repeating any records (other than the SOA).
+However, this is not necessary for interoperability. The BIND company's bandwidth excuse is frivolous, as discussed
+above.
+
+Poison in a zone
+
+Suppose that an ISP is simultaneously a third-party DNS server for .edu and a third-party DNS server for princeton.edu.
+
+Suppose the ISP pulls the princeton.edu zone from a Princeton AXFR server, and receives the data
+
+     haven.princeton.edu NS serv1.net.yale.edu
+     serv1.net.yale.edu A 128.112.128.15
+
+from the AXFR server. The point of the following analysis is that the ISP must discard the yale.edu information.
+
+An innocent user's cache has the legitimate record
+
+     yale.edu NS serv1.net.yale.edu
+
+saved. The user asks for the address of www.haven.princeton.edu. The cache contacts the root server, learns that the ISP
+is a .edu server, contacts the ISP, and receives the same information
+
+     haven.princeton.edu NS serv1.net.yale.edu
+     serv1.net.yale.edu A 128.112.128.15
+
+that the ISP obtained from the Princeton server. Because the ISP is a .edu server, the cache trusts and saves the
+serv1.net.yale.edu information. The user now asks for the address of www.yale.edu. The cache knows yale.edu NS
+serv1.net.yale.edu and serv1.net.yale.edu A 128.112.128.15, so it contacts 128.112.128.15 to obtain the address of
+www.yale.edu. In short, Princeton has been given control over the Yale web server.
+
+As a general rule, before any data can be made available from a zone retrieved from a third party through AXFR, records
+that don't end with the zone name have to be discarded. There is no harm in AXFR clients discarding all such records upon
+receipt.
+
+When I first mentioned this type of attack, the BIND 9 implementors claimed that it was safe for the ISP to provide the
+serv1.net.yale.edu information as glue for haven.princeton.edu. That claim is false, as the above analysis shows. Do some
+versions of BIND 9 fail to discard the poison? Is this yet another BIND vulnerability?
+
+Database indexing in the Domain Name System
+
+The following discussion is important background for understanding how clients handle parent-child discrepancies.
+
+RFC 1034 and RFC 1035 specify the semantics of the Domain Name System: the DNS database is a collection of trees,
+containing nodes, containing record sets of various types. There is one tree for each class (IN, CH, etc.); at most one
+node in each tree for each name (aol.com, etc.); and at most one record set in each node for each type (A, MX, etc.).
+
+In other words, the DNS database at any moment is a collection of record sets, indexed by class, name, and type. For
+example, there is one record set for class IN, name aol.com, type A. (That record set contains four IP addresses right
+now: 64.12.187.24, 205.188.145.213, 205.188.160.120, and 64.12.149.25.)
+
+Of course, this semantic rule does not mean that copies of data around the Internet are magically equalized if they have
+the same class, name, and type. Most of the copying protocols have reliability problems, producing accidental (though
+usually harmless) inconsistencies. Often people deliberately introduce inconsistencies---for example, giving different
+answers to different clients. (This is called ``client differentiation'' in tinydns, and ``views'' in BIND 9.)
+
+What the semantic rule means is that implementations are allowed to store record sets by class, name, and type. If an
+implementation is faced with two record sets of the same class, name, and type, it is allowed to throw one record set
+away. Three examples:
+
+  • Consider, once again, client differentiation: some servers store data indexed by class, name, type, and client IP
+    address. Everybody else is free to assume that this doesn't happen. For example, a client that uses two IP addresses
+    for its outgoing requests, and receives different data under the same class+name+type on the two IP addresses, is
+    under absolutely no obligation to keep track of both record sets.
+  • Consider, as a simpler example, the fact that different servers for a zone can have different data. Everybody else is
+    free to assume that this doesn't happen. (RFC 1034, section 4.3.5: ``must be distributed to all of the name
+    servers.'') If a client receives different record sets from the two servers, under the same class+name+type, it can
+    use either one. It is under no obligation to keep track of both record sets.
+  • Consider, as a third example, the fact that a parent and a child can have different data for the same
+    class+name+type. Everybody else is free to assume that this doesn't happen: i.e., that the parent record set is an
+    exact copy of the child record set. (RFC 1034, section 4.2.1: ``exactly the same as the corresponding RRs in the ...
+    subzone.'' Section 4.2.2: ``the NS and glue RRs which mark both sides of the cut are consistent and remain so.'') If
+    a client receives different record sets from the two servers, under the same class+name+type, it can use either one.
+    It is under no obligation to keep track of both record sets.
+
+To summarize: The fact that one DNS implementation indexes its database by something more than class+name+type does not
+oblige other DNS implementations to do the same thing.
+
+Handling parent-child discrepancies
+
+Suppose an ISP's DNS server is a third-party DNS server for princeton.edu, and simultaneously a third-party DNS server
+for cs.princeton.edu.
+
+As discussed above, the ISP is free to assume that the princeton.edu zone contains the same cs.princeton.edu data as the
+cs.princeton.edu zone. If the princeton.edu AXFR server says
+
+     cs.princeton.edu NS cs.princeton.edu
+     cs.princeton.edu NS engram.cs.princeton.edu
+
+while the cs.princeton.edu AXFR server says
+
+     cs.princeton.edu NS dns1.cs.princeton.edu
+     cs.princeton.edu NS dns2.cs.princeton.edu
+
+then the ISP is free to discard the first record set in favor of the second. If the Princeton administrators don't like
+this for some reason, too bad; it's their fault for not following the DNS semantics specified in RFC 1034.
+
+As a general rule, when AXFR results for w.x.y.z and y.z are combined, any record sets in the y.z zone whose names end
+with w.x.y.z can be discarded.
+
+BIND 9, unlike most DNS server installations on the Internet, keeps track of both record sets. Of course, it is forced to
+throw one record set away when it responds to queries; a query asks for a record set by class+name+type.
+
+In yet another demonstration of their astonishing disregard for interoperability, the BIND company is pushing an optional
+``IXFR'' protocol that assumes the BIND 9 behavior. They say that IXFR breaks horribly when it encounters the standard
+RFC 1034 behavior. Normal people conclude that IXFR is broken and that IXFR has to be fixed. (I've explained elsewhere
+how to fix it.) But the BIND company is instead demanding in its ``AXFR clarifications'' that most AXFR clients on the
+Internet be changed to accommodate IXFR. This is insane.
+
+The BIND 8.2.3 bug
+
+The BIND company introduced the following rule into BIND 8.2.3: zones are only allowed to contain
+
+  • authoritative records for that zone,
+  • NS records immediately below the zone,
+  • A records that those NS records point to,
+  • AAAA records that those NS records point to, and
+  • A6 records that those NS records point to.
+
+For example, if the heaven.af.mil zone contains a record for full.moon.heaven.af.mil, BIND 8.2.3 might reject the entire
+zone, depending on exactly what the record types and contents are.
+
+BIND 8.2.3 applies this rule not only to zones added manually by the system administrator, but also to data received
+through AXFR, so it creates interoperability problems.
+
+There are many ways to see that the BIND 8.2.3 rule is flawed. Here's the easiest: What happens if the IETF adds another
+address type beyond A/AAAA/A6? Answer: a zone administrator who adds a record of that type causes a complete
+zone-transfer failure with BIND 8.2.3. This is even worse than BIND's other problems with new types, because it kills the
+whole zone transfer, not just the new records.
+
+As a general rule, AXFR clients cannot assume that they will be able to figure out why a record was included in a zone.
+
+Zone creators probably don't need to worry about the BIND 8.2.3 bug. Subsequent versions of BIND (including BIND 9) have
+reportedly been fixed; and all BIND 8.2.3 users are required to upgrade, because BIND 8.2.3 also has a remotely
+exploitable buffer overflow allowing attackers to take over the machine.

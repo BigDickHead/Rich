@@ -1,0 +1,260 @@
+w3m - WWW browsable pager with excellent tables/frames support
+w3m-img - inline image extension support utilities for w3m
+
+
+usage: w3m [options] [URL or filename]
+options:
+    -t tab           set tab width
+    -r               ignore backspace effect
+    -l line          # of preserved line (default 10000)
+    -I charset       document charset
+    -O charset       display/output charset
+    -B               load bookmark
+    -bookmark file   specify bookmark file
+    -T type          specify content-type
+    -m               internet message mode
+    -v               visual startup mode
+    -M               monochrome display
+    -N               open URL of command line on each new tab
+    -F               automatically render frame
+    -cols width      specify column width (used with -dump)
+    -ppc count       specify the number of pixels per character (4.0...32.0)
+    -ppl count       specify the number of pixels per line (4.0...64.0)
+    -dump            dump formatted page into stdout
+    -dump_head       dump response of HEAD request into stdout
+    -dump_source     dump page source into stdout
+    -dump_both       dump HEAD and source into stdout
+    -dump_extra      dump HEAD, source, and extra information into stdout
+    -post file       use POST method with file content
+    -header string   insert string as a header
+    +<num>           goto <num> line
+    -num             show line number
+    -no-proxy        don't use proxy
+    -4               IPv4 only (-o dns_order=4)
+    -6               IPv6 only (-o dns_order=6)
+    -no-mouse        don't use mouse
+    -cookie          use cookie (-no-cookie: don't use cookie)
+    -graph           use DEC special graphics for border of table and menu
+    -no-graph        use ACII character for border of table and menu
+    -s               squeeze multiple blank lines
+    -W               toggle wrap search mode
+    -X               don't use termcap init/deinit
+    -title[=TERM]    set buffer name to terminal title string
+    -o opt=value     assign value to config option
+    -show-option     print all config options
+    -config file     specify config file
+    -help            print this usage message
+    -version         print w3m version
+    -reqlog          write request logfile
+    -debug           DO NOT USE
+
+
+Show keymap file
+
+Page/Cursor motion
+
+^[[6~,+,SPC,C-v      Move to next page (NEXT_PAGE)
+b,-,^[[5~,ESC-v      Move to previous page (PREV_PAGE)
+RIGHT,C-f,l          Move cursor right (a half screen shift at the right edge) (MOVE_RIGHT)
+LEFT,C-b,h           Move cursor left (a half screen shift at the left edge) (MOVE_LEFT)
+j,C-n,DOWN           Move cursor down (a half screen scroll at the end of screen) (MOVE_DOWN)
+C-p,k,UP             Move cursor up (a half screen scroll at the top of screen) (MOVE_UP)
+<NOT ASSIGNED>       Move cursor right (1 columns shift at the right edge) (MOVE_RIGHT1)
+<NOT ASSIGNED>       Move cursor left (1 columns shift at the left edge) (MOVE_LEFT1)
+<NOT ASSIGNED>       Move cursor down (1 line scroll at the end of screen) (MOVE_DOWN1)
+<NOT ASSIGNED>       Move cursor up (1 line scrol at the top of screen) (MOVE_UP1)
+K                    Scroll down one line (DOWN)
+J                    Scroll up one line (UP)
+<                    Shift screen left (SHIFT_LEFT)
+>                    Shift screen right (SHIFT_RIGHT)
+,                    Shift screen one column (LEFT)
+.                    Shift screen one column right (RIGHT)
+^,C-a                Go to the beginning of line (LINE_BEGIN)
+C-e,$                Go to the end of line (LINE_END)
+Z                    Move to the center line (CENTER_H)
+z                    Move to the center column (CENTER_V)
+ESC-g                Go to specified line (GOTO_LINE)
+g,^[[1~,ESC-<        Go to the first line (BEGIN)
+ESC->,^[[4~,G        Go to the last line (END)
+w                    Move to next word (NEXT_WORD)
+W                    Move to previous word (PREV_WORD)
+[                    Go to the first link (LINK_BEGIN)
+]                    Go to the last link (LINK_END)
+TAB                  Move to next link (NEXT_LINK)
+C-u,^[[Z,ESC-TAB     Move to previous link (PREV_LINK)
+ESC-m                Popup link list menu and move cursor to selected link (MOVE_LIST_MENU)
+<NOT ASSIGNED>       Move to next right link (NEXT_RIGHT)
+<NOT ASSIGNED>       Move to next left link (NEXT_LEFT)
+<NOT ASSIGNED>       Move to next downward link (NEXT_DOWN)
+<NOT ASSIGNED>       Move to next upward link (NEXT_UP)
+<NOT ASSIGNED>       Move to next right (or downward) link (NEXT_RIGHT_DOWN)
+<NOT ASSIGNED>       Move to next left (or upward) link (NEXT_LEFT_UP)
+(                    Cancel the last cursor movement (UNDO)
+)                    Cancel the last undo (REDO)
+
+Hyperlink operation
+
+C-m,C-j              Go to current link (GOTO_LINK)
+C-t                  Open current link on new tab (TAB_LINK)
+a,ESC-C-j,ESC-C-m    Save link to file (SAVE_LINK)
+I                    View image (VIEW_IMAGE)
+ESC-I                Save image to file (SAVE_IMAGE)
+<NOT ASSIGNED>       Submit form (SUBMIT)
+c                    Peek current URL (PEEK)
+u                    Peek link URL (PEEK_LINK)
+i                    Peek image URL (PEEK_IMG)
+=                    View info of current document (INFO)
+C-g                  Show current line number (LINE_INFO)
+:                    Mark URL-like strings as anchors (MARK_URL)
+";"                  Mark current word as anchor (MARK_WORD)
+ESC-:                Mark Message-ID-like strings as anchors (MARK_MID)
+F                    Render frame (FRAME)
+M                    Execute external browser (EXTERN)
+ESC-M                View current link using external browser (EXTERN_LINK)
+L                    Show all links and images (LIST)
+ESC-l                Popup link list menu and go to selected link (LIST_MENU)
+<NOT ASSIGNED>       Popup link element menu (LINK_MENU)
+<NOT ASSIGNED>       ()
+
+File/Stream operation
+
+U                    Go to URL (GOTO)
+ESC-u                Go to relative URL (GOTO_RELATIVE)
+<NOT ASSIGNED>       Open URL on new tab (TAB_GOTO)
+<NOT ASSIGNED>       Open relative URL on new tab (TAB_GOTO_RELATIVE)
+V                    Load local file (LOAD)
+@                    Execute shell command and load (READ_SHELL)
+#                    Execute shell command and browse (PIPE_SHELL)
+|                    Send rendered document to pipe (PIPE_BUF)
+
+Buffer operation
+
+B                    Back to previous buffer (BACK)
+<NOT ASSIGNED>       Move to next buffer (NEXT)
+<NOT ASSIGNED>       Move to previous buffer (PREV)
+s                    Popup buffer selection menu (SELECT_MENU)
+<NOT ASSIGNED>       Go to buffer selection panel (SELECT)
+v                    View HTML source (VIEW)
+ESC-s                Save document source to file (SAVE)
+S                    Save buffer to file (PRINT)
+E                    Edit current document (EDIT)
+ESC-e                Edit currently rendered document (EDIT_SCREEN)
+R                    Reload buffer (RELOAD)
+<NOT ASSIGNED>       Re-render buffer (RESHAPE)
+C-l                  Redraw screen (REDRAW)
+<NOT ASSIGNED>       Restart loading and drawing of images (DISPLAY_IMAGE)
+<NOT ASSIGNED>       Stop loading and drawing of images (STOP_IMAGE)
+
+Tab operation
+
+T                    Open new tab (NEW_TAB)
+C-q                  Close current tab (CLOSE_TAB)
+}                    Move to next tab (NEXT_TAB)
+{                    Move to previous tab (PREV_TAB)
+ESC-t                Popup tab selection menu (TAB_MENU)
+<NOT ASSIGNED>       Move current tab right (TAB_RIGHT)
+<NOT ASSIGNED>       Move current tab left (TAB_LEFT)
+
+Bookmark operation
+
+ESC-b                View bookmark (VIEW_BOOKMARK)
+ESC-a                Add current page to bookmark (ADD_BOOKMARK)
+
+Search
+
+/                    Search forward (SEARCH_FORE)
+?                    Search backward (SEARCH_BACK)
+n                    Search next regexp (SEARCH_NEXT)
+N                    Search previous regexp (SEARCH_PREV)
+C-s                  Incremental search forward (ISEARCH)
+C-r                  Incremental search backward (ISEARCH_BACK)
+
+Dictionary look-up
+
+ESC-w                Execute dictionary command (see README.dict) (DICT_WORD)
+ESC-W                Execute dictionary command for word at cursor (DICT_WORD_AT)
+
+Mark operation
+
+C-@                  Set/unset mark (MARK)
+ESC-n                Move to next word (NEXT_MARK)
+ESC-p                Move to previous mark (PREV_MARK)
+"                    Set mark using regexp (REG_MARK)
+
+Miscellany
+
+^[[E,^[[2~,^[[L,^    Popup menu (MENU)
+[[28~
+H                    View help (HELP)
+o                    Option setting panel (OPTIONS)
+r                    Display version of w3m (VERSION)
+C-k                  View cookie list (COOKIE)
+C-h                  View history of URL (HISTORY)
+D                    Display download list panel (DOWNLOAD_LIST)
+<NOT ASSIGNED>       Change the current document charset (CHARSET)
+<NOT ASSIGNED>       Change the default document charset (DEFAULT_CHARSET)
+<NOT ASSIGNED>       Display error messages (MSGS)
+m                    Toggle activity of mouse (MOUSE_TOGGLE)
+C-w                  Toggle wrap search mode (WRAP_TOGGLE)
+ESC-c                Execute w3m command(s) (COMMAND)
+<NOT ASSIGNED>       Set alarm (ALARM)
+ESC-o                Set option (SET_OPTION)
+<NOT ASSIGNED>       Set environment variable (SETENV)
+ESC-k                Define a binding between a key stroke and a user command (DEFINE_KEY)
+<NOT ASSIGNED>       Reload configuration files (REINIT)
+!                    Execute shell command (EXEC_SHELL)
+C-z                  Stop loading document (INTERRUPT)
+q                    Quit w3m (QUIT)
+Q                    Quit w3m without confirmation (EXIT)
+
+User defined keymaps
+
+
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Buffer selection mode
+
+C-n,j                Select next buffer
+k,C-p                Select previous buffer
+D                    Delete current buffer
+RET                  Go to the selected buffer
+
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Line-edit mode
+
+C-f                  Move cursor forward
+C-b                  Move cursor backward
+C-h                  Delete previous character
+C-d                  Delete current character
+C-k                  Kill everything after cursor
+C-u                  Kill everything before cursor
+C-a                  Move to the top of line
+C-e                  Move to the bottom of line
+C-p                  Fetch the previous string from the history list
+C-n                  Fetch the next string from the history list
+C-o                  Edit with external editor
+SPC,TAB              Complete filename
+RET                  Accept
+
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Popup menu
+
+SPC,RIGHT,RET        Select item
+^[[2~,C-c,^[[28~     Close menu
+DEL,LEFT,C-h         Back
+j,C-n,DOWN           Move to next item
+C-p,k,UP             Move to previous item
+K                    Scroll up one item
+J                    Scroll down one item
+C-a                  Go to top item
+C-e                  Go to last item
+C-f,^[[6~,C-v        Go to next page
+^[[5~,C-b,ESC-v      Go to previous page
+/,C-s                Search foreward
+C-r,?                Search backward
+n                    Search next regexp
+N                    Search previous regexp
+C-z                  Suspend
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
