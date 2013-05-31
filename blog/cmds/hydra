@@ -2,6 +2,9 @@
 hydra http-post-form -U
 
 
+Use HYDRA_PROXY_HTTP/HYDRA_PROXY and HYDRA_PROXY_AUTH environment for a proxy.
+
+
 Brute forcing HTTP Basic Authentication
 hydra -l admin -P wordlist target.com http-head /private/
 

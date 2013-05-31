@@ -173,3 +173,5 @@ TCP flags
 | F         | Final (FIN)          |               1 |
 |-----------+----------------------+-----------------|
 
+
+nmap -A -oA wapscan%D -p 1-85,113,443,8080-8100 -T4 --min-hostgroup 50 --max-rtt-timeout 1000 --initial-rtt-timeout 300 --max-tries 3 --host-timeout 20m --max-scan-delay 1000 target_network

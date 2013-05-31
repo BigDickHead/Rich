@@ -1,0 +1,38 @@
+Computer Based Social Engineering Tools: Who's Your Daddy Password Profiler (WYD)
+
+Generic Usage
+
+Usage: wyd.pl [OPTIONS] [file(s)|directory]
+
+Possible OPTIONS are:
+
+    -o [file] = The file where all extracted words will be written to. If omitted, all words gets printed to STDOUT.
+
+    -t = Create separate files for each type. This option required the -o [file] and creates single files for each type. E.g. when [file] = 'list.txt' and there are words found in MP3, plain-text and HTML files, 'list.txt.mp3', 'list.txt.plain' and 'list.txt.html' will be created.
+
+    -s [min-len] = When you have a lot of unsupported file formats, which are not ascii based, you can use this option to parse all unknown filetypes using the UNIX command 'strings'. The parameter [min-len] is a number which defines the minimum length of a printable sequence of characters. All shorter sequences will be ignored. The problem with 'strings' is, that it will detect a lot of useless "false-positives".
+
+    -b = Disable the removal of non-alpha chars at start of word. By default all non-alpha numeric characters at the beginning of a word are removed.
+
+    -e = Disable the removal of non-alpha chars at end of word. By default all non-alpha numeric characters at the end of a word are removed.
+
+    -f = Disable inclusion of filenames (without extensions) in wordlist. By default, the filenames itself are also included in the wordlist as they may contain product/project names, names of songs (which do not have an IDv1/IDv3 tag), e.g.
+
+    -v = Enable debugging/verbose mode
+
+[file(s)|directory] can be either a single file or directory or a list of files/directories.
+
+
+Supported File Types
+    plain
+    html
+    php (partially, as html)
+    doc
+    pdf
+    mp3
+    ppt
+    jpeg
+    odt / ods / odp
+
+
+Additionally all unknown files with MIME type text/plain are processed using the plain module or the strings usage.

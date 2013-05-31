@@ -1,0 +1,16 @@
+
+    每次想要启动这些程序时，你不得不输入 cd ~/.wine/drive_c/Program＼ Files＼My＼ Windows＼ App; wine My＼ Windows＼ App.exe,有没有什么办法，能在xterm下直接通过My＼ Windows＼ App.exe来运行这些程序？
+
+　　幸运的是，Linux内核特性binfmt_misc就够帮助你达成这个愿望。
+
+　　当你运行你的Linux发布版本的stock kernel后，便拥有这个特性。如果没有，或者说你希望使用你自定制的核心，那么请确定，无论是内置还是作为模块，你都要选择CONFIG_BINFMT_MISC (Executable file formats -> Kernel support for MISC binaries)。在后一种情况下，请确定binfmt_misc模块在启动时是自动加载的（在Debian和Debian系的系统中可以运行echo binfmt_misc >> /etc/modules） 。之后通过命令 mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc 挂载bifmt_misc，或者拷贝下面的字符到你的/etc/fstab文件中，以确保在每一次启动时它都自动挂载： none /proc/sys/fs/binfmt_misc binfmt_misc defaults 0 0
+　　
+　　现在，你必须告诉binfmt_misc，通过调用/usr/bin/wine来执行win16或win32应用程序。请注意，wine的路径必须是全路径，否则不能工作： echo ’:DOSWin:M::MZ::/usr/bin/wine:’ > /proc/sys/fs/binfmt_misc/register
+
+　　接下来就要让这个设置永久性得起作用。如果你使用的是gentoo，将前面的这个命令复制到你的/etc/rc.d/rc.local 或 /etc/conf.d/local.start文件中。如果你使用的是基于Debian的发行版，就要复制下面的命令到/etc/init.d/wine： #!/bin/sh test -e proc/sys/fs/binfmt_misc/register || exit 0 case "$1" in start)   echo ’:DOSWin:M::MZ::/usr/bin/wine:’ > /proc/sys/fs/binfmt_misc/register   ;; stop)   echo 0 > /proc/sys/fs/binfmt_misc/status   ;; *)   echo "Usage: $0 {start|stop}" >&2   exit 3   ;; esac   然后，通过 chmod 755 /etc/init.d/wine 让文件能够被用户执行。再通过 update-rc.d wine start ArrayArray 2 3 4 5 . stop 10 0 1 6 . 让它在启动过程中开始起作用。
+
+　　最后一步，确认你的Windows二进制程序能够被执行，当然还是通过这个命令 chmod 755 ./My＼ Windows＼ App.exe 接下来，你就能和运行linux程序一样来运行它了。当然，为了方便，你还可以建立一个符号连接到你的任何一个PATH路径下，例如/usr/local/bin。
+
+　　用同样的办法，binfmt_misc能够运行基于java和python编写的程序，如果想得到更多信息的话，请参考任何一个版本较新的内核文件包中的Documentation/binmft_misc.txt。
+
+　　这个技术也许在应用上还存在一些安全性问题------例如本地提权------因此，请让值得信任的用户在更新过的系统中使用。更好的办法，是让你的/proc文件系统通过nosuid属性挂载。
