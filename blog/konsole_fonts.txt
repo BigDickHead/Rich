@@ -1,0 +1,3 @@
+konsole's configuration file
+
+~/.kde/share/apps/konsole/Shell.profile
