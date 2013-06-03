@@ -1,0 +1,689 @@
+tcpreplay
+重发pcap文件中的数据包。
+
+
+tcprewrite
+改写pcap数据包的2-4层的头部信息，即MAC地址、IP地址和PORT等。
+
+
+tcpprep
+区分pcap数据包的流向，即区分出客户端和服务器。
+
+
+tcpreplay负责发送数据包，tcprewrite用来改写数据包，tcpprep用来区分客户端和服务器。
+1, 因为数据包中的内容都是双向的(客户端->服务器, 服务器->客户端), tcprewrite改写数据, tcpreplay发送数据包时都应该区分方向(即区分客户端和服务器), 因此这两个工具一般是工作在tcpprep的基础上的。
+
+2, tcpreplay可以发送任意pcap数据包, 如果它想改变发送内容, 就必须先用tcprewrite来改写数据包, 然后再发送改写后的数据包。
+
+
+START:
+1, 区分客户端和服务器
+$tcpprep --port --cachefile=cache_test.cache --pcap=http.pcap
+
+tcpprep的详细使用请参看相关手册（如man手册）。
+
+--port是指tcpprep用port-split模式来区分客户端和服务器。在这种模式下，所有目的端口<1024的，将被视作客户端－>服务器的包，否则视为服务器->客户端的包。tcppgrep有auto，cidr，regex，port和mac等多种模式，各种模式的详细情况请查看相关手册（如man手册）。
+
+--pcap=http.pcap是指tcpprep处理的是http.pcap这个文件。
+
+--cachefile=cache_test.cache是指tcpgrep处理后的信息存放在cache_test.cahe这个文件中。这个文件在tcprewrite和tcpreplay中将用到。
+
+整个指令的意思就是采用port-spllit模式来处理http.pcap文件（区分http.pcap中的客户端和服务器），然后将处理结果存到cache_test.cache文件中。
+
+
+2, 改写数据包的的内容
+$tcprewrite --endpoints=192.168.0.1:192.168.0.2 --cachefile=cache_test.cache --infile=http.pcap --outfile=http_rewrite.pcap
+
+tcprewrite的详细使用请参看相关手册（如man手册）。
+
+--endpoints=192.168.0.1:192.168.0.2是指将客户端ip修改为192.168.0.1，将服务器ip修改为192.168.88.0.2，注意3.x版本的Tcpreplay自动地将IP的校验和修改好。用wireshark查看http_rewrite.pcap可以得到这个修改结果。
+
+--cachefile=cache_test.cache是指tcprewrite用tcpprep 上步的处理结果——cache_test.cache来区分方向。
+
+--infile=http.pcap是指要处理的pcap文件是http.pcap。
+
+--outfile=http_rewrite.pcap是指处理结果存在http_rewrite.pcap文件中。这个文件将是tcpreplay发送数据包的来源。
+
+
+3, 发送数据包
+$tcpreplay --intf1=eth0 --intf2=eth0 -t --cachefile=cache_test.cache http_rewrite.pcap
+
+tcpreplay的详细使用请参看相关手册（如man手册）。
+
+--intf1=eth0是指主接口是eth0，客户端－>服务器的数据包通过这个接口发送。服务器和客户端的区分是从tcpprep的处理结果cache_test.cache中得到的。
+
+--intf2=eth0是指从接口是eth0，服务器－>客户端的数据包通过这个接口发送。
+
+--cachefile=cache_test.cache是指tcpreplay用tcpprep 上步的处理结果——cache_test.cache来区分方向。
+
+http_rewrite.pcap是指tcpreplay发送的是来自http_rewrite.pcap这个文件中的数据包。
+
+
+4, 合理使用tcpdump
+
+我们可以合理地使用tcpdump来配合tcpreplay的使用。举两个例子。
+抓包
+
+用tcpdump 抓取tcpreplay在eth0端口发出的tcp包，并要求这些包的目的地址是192.168.0.2，可输入如下的指令。
+
+tcpdump -i eth0 -w tcpdump.pcap -s 0 '(tcp and (dst host 192.168.0.2) ) '    /* 如果不能同时开多个shell 窗口，可以让它后台运行 */
+
+-w tcpdump.pcap是指将抓取到的包存到tcpdump.pcap这个文件中，-s 0是指尽可能大的抓取每个包（尽量不截断），最后面的单引号里的内容是过滤规则。
+
+选包
+
+又如只想把test.pcap文件中端口号为80的tcp包（http包）提取出来，再转交给tcpreplay去发送，可以这样做。
+
+$ tcpdump -r test.pcap -w http_only.pcap -s 0 tcp port 80
+
+-r test.pcap是指从test.pcap中读包。这个指令的意思是从test.pcap中读包后，根据“tcp port 80”这个过滤规则筛选出满足要求的包，将这些包存到http_only.pcap这个文件中去。
+
+
+****************************************************************************************************
+    tcpprep is the pcap pre-processor for tcpreplay and tcprewrite. The purpose of tcpprep is to create a cache file which is used to "split" traffic into two sides (often called primary/secondary or client/server). If you are intending to use tcpreplay with two NIC's, then tcpprep is what decides which interface each packet will use. By using a seperate process to generate cache files, tcpreplay can send packets at a much higher rate then if it had to do the calculations to split traffic itself.
+
+    tcpprep是一个在tcpreplay和tcprewrite（3.0.beta11版本才有，这里不讨论）之前使用的pcap文件的处理程序。使用tcpprep的目的就是建立一个cache文件，用于分离通信流量中的两方（通常叫做 主要的/次要的 或者 客户端/服务器）。如果你正打算在两块网卡上使用tcpreplay的话，那么tcpprep就是用来决定每一个报文（packet）从哪一个接口发出。通过使用这样一个分离的程序来建立一个cache文件，tcpreplay就可以根据这个cache文件通过自身的计算来分离流量，高速率的发送报文。
+
+    cache文件的作用解释，主要是加速报文的发送，cache文件中存放着pcap文件中每个帧的编号和时间戳等信息，以达到tcpreplay回放时可以更加快速的发送报文的目的。
+
+    其实我们要使用tcpreplay的功能的话，肯定就是它的重放功能，而重放的话肯定是一个客户端和服务器的交互过程，例如ftp、tftp、sqlnet、rtsp、mms等应用层协议的交互过程，我们只要有正确和足够的pcap文件，只需要制作cache文件，使用tcpreplay的命令，就不需要每次都搭建一个真实的测试环境来测试DUT对该协议的支持程度。所以在介绍tcpreplay之前先介绍tcpprep这个命令的使用。tcprewrite提供的功能暂时不做研究。
+Tcpprep帮助文件说明
+
+    Usage: tcpprep [-a -n <mode> -N <type> | -c <cidr> | -p | -r <regex>] \
+
+                -o <out> -i <in> <args>
+
+-a Split traffic in Auto Mode
+
+一般情况下都需要该参数，表示按模式自动分离的通讯流量生成cache文件，这个参数一半都和-n参数一起使用，表示自动分离采取的拓扑模式，来决定采取那种模式分离通讯流量的双方。
+
+-c CIDR1,CIDR2,...      Split traffic in CIDR Mode
+
+可选参数，表示分离流量时采用CIDR（无类别域间路由选择）模式。格式：tcpprep  -ac 10.10.0.0/24，表示把源地址匹配10.10.0.0/24网段的报文全部由主网卡发送，剩下的报文由从网卡发送出来，这里还有一点需要补充，就是tcpreplay在重放报文时对两个网卡的定义很明确，一个主网卡（primary interface），一个是从网卡（secondary interface），不同的模式，两块网卡的属性不一样。该参数不能和-r,-a一起使用。
+
+-C <comment>            Embed comment in tcpprep cache file
+
+可选参数，表示在cache文件中嵌入注释内容，可以用于注释说明cache文件的内容，注意使用时参数位置，不要放在最后，我测试时放在-o参数值的后面就报错，放到-i参数之前就可以。生成cache文件后使用-P可以查看写入的内容。
+
+-h                      Help
+
+显示帮助文件。
+
+-i <capfile>            Input capture file to process
+
+生成cache文件的必带参数，后面紧跟pcap文件名，表示这个pcap文件需要处理。
+
+-m <minmask>            Minimum mask length in Auto/Router mode
+
+可选参数，在选用router模式时使用，表示最小掩码，默认是30（2个有效ip地址）。
+
+-M <maxmask>            Maximum mask length in Auto/Router mode
+
+可选参数，在选用router模式时使用，表示最大掩码，默认是8（1600万个ip地址）。
+
+-n <auto mode>          Use specified algorithm in Auto Mode
+
+生成cache文件的必带参数，后面紧跟模式名称，可选项有(bridge|router|client|server)，目前2.3.5版本只支持这4种模式。模式的选择很关键，例如在客户端使用ftp软件下载文件，那么你在客户端抓到的报文生成的pcap文件，那么就选用client模式，在服务器端抓到的报文生成的pcap文件就选用server模式。只有模式选对了，才能正确的分离流量从正确的接口发出正确的报文。注意：Server端的报文由主网卡发送出去，Client端的报文由从网卡发送出去。怎么确定主从网卡由tcpreplay的命令（-i –j两个参数）来决定。
+
+-N client|server        Classify non-IP traffic as client/server
+
+可选参数，表示非IP的流量（例如ARP报文）从哪个接口送出，因为很多的tcpprcp支持的模式中，都依赖于IP头部中的IP地址信息来决定报文是从client端还是从server端发送出去。但是并不是所有的报文都是IPv4结构的，所以这种情况下，tcpprep不能确定这些非IPv4类型的报文应该从哪个接口发送出去，所以，默认的配置就是从client的接口发送出去。如果你硬要正确的分离出非IPv4报文的话，可以使用MAC address模式（--mac）。3.0版本才支持。
+
+-o <outputfile>         Output cache file name
+
+生成cache文件的必带参数，后面紧跟cache文件名，表示这个输出的cache文件以这个名字命名。
+
+-p                      Split traffic based on destination port
+
+    可选参数，基于目的端口来分离通讯流量，它区分的依据是认为0-1023端口都是服务器的端发出的报文，其它的端口都是客户端发出的报文，具体的端口对应的/etc/services文件里的的内容。使用的格式：-p /etc/services，可以根据自己的需要来制作一个文件也可以。
+
+-P <file>               Print comment in tcpprep file
+
+    可选参数，查看cache文件的内容。
+
+-r <regex>              Split traffic in Regex Mode
+
+    可选参数，表示使用Regex模式分离通讯流量，有点类似于CIDR模式，但是它匹配的是服务器的源IP。man文件提示不能和-a、-c参数一起使用，但是我使用了也没有报错，格式：-r "(192)"或-r "(192|172)\.....*"，具体应用还有待实验。
+
+-R <ratio>              Specify a ratio to use in Auto Mode
+
+    可选参数，一个比例值，这个比例值的意义是服务器端发起的连接数和客户端发起的连接数的比例，这个值大于2的话就视为server端。这个英文原意我也不是太肯定，大家可以参考一下原文：
+
+The ratio of server connections to client connections  necessary to  be classified as a server in auto mode.  A system is classified as a server if [# server connections] >= ([# client connections] * [ratio]).  Default is: 2.0
+
+-s <file>               Specify service ports in /etc/services format
+
+    可选参数，在man文件中没有对该参数的解释，估计就是按/etc/services文件里的格式来定义服务的端口，没有太多的研究意义。
+
+-x <match>              Only send the packets specified
+
+    重要的可选参数，表示按照参数定义的需求来定义发送报文。后面还有具体的参数，因为在我们的抓包过程中，可能会由于网络环境原因，抓到了许多我们不需要回放的报文，我们就可以根据这个参数决定我们需要回放哪些报文内容。具体的参数意思如下：
+
+    S:<CIDR1>,... - Src IP must match specified CIDR(s)
+
+    在CIDR模式下必须匹配源IP，格式：-xS:100.1.1.0/24,10.10.10.0/26。多个用逗号隔开，参数个数没有试过，3个没有问题。
+
+D:<CIDR1>,... - Dst IP must match specified CIDR(s)
+
+在CIDR模式下必须匹配目的IP，格式同上。
+
+B:<CIDR1>,... - Both src and dst addresses must match
+
+必须同时匹配源和目的IP，格式同上。
+
+E:<CIDR1>,... - Either src or dst address must match
+
+匹配源或目的IP，格式同上。
+
+P:<list>  - Must be one of the listed packets where the list corresponds  to  the  packet number in the capture file. 
+
+Ex: -xP:1-5,9,15 would only send packets 1 through 5, 9 and 15.
+
+根据参数后的参数值（报文编号）发送指定的报文。可以在ethereal中确认报文的编号，然后把需要的报文发送。可以用于排除ARP报文。
+
+F:"<filter>"  - BPF filter.  See the  tcpdump(8)  man  page  for syntax.
+
+未知，以后补充。
+
+-X <match>              Send all the packets except those specified
+
+    可选参数，就是-x参数的取反，参数内容也是一样。
+
+-v                      Verbose
+
+    可选参数，显示trpprep生成cache文件的处理过程，就是一些信息的即时打印。
+
+-V                      Version
+
+    显示版本号。
+Tcpprep使用小结
+
+    再构造cache文件的过程中我用的比较多的选项参数就-v、-P、-xB、-xP，一般都是client和server的模式，其它两种模式没有实验过，暂时还不知道怎么使用，bridge模式我使用过一次，结果发现报文是从一个网卡送出。
+
+    对于tcp和udp协议都做了测试，是可以支持的，icmp还没有成功。对于网络上的BT报文，只要你有pcap文件，也是可以构造cache文件来模拟完全真实的BT流量。
+
+    目前的使用就是这么多，感觉还是很有用的，tcpreplay的参数有一部分是和tcpprep重复，下面的帮助文件说明就不详细说明了，但是特殊有好用的参数会使用蓝色字体标记出来给予重视。存在的不足是还没有学会在nat模式下重放报文，现在所有的报文重放都是在透明模式下完成的。
+
+ 
+
+ 
+Tcpreplay帮助文件说明
+
+    Usage: tcpreplay [args] <file(s)>
+
+-A "<args>"             Pass arguments to tcpdump decoder (use w/ -v)
+
+    可选参数，在使用tcpdump风格打印输出信息时，同时再调用tcpdump中的参数，默认已经带有“-n,-l”，所以一般看到的都是ip地址，而没有主机名的打印，注意这个是在tcpreplay使用了-v参数时，才能使用，不带-v不会报错，但是没有实际意义。格式：-vA “nnt”表示以tcpdump风格输出报文信息，并且不打印时间戳、主机名、端口服务名称。注意不要使用-c参数来指定打印的数据报文的个数，这样发送出去的报文也会变少。
+
+-b                      Bridge two broadcast domains in sniffer mode
+
+    可选参数，没有用过
+
+-c <cachefile>          Split traffic via cache file
+
+    双网卡回放报文必选参数，后面紧跟cache文件名，该文件为tcpprep根据对应的pcap文件构造出来。
+
+-C <CIDR1,CIDR2,...>    Split traffic by matching src IP
+
+    可选参数，
+
+-D                      Data dump mode (set this BEFORE -w and -W)
+
+可选参数，把应用层的数据，使用dump mode写入到指定文件中去，和-w、-W参数一起使用。
+
+-e <ip1:ip2>            Specify IP endpoint rewriting
+
+    可选参数，指定端点的ip，即把发送报文的和接收的报文的ip都修改称对应的参数值中指定的ip，但是这样发送的出的报文不会区分client和server，还没有发现使用的地方。
+
+-f <configfile>         Specify configuration file
+
+    可选参数，指定配置文件，目前不会使用。
+
+-F                      Fix IP, TCP, UDP and ICMP checksums
+
+    可选参数，在发送报文时，自动纠正错误的校验和。对测试DUT的校验和检验还是有用的。
+
+-h                      Help
+
+    显示帮助文件。
+
+-i <nic>                Primary interface to send traffic out of
+
+    双网卡回放报文必选参数，指定主接口。
+
+-I <mac>                Rewrite dest MAC on primary interface
+
+    可选参数，重写主网卡发送出报文的目的MAC地址。
+
+-j <nic>                Secondary interface to send traffic out of
+
+    双网卡回放报文必选参数，指定从接口。
+
+-J <mac>                Rewrite dest MAC on secondary interface
+
+    可选参数，重写从网卡发送出报文的目的MAC地址。
+
+-k <mac>                Rewrite source MAC on primary interface
+
+    可选参数，重写主网卡发送报文的源MAC地址。
+
+-K <mac>                Rewrite source MAC on secondary interface
+
+    可选参数，重写从网卡发送报文的源MAC地址。
+
+-l <loop>               Specify number of times to loop
+
+    可选参数，指定循环的次数，测试过程发现不是那么好用，有待确认。
+
+-L <limit>              Specify the maximum number of packets to send
+
+    可选参数，指定最大的发包数量。可以在确认连接的调试时使用。
+
+-m <multiple>           Set replay speed to given multiple
+
+    可选参数，指定一个倍数值，就是必默认发送速率要快多少倍的速率发送报文。加大发送的速率后，对于DUT可能意味着有更多的并发连接和连接数，特别是对于BT报文的重放，因为连接的超时是固定的，如果速率增大的话，留在session表中的连接数量增大，还可以通过修改连接的超时时间来达到该目的。
+
+-M                      Disable sending martian IP packets
+
+    可选参数，表示不发送“火星”的ip报文，man文件中的定义是0/8、172/8、255/8。
+
+-n                      Not nosy mode (not promisc in sniff/bridge mode)
+
+    可选参数，在使用-S参数，不对混杂模式进行侦听。没有测试过。
+
+-N <CIDR1:CIDR2,...>    Rewrite IP's via pseudo-NAT
+
+    可选参数，通过伪造的NAT，重写IP地址。这个参数应该有很重要的应用，目前没有测试使用。
+
+-O                      One output mode
+
+    可选参数，没有测试使用
+
+-p <packetrate>         Set replay speed to given rate (packets/sec)
+
+    可选参数，指定每秒发送报文的个数，指定该参数，其它速率相关的参数被忽略，最后的打印信息不会有速率和每秒发送报文的统计。
+
+-P                      Print PID
+
+    可选参数，表示在输出信息中打印PID的信息，用于单用户或单帐户模式下暂停和重启程序。
+
+-r <rate>               Set replay speed to given rate (Mbps)
+
+    可选参数，指定发送的速率。目前-m/-r/-p这3个参数的相互关系还需要确认。
+
+-R                      Set replay speed to as fast as possible
+
+    可选参数，让报文线速发送。
+
+-s <seed>               Randomize src/dst IP addresses w/ given seed
+
+    可选参数，
+
+-S <snaplen>            Sniff interface(s) and set the snaplen length
+
+    可选参数，
+
+-t <mtu>                Override MTU (defaults to 1500)
+
+    可选参数，指定MTU，标准的10/100M网卡的默认值是1500。
+
+-T                      Truncate packets > MTU so they can be sent
+
+    可选参数，截去报文中MTU大于标准值的部分再发送出去，默认是不发送，skip掉。目前还有疑问，为什么会产生MTU大于1500字节的包，在BT报文中，这种包比较常见。
+
+-u pad|trunc            Pad/Truncate packets which are larger than the snaplen
+
+    可选参数，后面的参数值二选一，snaplen是指保留数据包的长度，这里的trunc参数值和MTU没有任何关系，不要混淆。
+
+-v                      Verbose: print packet decodes for each packet sent
+
+    可选参数，没发送一个报文都以tcpdump的风格打印出对应的信息。
+
+-V                      Version
+
+    查看版本号。
+
+-w <file>               Write (primary) packets or data to file
+
+    可选参数，将主网卡发送的报文写入一个文件中，参数后紧跟文件名。
+
+-W <file>               Write secondary packets or data to file
+
+    可选参数，将从网卡发送的报文写入一个文件中，参数后紧跟文件名。
+
+-x <match>              Only send the packets specified
+
+    可选参数，发送匹配参数值的报文，这里各个参数具体的含义和tcpprep中的一样，
+
+S:<CIDR1>,... - Src IP must match specified CIDR(s)
+
+    在CIDR模式下必须匹配源IP，格式：-xS:100.1.1.0/24,10.10.10.0/26。多个用逗号隔开，参数个数没有试过，3个没有问题。
+
+D:<CIDR1>,... - Dst IP must match specified CIDR(s)
+
+在CIDR模式下必须匹配目的IP，格式同上。
+
+B:<CIDR1>,... - Both src and dst addresses must match
+
+必须同时匹配源和目的IP，格式同上。
+
+E:<CIDR1>,... - Either src or dst address must match
+
+匹配源或目的IP，格式同上。
+
+P:<list>  - Must be one of the listed packets where the list corresponds  to  the  packet number in the capture file. 
+
+Ex: -xP:1-5,9,15 would only send packets 1 through 5, 9 and 15.
+
+根据参数后的参数值（报文编号）发送指定的报文。可以在ethereal中确认报文的编号，然后把需要的报文发送。可以用于排除ARP报文。
+
+F:"<filter>"  - BPF filter.  See the  tcpdump(8)  man  page  for syntax.
+
+未知，以后补充。
+
+-X <match>              Send all the packets except those specified
+
+    可选参数，-x的参数内容取反。参数内容一样。
+
+-1                      Send one packet per key press
+
+    可选参数，参数内容就是阿拉伯数字1，这个参数对于确定连接的建立，相当好用，根据按回车键发送报文，可以将报文一个一个发送，来判断连接的状态。也可以用于故障定位。
+
+-2 <datafile>           Layer 2 data
+
+    可选参数，在2层加入数据。
+
+-4 <PORT1:PORT2,...>    Rewrite port numbers
+
+    可选参数，重写端口号，对于测试特殊端口的应用比较实用。
+
+<file1> <file2> ...     File list to replay
+
+    可选参数，没有实验过。
+配置实例
+
+1、  重放在客户端ftp连接的报文
+
+a、  在客户端使用ethereal抓包，存为ftp.pcap文件
+
+b、  将ftp.pcap文件进行tcpprep操作，制作cache文件。
+
+[root@A ~]# tcpprep -an client -i ftp.pcap -o ftp.cache –v
+
+c、  将DUT设备的两个接口和PC的两个接口使用网线连接，使用tcpreplay重放报文。注意防火墙的配置为网桥（透明）模式。
+
+[root@A ~]# tcpreplay -c ftp.cache -i eth0 -j eth1 ftp.pcap  -R –v
+
+-R参数表示全速发送，-v显示打印信息。
+
+2、  重放在客户端BT连接的报文
+
+a、  在实验室BT下载一些台湾的娱乐节目和热门的大片，使用ethereal抓包，存为bt.pcap文件。注意pcap文件大小的控制，对pc的内存要求比较高，我保存了一个600多M的pcap文件用了40多分钟，大家有需要可以直接从实验室copy。
+
+b、  将bt.pcap文件进行tcpprep操作，制作cache文件。
+
+[root@A ~]# tcpprep -an client -i bt.pcap -o bt.cache -C "100M BT Packet" –v
+
+    制作cache文件，在cache文件中写入“100M BT Packet”的注释。
+
+c、  使用tcpreplay重放报文。
+
+[root@A ~]# tcpreplay -c bt.cache -i eth0 -j eth1 bt.pcap -v –R
+
+3、  重放tftp服务器上抓到的报文
+
+a、  在tftp服务器上使用ethereal抓包，存为tftp.pcap文件。
+
+b、  将pcap文件进行tcpprep的操作，制作cache文件。
+
+[root@A ~]# tcpprep -an server -i tftp.pcap -o tftp.cache –v
+
+注意：我在测试的时候犯了一个错误，使用DUT的tftp升级来做实验，同时穿过DUT重放报文，结果在网卡发送报文的后，DUT的mac地址做了的回应，导致交互过程没有穿过DUT，这个问题比较搞笑，上午弄了半天才发现原因，开始还以为udp的连接不能重放。
+
+c、  使用tcpreplay重放报文。
+
+
+[root@A ~]# tcpreplay -c tftp.cache -i eth0 -j eth1 tftp.pcap –v
+NAME
+       tcpreplay - Replay network traffic stored in pcap files
+
+SYNOPSIS
+       tcpreplay [-flag [value]]... [--opt-name [[=| ]value]]...
+	       <pcap_file(s)>
+
+       tcpreplay  is  a  tool  for replaying network traffic from files saved with tcpdump or other tools which write pcap(3)
+       files.
+
+DESCRIPTION
+       This manual page briefly documents the tcpreplay command.  The basic operation of tcpreplay is to resend  all  packets
+       from  the input file(s) at the speed at which they were recorded, or a specified data rate, up to as fast as the hard‐
+       ware is capable.
+
+       Optionally, the traffic can be split between two interfaces, written to files, filtered and edited  in  various	ways,
+       providing the means to test firewalls, NIDS and other network devices.
+
+       For more details, please see the Tcpreplay Manual at: http://tcpreplay.synfin.net/trac/wiki/manual
+
+OPTIONS
+       -d number, --dbug=number
+	      Enable  debugging  output.   This  option may appear up to 1 times.  This option takes an integer number as its
+	      argument.  The value of number is constrained to being:
+		  in the range	0 through 5
+	      The default number for this option is:
+		   0
+
+	      If configured with --enable-debug, then you can specify a verbosity level for debugging output.  Higher numbers
+	      increase verbosity.
+
+       -q, --quiet
+	      Quiet mode.
+
+	      Print nothing except the statistics at the end of the run
+
+       -T string, --timer=string
+	      Select packet timing mode: select, ioport, rdtsc, gtod, nano, abstime.  This option may appear up to 1 times.
+	      The default string for this option is:
+		   gtod
+
+	      Allows you to select the packet timing method to use:
+
+	      nano - Use nanosleep() API
+
+	      select - Use select() API
+
+	      ioport - Write to the i386 IO Port 0x80
+
+	      rdtsc - Use the x86/x86_64/PPC RDTSC
+
+	      gtod [default] - Use a gettimeofday() loop
+
+	      abstime - Use OS X's AbsoluteTime API
+
+
+       --sleep-accel=number
+	      Reduce the amount of time to sleep by specified usec.  This option takes an integer number as its argument.
+	      The default number for this option is:
+		   0
+
+	      Reduce the amount of time we would normally sleep between two packets by the specified number of usec.  This
+	      provides a "fuzz factor" to compensate for running on a non-RTOS and other processes using CPU time.  Default
+	      is disabled.
+
+       --rdtsc-clicks=number
+	      Specify the RDTSC clicks/usec.  This option may appear up to 1 times.  This option takes an integer number as
+	      its argument.  The default number for this option is:
+		   0
+
+	      Override the calculated number of RDTSC clicks/usec which is often the speed of the CPU in Mhz.  Only useful if
+	      you specified --timer=rdtsc
+
+       -v, --verbose
+	      Print decoded packets via tcpdump to STDOUT.  This option may appear up to 1 times.
+
+
+
+       -A string, --decode=string
+	      Arguments passed to tcpdump decoder.  This option may appear up to 1 times.  This option must appear in combi‐
+	      nation with the following options: verbose.
+
+	      When enabling verbose mode (-v) you may also specify one or more additional  arguments to pass to tcpdump to
+	      modify the way packets are decoded.  By default, -n and -l are used.   Be  sure  to quote the arguments like:
+	      -A "-axxx" so that they are not interpreted by tcpreplay.   Please see the tcpdump(1) man page for a complete
+	      list of options.
+
+       -K, --enable-file-cache
+	      Enable caching of packets to internal memory.  This option must appear in combination with the following
+	      options: loop.
+
+	      Cache pcap file(s) the first time they are cached in RAM so that subsequent loops don't incurr any disk I/O
+	      latency in order to increase performance.  Make sure you have enough free RAM to store the entire pcap file(s)
+	      in memory or the system will swap and performance will suffer.
+
+       --preload-pcap
+	      Preloads packets into RAM before sending.
+
+	      This option loads the specified pcap(s) into RAM before starting to send in order to improve replay performance
+	      while introducing a startup performance hit.  Preloading can be used with or without --loop and implies
+	      --enable-file-cache.
+
+       -c string, --cachefile=string
+	      Split traffic via a tcpprep cache file.  This option may appear up to 1 times.
+
+
+
+       -i string, --intf1=string
+	      Server/primary traffic output interface.	This option may appear up to 1 times.
+
+
+
+       -I string, --intf2=string
+	      Client/secondary traffic output interface.  This option may appear up to 1 times.  This option must appear in
+	      combination with the following options: cachefile.
+
+
+
+       --listnics
+	      List available network interfaces and exit.
+
+
+
+       -l number, --loop=number
+	      Loop through the capture file X times.  This option may appear up to 1 times.  This option takes an integer
+	      number as its argument.  The value of number is constrained to being:
+		  greater than or equal to 0
+	      The default number for this option is:
+		   1
+
+
+
+       --pktlen
+	      Override the snaplen and use the actual packet len.  This option may appear up to 1 times.
+
+	      By default, tcpreplay will send packets based on the size of the "snaplen" stored in the pcap file which is
+	      usually the correct thing to do.	However, occasionally, tools will store more bytes then told to.  By specify‐
+	      ing this option, tcpreplay will ignore the snaplen field and instead try to send packets based on the original
+	      packet length.  Bad things may happen if you specify this option.
+
+       -L number, --limit=number
+	      Limit the number of packets to send.  This option may appear up to 1 times.  This option takes an integer num‐
+	      ber as its argument.  The value of number is constrained to being:
+		  greater than or equal to 1
+	      The default number for this option is:
+		   -1
+
+	      By default, tcpreplay will send all the packets.	Alternatively, you can specify a maximum number of packets to
+	      send.
+
+       -x string, --multiplier=string
+	      Modify replay speed to a given multiple.	This option may appear up to 1 times.  This option must not appear in
+	      combination with any of the following options: pps, mbps, oneatatime, topspeed.
+
+	      Specify a floating point value to modify the packet replay speed.  Examples:
+		      2.0 will replay traffic at twice the speed captured
+		      0.7 will replay traffic at 70% the speed captured
+
+       -p number, --pps=number
+	      Replay packets at a given packets/sec.  This option may appear up to 1 times.  This option must not appear in
+	      combination with any of the following options: multiplier, mbps, oneatatime, topspeed.  This option takes an
+	      integer number as its argument.
+
+
+
+       -M string, --mbps=string
+	      Replay packets at a given Mbps.  This option may appear up to 1 times.  This option must not appear in combina‐
+	      tion with any of the following options: multiplier, pps, oneatatime, topspeed.
+
+	      Specify a floating point value for the Mbps rate that tcpreplay should send packets at.
+
+       -t, --topspeed
+	      Replay packets as fast as possible.  This option must not appear in combination with any of the following
+	      options: mbps, multiplier, pps, oneatatime.
+
+
+
+       -o, --oneatatime
+	      Replay one packet at a time for each user input.	This option must not appear in combination with any of the
+	      following options: mbps, pps, multiplier, topspeed.
+
+	      Allows you to step through one or more packets at a time.
+
+       --pps-multi=number
+	      Number of packets to send for each time interval.  This option must appear in combination with the following
+	      options: pps.  This option takes an integer number as its argument.  The value of number is constrained to
+	      being:
+		  greater than or equal to 1
+	      The default number for this option is:
+		   1
+
+	      When trying to send packets at very high rates, the time between each packet can be so short that it is impos‐
+	      sible to accurately sleep for the required period of time.  This option allows you to send multiple packets at
+	      a time, thus allowing for longer sleep times which can be more accurately implemented.
+
+       -P, --pid
+	      Print the PID of tcpreplay at startup.
+
+
+
+       --stats=number
+	      Print statistics every X seconds.  This option takes an integer number as its argument.  The value of number is
+	      constrained to being:
+		  greater than or equal to 1
+
+	      Note that this is very much a "best effort" and long delays between sending packets may cause equally long
+	      delays between printing statistics.
+
+       -V, --version
+	      Print version information.
+
+
+
+       -h, --less-help
+	      Display less usage information and exit.
+
+
+
+       -H, --help
+	      Display usage information and exit.
+
+       -!, --more-help
+	      Extended usage information passed thru pager.
+
+       - [rcfile], --save-opts[=rcfile]
+	      Save the option state to rcfile.	The default is the last configuration file listed in the OPTION PRESETS sec‐
+	      tion, below.
+
+       - rcfile, --load-opts=rcfile, --no-load-opts
+	      Load options from rcfile.  The no-load-opts form will disable the loading of earlier RC/INI files.  --no-load-
+	      opts is handled early, out of order.
+
+OPTION PRESETS
+       Any option that is not marked as not presettable may be preset by loading values from configuration ("RC" or ".INI")
+       file(s).  The homerc file is "$$/", unless that is a directory.	In that case, the file ".tcpreplayrc" is searched for
+       within that directory.
+
+SIGNALS
+       tcpreplay understands the following signals:
+
+       SIGUSR1 Suspend tcpreplay
+
+       SIGCONT Restart tcpreplay
