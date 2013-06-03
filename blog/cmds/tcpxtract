@@ -1,1 +1,11 @@
 tcpxtract - extracts files from network traffic based on file signatures
+
+
+Usage: tcpxtract [OPTIONS] [[-d <DEVICE>] [-f <FILE>]]
+Valid options include:
+  --file, -f <FILE>         to specify an input capture file instead of a device
+  --device, -d <DEVICE>     to specify an input device (i.e. eth0)
+  --config, -c <FILE>       use FILE as the config file
+  --output, -o <DIRECTORY>  dump files to DIRECTORY instead of current directory
+  --version, -v             display the version number of this program
+  --help, -h                display this lovely screen

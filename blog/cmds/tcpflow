@@ -1,0 +1,330 @@
+tcpflow 类tcpdump的抓包分析工具
+
+tcpflow是一个用户来抓取TCP数据流的程序。它会将抓到的数据按照适合数据分析员分析的格式保存起来。tcpflow可以解析TCP包的顺序标记，可以将传输的数据按照正确的顺序重新构建，不论传输过程中的错误，重传，乱序等等问题。每个数据流都是用单独的文件来保存。tcpflow是一款可移植的程序，使用LBL包抓取库和GNU autoconf。它可以在大部分UNIX平台下工作，并且能解析多种网络接口，例如ethernet，PPP，loopback等。
+
+
+利用tcpflow提取SQL查询操作
+http://mysqldump.azundris.com/uploads/extract_queries.c
+
+NAME
+       tcpflow - TCP flow recorder
+
+SYNOPSIS
+       tcpflow [-BcCehPpsv] [-b max_bytes] [-d debug_level] [-f max_fds] [-i iface] [-r file1.pcap] [-R file0.pcap] [-m min‐
+       skip] [-X file.xml] [-F[outputformat]] [-T[filenameetemplate]] [expression]
+
+DESCRIPTION
+       tcpflow is a program that captures data transmitted as part of TCP connections (flows), and stores the data in a way
+       that is convenient for protocol analysis or debugging.  A program like tcpdump(4) shows a summary of packets seen on
+       the wire, but usually doesn't store the data that's actually being transmitted.  In contrast, tcpflow reconstructs the
+       actual data streams and stores each flow in a separate file for later analysis.  tcpflow understands TCP sequence num‐
+       bers and will correctly reconstruct data streams regardless of retransmissions or out-of-order delivery.
+
+       tcpflow stores all captured data in files that have names of the form
+            192.168.101.102.02345-010.011.012.013.45103
+       where the contents of the above file would be data transmitted from host 192.168.101.102 port 2345, to host
+       10.11.12.13 port 45103.
+
+OPTIONS
+       -B     Force binary output even when printing to console with -C or -c.
+
+       -b     Max bytes per flow.  Capture no more than max_bytes bytes per flow.  Any data captured for a flow beyond
+              max_bytes from the first byte captured will be discarded.  The default is to store an unlimited number of bytes
+              per flow.
+
+       -c     Console print.  Print the contents of packets to stdout as they are received, without storing any captured data
+              to files (implies
+
+       -C     Console print without the packet source and destination details being printed.  Print the contents of packets
+              to stdout as they are received, without storing any captured data to files (implies -e When outputting to the
+              console each flow will be output in different colors (blue for client to server flows, red for server to client
+              flows, green for undecided flows).  -s ).
+
+       -d     Debug level.  Set the level of debugging messages printed to stderr to debug_level.  Higher numbers produce
+              more messages.  -d 0 causes completely silent operation.  -d 1 , the default, produces minimal status messages.
+              -d 10 produces verbose output equivalent to -v .  Numbers higher than 10 can produce a large amount of debug‐
+              ging information useful only to developers.
+
+       -F[format]
+              Specifies format for output filenames. Format specifiers: t prepends each filename with a Unix timestamp.  T
+              prepends each filename with an ISO-8601 timestamp.  c appends each filename with a connection counter.
+
+       -FM    Include MD5 of each flow in the DFXML output.
+
+       -FX    Suppresses file output entirely (DFXML file is still produced).
+
+       -T[format]
+              Specifies an arbitrary template for filenames.  %A expands to source IP address.  %a expands to source IP port.
+              %B expands to destination IP address.  %a expands to destination IP port.  %T expands to timestamp in ISO8601
+              format.  %t expands to timestamp in Unix time_t format.  %V expands to "--" if a VLAN is present.  %v expands
+              to the VLAN number if a VLAN is present.  %C expands to "c" if the connection count>0.  %c expands to the con‐
+              nection count if the connection count>0.  %# always expands to the connection count.  %% prints a "%".
+
+       -AH    Perform HTTP post-processing ("After" processing). If the output file is
+                   208.111.153.175.00080-192.168.001.064.37314,
+              Then the post-processing will create the files:
+                   208.111.153.175.00080-192.168.001.064.37314-HTTP
+                   208.111.153.175.00080-192.168.001.064.37314-HTTPBODY
+              If the HTTPBODY was compressed with GZIP, you may get a third file as well:
+                   208.111.153.175.00080-192.168.001.064.37314-HTTPBODY-GZIP
+              Additional information about these streams, such as their MD5 hash value, is also written to the DFXML file
+
+       -fmax_fds
+              Max file descriptors used.  Limit the number of file descriptors used by tcpflow to max_fds.  Higher numbers
+              use more system resources, but usually perform better.  If the underlying operating system supports the setr‐
+              limit() system call, the OS will be asked to enforce the requested limit.  The default is for tcpflow to use
+              the maximum number of file descriptors allowed by the OS.  The -v option will report how many file descriptors
+              tcpflow is using.
+
+       -h     Help.  Print usage information and exit.
+
+       -i     Interface name.  Capture packets from the network interface named iface.  If no interface is specified with -i
+              , a reasonable default will be used by libpcap automatically.
+
+       -m min_size
+              Forces a new connection output file when there is a skip in the TCP session of min_size bytes or more.
+
+       -P     No purge. Normally tcpflow removes connections from the hash table after the connection is closed with a FIN.
+              This conserves memory but takes additional CPU time. Selecting this option causes the std::tr1:unordered_map to
+              grow without bounds, as tcpflow did prior to version 1.1. That makes tcpflow run faster if there are less than
+              10 million connections, but can lead to out-of-memory errors.
+
+       -p     No promiscuous mode.  Normally, tcpflow attempts to put the network interface into promiscuous mode before cap‐
+              turing packets.  The -p option tells tcpflow not to put the interface into promiscuous mode.  Note that it
+              might already be in promiscuous mode for some other reason.
+
+       -r     Read from file.  Read packets from file, which was created using the -w option of tcpdump(1).  This option may
+              be repeated any number of times as of tcpflow version 1.2.7.  Standard input is used if file is ``-''.  Note
+              that for this option to be useful, tcpdump's -s option should be used to set the snaplen to the MTU of the
+              interface (e.g., 1500) while capturing packets.
+
+       -R     Read from a file, but only to complete TCP flows. This option is used when tcpflow is used to process a series
+              of files that are captured over time.  For each time period n, file filen.pcap should be processed with
+              -rfilen.pcap, while file(n-1).pcap should be processed with -Rfile(n-1).pcap.
+
+       -s     Strip non-printables.  Convert all non-printable characters to the "." character before printing packets to the
+              console or storing them to a file.
+
+       -v     Verbose operation.  Verbosely describe tcpflow's operation.  Equivalent to -d 10 .
+
+FILTERING EXPRESSIONS
+       The expression specified on the command-line specifies which packets should be captured.  Because tcpflow uses the the
+       libpcap library, tcpflow has the same powerful filtering language available as programs such as tcpdump(1).
+
+       The following part of the man page is excerpted from the tcpdump man page.
+
+       expression selects which packets will be dumped.  If no expression is given, all packets on the net will be dumped.
+       Otherwise, only packets for which expression is `true' will be dumped.
+
+       The expression consists of one or more primitives.  Primitives usually consist of an id (name or number) preceded by
+       one or more qualifiers.  There are three different kinds of qualifier:
+
+       type   qualifiers say what kind of thing the id name or number refers to.  Possible types are host, net and port.
+              E.g., `host foo', `net 128.3', `port 20'.  If there is no type qualifier, host is assumed.
+
+       dir    qualifiers specify a particular transfer direction to and/or from id.  Possible directions are src, dst, src or
+              dst and src and dst.  E.g., `src foo', `dst net 128.3', `src or dst port ftp-data'.  If there is no dir quali‐
+              fier, src or dst is assumed.  For `null' link layers (i.e. point to point protocols such as slip) the inbound
+              and outbound qualifiers can be used to specify a desired direction.
+
+       proto  qualifiers restrict the match to a particular protocol.  Possible protos are: ether, fddi, ip, arp, rarp, dec‐
+              net, lat, sca, moprc, mopdl, tcp and udp.  E.g., `ether src foo', `arp net 128.3', `tcp port 21'.  If there is
+              no proto qualifier, all protocols consistent with the type are assumed.  E.g., `src foo' means `(ip or arp or
+              rarp) src foo' (except the latter is not legal syntax), `net bar' means `(ip or arp or rarp) net bar' and `port
+              53' means `(tcp or udp) port 53'.
+
+       [`fddi' is actually an alias for `ether'; the parser treats them identically as meaning ``the data link level used on
+       the specified network interface.''  FDDI headers contain Ethernet-like source and destination addresses, and often
+       contain Ethernet-like packet types, so you can filter on these FDDI fields just as with the analogous Ethernet fields.
+       FDDI headers also contain other fields, but you cannot name them explicitly in a filter expression.]
+
+       In addition to the above, there are some special `primitive' keywords that don't follow the pattern: gateway, broad‐
+       cast, less, greater and arithmetic expressions.  All of these are described below.
+
+       More complex filter expressions are built up by using the words and, or and not to combine primitives.  E.g., `host
+       foo and not port ftp and not port ftp-data'.  To save typing, identical qualifier lists can be omitted.  E.g., `tcp
+       dst port ftp or ftp-data or domain' is exactly the same as `tcp dst port ftp or tcp dst port ftp-data or tcp dst port
+       domain'.
+
+       Allowable primitives are:
+
+       dst host host
+              True if the IP destination field of the packet is host, which may be either an address or a name.
+
+       src host host
+              True if the IP source field of the packet is host.
+
+       host host
+              True if either the IP source or destination of the packet is host.  Any of the above host expressions can be
+              prepended with the keywords, ip, arp, or rarp as in:
+                   ip host host
+              which is equivalent to:
+                   ether proto \ip and host host
+              If host is a name with multiple IP addresses, each address will be checked for a match.
+
+       ether dst ehost
+              True if the ethernet destination address is ehost.  Ehost may be either a name from /etc/ethers or a number
+              (see ethers(3N) for numeric format).
+
+       ether src ehost
+              True if the ethernet source address is ehost.
+
+       ether host ehost
+              True if either the ethernet source or destination address is ehost.
+
+       gateway host
+              True if the packet used host as a gateway.  I.e., the ethernet source or destination address was host but nei‐
+              ther the IP source nor the IP destination was host.  Host must be a name and must be found in both /etc/hosts
+              and /etc/ethers.  (An equivalent expression is
+                   ether host ehost and not host host
+              which can be used with either names or numbers for host / ehost.)
+
+       dst net net
+              True if the IP destination address of the packet has a network number of net. Net may be either a name from
+              /etc/networks or a network number (see networks(5) for details).
+
+       src net net
+              True if the IP source address of the packet has a network number of net.
+
+       net net
+              True if either the IP source or destination address of the packet has a network number of net.
+
+       net net mask mask
+              True if the IP address matches net with the specific netmask.  May be qualified with src or dst.
+
+       net net/len
+              True if the IP address matches net a netmask len bits wide.  May be qualified with src or dst.
+
+       dst port port
+              True if the packet is ip/tcp or ip/udp and has a destination port value of port.  The port can be a number or a
+              name used in /etc/services (see tcp(4P) and udp(4P)).  If a name is used, both the port number and protocol are
+              checked.  If a number or ambiguous name is used, only the port number is checked (e.g., dst port 513 will print
+              both tcp/login traffic and udp/who traffic, and port domain will print both tcp/domain and udp/domain traffic).
+
+       src port port
+              True if the packet has a source port value of port.
+
+       port port
+              True if either the source or destination port of the packet is port.  Any of the above port expressions can be
+              prepended with the keywords, tcp or udp, as in:
+                   tcp src port port
+              which matches only tcp packets whose source port is port.
+
+       less length
+              True if the packet has a length less than or equal to length.  This is equivalent to:
+                   len <= length.
+
+       greater length
+              True if the packet has a length greater than or equal to length.  This is equivalent to:
+                   len >= length.
+
+       ip proto protocol
+              True if the packet is an ip packet (see ip(4P)) of protocol type protocol.  Protocol can be a number or one of
+              the names icmp, igrp, udp, nd, or tcp.  Note that the identifiers tcp, udp, and icmp are also keywords and must
+              be escaped via backslash (\), which is \\ in the C-shell.
+
+       ether broadcast
+              True if the packet is an ethernet broadcast packet.  The ether keyword is optional.
+
+       ip broadcast
+              True if the packet is an IP broadcast packet.  It checks for both the all-zeroes and all-ones broadcast conven‐
+              tions, and looks up the local subnet mask.
+
+       ether multicast
+              True if the packet is an ethernet multicast packet.  The ether keyword is optional.  This is shorthand for
+              `ether[0] & 1 != 0'.
+
+       ip multicast
+              True if the packet is an IP multicast packet.
+
+       ether proto protocol
+              True if the packet is of ether type protocol.  Protocol can be a number or a name like ip, arp, or rarp.  Note
+              these identifiers are also keywords and must be escaped via backslash (\).  [In the case of FDDI (e.g., `fddi
+              protocol arp'), the protocol identification comes from the 802.2 Logical Link Control (LLC) header, which is
+              usually layered on top of the FDDI header.  Tcpdump assumes, when filtering on the protocol identifier, that
+              all FDDI packets include an LLC header, and that the LLC header is in so-called SNAP format.]
+
+       decnet src host
+              True if the DECNET source address is host, which may be an address of the form ``10.123'', or a DECNET host
+              name.  [DECNET host name support is only available on Ultrix systems that are configured to run DECNET.]
+
+       decnet dst host
+              True if the DECNET destination address is host.
+
+       decnet host host
+              True if either the DECNET source or destination address is host.
+
+       ip, arp, rarp, decnet
+              Abbreviations for:
+                   ether proto p
+              where p is one of the above protocols.
+
+       lat, moprc, mopdl
+              Abbreviations for:
+                   ether proto p
+              where p is one of the above protocols.  Note that tcpdump does not currently know how to parse these protocols.
+
+       tcp, udp, icmp
+              Abbreviations for:
+                   ip proto p
+              where p is one of the above protocols.
+
+       expr relop expr
+              True if the relation holds, where relop is one of >, <, >=, <=, =, !=, and expr is an arithmetic expression
+              composed of integer constants (expressed in standard C syntax), the normal binary operators [+, -, *, /, &, |],
+              a length operator, and special packet data accessors.  To access data inside the packet, use the following syn‐
+              tax:
+                   proto [ expr : size ]
+              Proto is one of ether, fddi, ip, arp, rarp, tcp, udp, or icmp, and indicates the protocol layer for the index
+              operation.  The byte offset, relative to the indicated protocol layer, is given by expr.  Size is optional and
+              indicates the number of bytes in the field of interest; it can be either one, two, or four, and defaults to
+              one.  The length operator, indicated by the keyword len, gives the length of the packet.
+
+              For example, `ether[0] & 1 != 0' catches all multicast traffic.  The expression `ip[0] & 0xf != 5' catches all
+              IP packets with options. The expression `ip[6:2] & 0x1fff = 0' catches only unfragmented datagrams and frag
+              zero of fragmented datagrams.  This check is implicitly applied to the tcp and udp index operations.  For
+              instance, tcp[0] always means the first byte of the TCP header, and never means the first byte of an interven‐
+              ing fragment.
+
+       Primitives may be combined using:
+
+              A parenthesized group of primitives and operators (parentheses are special to the Shell and must be escaped).
+
+              Negation (`!' or `not').
+
+              Concatenation (`&&' or `and').
+
+              Alternation (`||' or `or').
+
+       Negation has highest precedence.  Alternation and concatenation have equal precedence and associate left to right.
+       Note that explicit and tokens, not juxtaposition, are now required for concatenation.
+
+       If an identifier is given without a keyword, the most recent keyword is assumed.  For example,
+            not host vs and ace
+       is short for
+            not host vs and host ace
+       which should not be confused with
+            not ( host vs or ace )
+
+       Expression arguments can be passed to tcpdump as either a single argument or as multiple arguments, whichever is more
+       convenient.  Generally, if the expression contains Shell metacharacters, it is easier to pass it as a single, quoted
+       argument.  Multiple arguments are concatenated with spaces before being parsed.
+
+EXAMPLES
+       The following part of the man page is excerpted from the tcpdump man page.
+
+       To record all packets arriving at or departing from sundown:
+              tcpflow host sundown
+
+       To record traffic between helios and either hot or ace:
+              tcpflow host helios and \( hot or ace \)
+
+       To record traffic between ace and any host except helios:
+              tcpflow host ace and not helios
+
+       To record all traffic between local hosts and hosts at Berkeley:
+              tcpflow net ucb-ether
+
+       To record all ftp traffic through internet gateway snup: (note that the expression is quoted to prevent the shell from
+       (mis-)interpreting the parentheses):
+              tcpflow 'gateway snup and (port ftp or ftp-data)'

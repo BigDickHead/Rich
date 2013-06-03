@@ -1,0 +1,27 @@
+tcpnice能够通过在添加活动的流量，降低指定的LAN上的TCP连接的速度
+
+tcpnice [-I] [-i interface] [-n increment] expression   这里的-n后面可以跟1-20，代表降低的速度，1为原速，20为最低
+
+
+tcpnice - slow down TCP connections on a LAN
+
+SYNOPSIS
+       tcpnice [-A] [-I] [-M] [-i interface] expression
+
+DESCRIPTION
+       tcpnice slows down specified TCP connections on a LAN via "active" traffic shaping.
+
+OPTIONS
+       -A     Inject TCP tiny window advertisements.
+
+       -I     Inject ICMP source quench replies.
+
+       -M     Inject ICMP fragmentation-needed replies with tiny next-hop MTUs.
+
+       -i interface
+              Specify the interface to listen on.
+
+       expression
+              Specify a tcpdump(8) filter expression to select the connections to slow down.
+
+       If no attack type is given, all attacks will be enabled.

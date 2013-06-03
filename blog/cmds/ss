@@ -1,0 +1,111 @@
+USAGE EXAMPLES
+       ss -t -a
+              Display all TCP sockets.
+
+       ss -u -a
+              Display all UDP sockets.
+
+       ss -o state established '( dport = :ssh or sport = :ssh )'
+              Display all established ssh connections.
+
+       ss -x src /tmp/.X11-unix/*
+              Find all local processes connected to X server.
+
+       ss -o state fin-wait-1 '( sport = :http or sport = :https )' dst 193.233.7/24
+              List all the tcp sockets in state FIN-WAIT-1 for our apache to network 193.233.7/24 and look at their timers.
+
+
+NAME
+       ss - another utility to investigate sockets
+
+SYNOPSIS
+       ss [options] [ FILTER ]
+
+DESCRIPTION
+       ss  is  used to dump socket statistics. It allows showing information similar to netstat.  It can display more TCP and
+       state informations than other tools.
+
+
+OPTIONS
+       These programs follow the usual GNU command line syntax, with long options starting with two dashes (`-').  A  summary
+       of options is included below.
+
+       -h, --help
+              Show summary of options.
+
+       -V, --version
+              Output version information.
+
+       -n, --numeric
+              Do now try to resolve service names.
+
+       -r, --resolve
+              Try to resolve numeric address/ports.
+
+       -a, --all
+              Display all sockets.
+
+       -l, --listening
+              Display listening sockets.
+
+       -o, --options
+              Show timer information.
+
+       -e, --extended
+              Show detailed socket information
+
+       -m, --memory
+              Show socket memory usage.
+
+       -p, --processes
+              Show process using socket.
+
+       -i, --info
+              Show internal TCP information.
+
+       -s, --summary
+              Print summary statistics. This option does not parse socket lists obtaining summary from various sources. It is
+              useful when amount of sockets is so huge that parsing /proc/net/tcp is painful.
+
+       -4, --ipv4
+              Display only IP version 4 sockets (alias for -f inet).
+
+       -6, --ipv6
+              Display only IP version 6 sockets (alias for -f inet6).
+
+       -0, --packet
+              Display PACKET sockets.
+
+       -t, --tcp
+              Display only TCP sockets.
+
+       -u, --udp
+              Display only UDP sockets.
+
+       -d, --dccp
+              Display only DCCP sockets.
+
+       -w, --raw
+              Display only RAW sockets.
+
+       -x, --unix
+              Display only Unix domain sockets.
+
+       -f FAMILY, --family=FAMILY
+              Display sockets of type FAMILY.  Currently the following families  are  supported:  unix,  inet,  inet6,  link,
+              netlink.
+
+       -A QUERY, --query=QUERY
+              List  of  socket tables to dump, separated by commas. The following identifiers are understood: all, inet, tcp,
+              udp, raw, unix, packet, netlink, unix_dgram, unix_stream, packet_raw, packet_dgram.
+
+       -D FILE
+              Do not display anything, just dump raw information about TCP sockets to FILE after applying filters. If FILE is
+              - stdout is used.
+
+       -F FILE, --filter=FILE
+              Read  filter  information from FILE.  Each line of FILE is interpreted like single command line option. If FILE
+              is - stdin is used.
+
+       FILTER := [ state TCP-STATE ] [ EXPRESSION ]
+              Please take a look at the official documentation (Debian package iproute-doc) for details regarding filters.

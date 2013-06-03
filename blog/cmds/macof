@@ -1,0 +1,35 @@
+macof 用来进行MAC flooding，可以用来使交换机的MAC表溢出，对于以后收到的数据包以广播方式发送。注意：在进行MAC泛洪之前就存在于交换机MAC表中的条目不会被覆盖，只能等到这些条目自然老化
+
+macof [-i interface] [-s src] [-d dst] [-e tha] [-x sport] [-y dport] [-n times]
+
+NAME
+       macof - flood a switched LAN with random MAC addresses
+
+SYNOPSIS
+       macof [-i interface] [-s src] [-d dst] [-e tha] [-x sport] [-y dport] [-n times]
+
+DESCRIPTION
+       macof floods the local network with random MAC addresses (causing some switches to fail open in repeating mode, facil‐
+       itating	sniffing).  A  straight  C  port  of  the   original   Perl   Net::RawIP   macof   program   by   Ian	Vitek
+       <ian.vitek@infosec.se>.
+
+OPTIONS
+       -i interface
+	      Specify the interface to send on.
+
+       -s src Specify source IP address.
+
+       -d dst Specify destination IP address.
+
+       -e tha Specify target hardware address.
+
+       -x sport
+	      Specify TCP source port.
+
+       -y dport
+	      Specify TCP destination port.
+
+       -n times
+	      Specify the number of packets to send.
+
+       Values for any options left unspecified will be generated randomly.

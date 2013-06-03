@@ -1,0 +1,29 @@
+mailsnarf可以嗅探SMTP和POP流量，并以Berkeley邮件格式输出e-mail消息
+
+mailsnarf [-i interface] [[-v] pattern [expression]]
+
+
+NAME
+       mailsnarf - sniff mail messages in Berkeley mbox format
+
+SYNOPSIS
+       mailsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]
+
+DESCRIPTION
+       mailsnarf  outputs  e-mail  messages  sniffed  from SMTP and POP traffic in Berkeley mbox format, suitable for offline
+       browsing with your favorite mail reader (mail(1), pine(1), etc.).
+
+OPTIONS
+       -i interface
+	      Specify the interface to listen on.
+
+       -p pcapfile
+	      Process packets from the specified PCAP capture file instead of the network.
+
+       -v     "Versus" mode. Invert the sense of matching, to select non-matching messages.
+
+       pattern
+	      Specify regular expression for message header/body matching.
+
+       expression
+	      Specify a tcpdump(8) filter expression to select traffic to sniff.

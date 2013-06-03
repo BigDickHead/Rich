@@ -1,0 +1,27 @@
+filesnarf可以嗅探网络文件系统（NFS）的流量，并选定某个文件，转储到本地当前工作目录
+
+filesnarf [-i interface] [[-v] pattern [expression]]
+
+NAME
+       filesnarf - sniff files from NFS traffic
+
+SYNOPSIS
+       filesnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]
+
+DESCRIPTION
+       filesnarf saves files sniffed from NFS traffic in the current working directory.
+
+OPTIONS
+       -i interface
+	      Specify the interface to listen on.
+
+       -p pcapfile
+	      Process packets from the specified PCAP capture file instead of the network.
+
+       -v     "Versus" mode. Invert the sense of matching, to select non-matching files.
+
+       pattern
+	      Specify regular expression for filename matching.
+
+       expression
+	      Specify a tcpdump(8) filter expression to select traffic to sniff.

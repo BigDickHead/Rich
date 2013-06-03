@@ -1,0 +1,36 @@
+dnsspoof
+
+dnsspoof启用DNS欺骗，如果dnsspoof嗅探到局域网内有DNS请求数据包，它会分析其内容，并用伪造的DNS响应包来回复请求者。如果是请求解析某个域名，dnsspoof会让该域名重新指向另一个IP地址（黑客所控制的主机），如果是反向IP指针解析，dnsspoof也会返回一个伪造的域名。
+
+dnsspoof [-i interface] [-f hostsfile] [expression]   这里-f 可以指定主机列表文件，文件格式与/usr/local/lib/dnsspoof.hosts相同，如果不指定该文件，dnsspoof会返回本地的IP给域名解析请求者
+
+这里本地主机会抢先代替DNS服务器来相应查询，前提是本地主机先回答DNS查询，如果因为网络问题，DNS服务器先发送了应答，DNS欺骗就不能生效了
+
+
+NAME
+       dnsspoof - forge replies to DNS address / pointer queries
+
+SYNOPSIS
+       dnsspoof [-i interface] [-f hostsfile] [expression]
+
+DESCRIPTION
+       dnsspoof  forges  replies to arbitrary DNS address / pointer queries on the LAN. This is useful in bypassing hostname-
+       based access controls, or in implementing a variety of man-in-the-middle attacks.
+
+OPTIONS
+       -i interface
+	      Specify the interface to use.
+
+       -f hostsfile
+	      Specify the pathname of a file in hosts(5) format. Only one hostname allowed per line  (no  aliases),  although
+	      hostnames may contain wildcards (such as *.doubleclick.net).
+
+       expression
+	      Specify a tcpdump(8) filter expression to select traffic to sniff.
+
+       If  no  hostsfile  is specified, replies will be forged for all address queries on the LAN with an answer of the local
+       machine's IP address.
+
+FILES
+       /usr/share/dsniff/dnsspoof.hosts
+	      Sample hosts file.

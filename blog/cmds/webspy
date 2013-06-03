@@ -1,1 +1,24 @@
-webspy - display sniffed URLs in Netscape in real-time
+webspy指定一个要嗅探的主机，如果指定主机发送HTTP请求，打开网页，webspy也会通过netscape浏览器在本地打开一个相同的网页
+
+    webspy [-i interface] host   host指定要嗅探的主机webspy - display sniffed URLs in Netscape in real-time
+
+
+NAME
+       webspy - display sniffed URLs in Netscape in real-time
+
+SYNOPSIS
+       webspy [-i interface | -p pcapfile] host
+
+DESCRIPTION
+       webspy  sends URLs sniffed from a client to your local Netscape browser for display, updated in real-time (as the tar‐
+       get surfs, your browser surfs along with them, automagically). Netscape must be running on your local X display	ahead
+       of time.
+
+OPTIONS
+       -i interface
+	      Specify the interface to listen on.
+
+       -p pcapfile
+	      Process packets from the specified PCAP capture file instead of the network.
+
+       host   Specify the web client to spy on.

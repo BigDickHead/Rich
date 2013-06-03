@@ -1,0 +1,26 @@
+tcpkill 能够切断指定的TCP会话连接，主要是基于TCP的三次握手过程
+
+    tcpkill [-i interface] [-1...9] expression
+
+当tcpkill检测到两边的TCP连接后，会同时向两边(冒充对方)发送tcp reset报文，重置连接。
+
+
+NAME
+       tcpkill - kill TCP connections on a LAN
+
+SYNOPSIS
+       tcpkill [-i interface] [-1...9] expression
+
+DESCRIPTION
+       tcpkill  kills  specified  in-progress TCP connections (useful for libnids-based applications which require a full TCP
+       3-whs for TCB creation).
+
+OPTIONS
+       -i interface
+              Specify the interface to listen on.
+
+       -1...9 Specify the degree of brute force to use in killing a connection. Fast connections may require a higher  number
+              in order to land a RST in the moving receive window. Default is 3.
+
+       expression
+              Specify a tcpdump(8) filter expression to select the connections to kill
