@@ -1,4 +1,35 @@
 hping3 --udp --traceroute -t 8 -p 53 scanme.nmap.org
 
 
+Determining Firewall Rules
+1, ACK Scan
+2, IP ID Tricks
+The humble identification field within IP headers can divulge a surprising amount of information. Later in this chapter it will be used for port scanning (idle scan technique) and to detect when firewall and intrusion detection systems are forging RST packets as though the firewall. There is no point spending hours on a blind spoofing attack "from" 192.168.0.1 if some firewall along the way drops all such packets.
 hping3 -c 5 -i 1 -p 80 -S target.com
+
+1) Find at least one accessible(open or closed) port of one machine on the internal network. Routers, printers and Windows boxes often work well. Recent releases of Linux, Solaris, and OpenBSD have largely resolved the issue of predictable IP ID sequence numbers and will not work. The machine chosen should have little network traffic to avoid confusing results.
+2) Verify that the machine has predictable IP ID sequence. The following command tests a Windows XP machine named playground. The hping options request that five 2) Verify that the machine has predictable IP ID sequence. The following command tests a Windows XP machine named palayground. Te hping2 options request that five SYN packets be sent to port 80, one second apart.
+# hping2 -c 5 -i 1 -p 80 -S playground
+HPING playground (eth0 192.168.0.40): S set, 40 headers + 0 data bytes
+len=46 ip=192.168.0.40 ttl=128 id=64473 sport=80 flags=RA seq=0 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64474 sport=80 flags=RA seq=1 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64475 sport=80 flags=RA seq=2 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64476 sport=80 flags=RA seq=3 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64477 sport=80 flags=RA seq=4 rtt=0.7ms
+
+notice the id=64473, 64474, 64475, 64476, 64477
+Since the IP ID field are perfectly sequential, we can move on to the next test. If they were random or very far apart, we would have to find a new accessible host.
+
+3) Start a flood of probes to the target from a host near your own (just about any host will do). An example command is hping2 --spoof scanme.nmap.org --fast -p 80 -c 10000 -S playground. Replace scanme.nmap.org with some other host of your choice, and playground with your target host. Getting replies back is not necessary, because the goal is simply to increment the IP ID sequences. Do not use the real address of the machine you are running hping2 from. Using a machine nearby on the network is advised to reduce the probability that your own ISP will block the packets.
+While this is going on, redo the test from the previous step against your target machine.
+# hping2 -c 5 -i 1 -p 80 -S playground
+HPING playground (eth0 192.168.0.40): S set, 40 headers + 0 data bytes
+len=46 ip=192.168.0.40 ttl=128 id=64672 sport=80 flags=RA seq=0 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64683 sport=80 flags=RA seq=1 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64694 sport=80 flags=RA seq=2 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64705 sport=80 flags=RA seq=3 rtt=0.7ms
+len=46 ip=192.168.0.40 ttl=128 id=64716 sport=80 flags=RA seq=4 rtt=0.7ms
+
+This time, the IP IDs are increasing by roughly 11 per second instead of one. The target is receiving our 10 forged packet per second, and responding to each of them. Each response increments the IP ID. Some hosts use a unique IP ID sequence for each IP address they communicate with. If that had been the case, we would not have seen the IP ID leaping like this and we would have to look for a different target host on the network.
+
+4) Repeat step 3 using spoofed address that you suspect may be allowed through the firewall or trusted. Try addresses behind their firewall, as well as the RFC 1918 private networks such as 10.0.0.0/8, 192.168.0.0/16, and 172.16.0.0/12. Also try localhost (127.0.0.1) and maybe another address from 127.0.0.0/8 to detect cases where 127.0.0.1 is hard coded in. There have been many security holes related to spoofed localhost packets, including the infamous Land denial of service attack. Misconfigured systems sometimes trust these addresses without checking whether they came from the loopback interface. If a source address gets through to the end host, the IP ID will jump as seen in step 3. If it continues to increment slowly as in step 2, the packets were likely dropped by a firewall or router.
