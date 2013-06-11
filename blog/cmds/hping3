@@ -1,1 +1,4 @@
 hping3 --udp --traceroute -t 8 -p 53 scanme.nmap.org
+
+
+hping3 -c 5 -i 1 -p 80 -S target.com

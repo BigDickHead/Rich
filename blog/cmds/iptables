@@ -1,3 +1,6 @@
+--reject-with type
+
+
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport $srcPortNumber -j REDIRECT --to-port $dstPortNumbe
 iptables -t nat -A PREROUTING -i eth0 -p udp --dport $srcPortNumber -j REDIRECT --to-port $dstPortNumbe
 iptables -t nat -I PREROUTING --src $SRC_IP_MASK --dst $DST_IP -p tcp --dport $portNumber -j REDIRECT --to-ports $rediectPort
@@ -74,3 +77,16 @@ In the attacker machine, add routing table for connect the internal network with
 OK
 
 **************************************************************************************
+
+
+Allow or enable ICMP outgoing ping request.
+==> Zero(0) is for echo-reply.
+==> Eight(8) is for echo-request.
+iptables -A OUTPUT -p icmp --icmp-type 8 -s 0/0 -d target_ip -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type 0 -s target_ip -d 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+Force fragments packet check
+iptables -A INPUT -f -j DROP
+
+
+iptables -A INPUT -m multiport -p tcp --destination-port  22,80 -j ACCEPT
