@@ -16,3 +16,8 @@ proxy:  85.64.228.230   8080
 
 
 nc -vv -L -p 80 -e "openssl s_client -quiet -connect victim.com:443"
+
+
+
+Became a scanner:
+nc -nvv -w2 -z  192.168.0.1  1-65535
