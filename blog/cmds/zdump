@@ -1,0 +1,2 @@
+Time zone dump: echoes the time in a specified time zone.
+$ zdump EST
