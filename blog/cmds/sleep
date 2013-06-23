@@ -1,0 +1,3 @@
+sleep 3   # Pauses 3 seconds.
+
+sleep 3 h # Pauses 3 hours.
