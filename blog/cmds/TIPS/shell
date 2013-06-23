@@ -1,0 +1,2 @@
+#This method to preface the filename to be removed with a dot-slash.
+rm -- -filename
