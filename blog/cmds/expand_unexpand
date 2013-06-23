@@ -1,0 +1,5 @@
+expand
+# The expand filter converts tabs to spaces. It is often used in a pipe.
+
+unexpand
+# The unexpand filter converts spaces to tabs. It is often used in a pipe.
