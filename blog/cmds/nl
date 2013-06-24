@@ -1,0 +1,4 @@
+line number filter:
+$ nl filename
+
+The output of nl is very similar to cat -b, since, by default nl does not list blank lines.

@@ -1,0 +1,4 @@
+This utility encodes binary files (images, sound files, compressed files, etc.) into ASCII characters, making them suitable for transmission in the body of an e-mail message or in a newsgroup posting. This is especially useful where MIME(multimedia) encoding is not available.
+
+
+uudecode To decoding uuencoded files back into the original binaries.
