@@ -1,0 +1,1 @@
+List the last login time of all system users. This reference the /var/log/lastlog file.
