@@ -1,4 +1,0 @@
-mkfontdir
-mkfontscale
-fc-cache -fv
-locale-gen --purge
