@@ -32,6 +32,9 @@ Verifying - enter des-cbc encryption password:<确认密码>
 -rw-r--r-- 1 root root 129K 04-26 09:03 mbox.no-a.des
   
 解密如下：
+[root@pps ~]# openssl enc -aes-256-ebc -d -a -in InputFile -out OutputFile
+
+
 [root@pps ~]# openssl enc -des -d -a -in InputFile.des -out OutputFile
 enter des-cbc decryption password:<输入密码>
  

@@ -21,9 +21,16 @@ sudo make install
 
 
 
-*********************************************************************************
 autotools-dev
 libgtk2.0-dev
 libscim-dev
 libtool
 automake1.9
+
+*********************************************************************************
+apt-get install ibus ibus-pinyin
+
+
+sogou词库
+https://code.google.com/p/hslinuxextra/downloads/list
+android.db 替换 /usr/share/ibus-pinyin/db/main.db
