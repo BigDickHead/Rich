@@ -9,3 +9,93 @@ cryptsetup master-key-file
 4, cryptsetup luksDump /dev/loopX
 
 crypsetup luksKillSlot /dev/file 0...
+
+***********************************************************************************
+Problem Solved
+
+cryptsetup luksOpen /dev/sda7 pvcrypt
+lvm vgs
+lvm vgchange -ay vg
+exit
+
+
+OR
+
+
+cryptsetup luksOpen /dev/sda7 pvcrypt
+pvscan
+lvscan
+lvchange -ay /dev/vg/root
+mount /dev/vg/root /mnt/linux
+mount /dev/sda1 /mnt/linux/boot
+mount --bind /dev/  /mnt/linux/dev
+mount --bind /proc/ /mnt/linux/proc
+chroot /mnt/linux
+
+vi /etc/initramfs-tools/modules
+Add the following to the file:
+xts
+gf128
+sha256
+
+#for 32bit
+aes-i586
+
+#for x86_64
+aes-x86_64
+Create the file /etc/initramfs-tools/conf.d/cryptroot :
+And put the following in it:
+target=sda2_crypt,source=UUID=[UUID of your /dev/sda2],lvm=vg-root
+***********************************************************************************
+
+apt-get update
+apt-get install hashalot lvm2
+
+dd if=/dev/urandom of=/dev/sda7
+
+cryptsetup -y --cipher aes-xts-plain --key-size 512 luksFormat /dev/sda7
+cryptsetup luksOpen /dev/sda7 pvcrypt
+pvcreate /dev/mapper/pvcrypt
+vgcreate vg /dev/mapper/pvcrypt
+lvcreate -n swap -L 2000M vg
+lvcreate -n root -l 100%FREE vg
+mkfs.ext4 /dev/mapper/vg-root
+mkswap /dev/mapper/vg-swap
+
+**********************
+install system to disk
+**********************
+mkdir /mnt/linux
+mount /dev/mapper/vg-root /mnt/linux
+mount /dev/sda6 /mnt/linux/boot
+
+chroot /mnt/linux
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t devpts devpts /dev/pts
+
+
+blkid /dev/sda7
+vi /etc/crypttab
+Add following to the crypttab
+pvcrypt /dev/disk/by-uuid/<uuid from above>    none    luks
+
+
+vi /etc/fstab
+/dev/mapper/vg-root / ext4  defaults 0 1
+
+
+update-initramfs -u
+***********************************************************************************
+
+Generate the keyfile
+dd if=/dev/urandom of=/mnt/linux/boot/keyfile bs=1024 count=4
+chmod 0400 /mnt/linux/boot/keyfile
+cryptsetup luksAddKey /dev/sda7 /mnt/linux/boot/keyfile
+
+vi /etc/crypttab
+pvcrypt UUID=d125fa61-bb52-406c-a7b6-048f0ac68456 /boot/keyfile luks
+OR
+pvcrypt /dev/disk/by-uuid/d125fa61-bb52-406c-a7b6-048f0ac68456  /boot/keyfile luks
+update-initramfs -u
+***********************************************************************************
