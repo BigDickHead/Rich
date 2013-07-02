@@ -1,0 +1,15 @@
+**************************************************************************************
+
+In victim machine: internal network
+# echo 1 > /proc/sys/net/ipv4/ip_forward
+# iptables -P FORWARD ACCEPT
+# iptables --table nat -A POSTROUTING -o eth1 -j MASQUERADE
+to create the bridge between attacker and internal network.
+
+
+In the attacker machine, add routing table for connect the internal network with
+# route add -net 192.168.59.0/24 gw 192.168.59.1
+# ping 192.168.59.10
+OK
+
+**************************************************************************************
