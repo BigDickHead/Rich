@@ -30,3 +30,11 @@ expect "*auth*" { send "\r" }
 # 执行完成后进入interact mode，否则退出
 interact  
 #EOF  
+
+
+***************************************************
+while (1) {
+expect "Email:" { send "blablabla\r"}
+expect "Password:" { send "blablabla\r"}
+}
+***************************************************
