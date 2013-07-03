@@ -1,0 +1,105 @@
+Dropbox sync. Edit /etc/privoxy/config
+
+listen-address  127.0.0.1:8118
+forward .dropbox.com 127.0.0.1:8087
+forward .dropbox.com:443 .
+
+*********************************************************************************************************
+
+用Privoxy转发socks代理，建http代理。
+
+有些软件不支持socks代理，只支持http代理。不像火狐那样都支持，于是有的时候要建http代理。
+
+
+用到的软件，privoxy，openssh。
+
+原理是浏览器请求发给http代理privoxy，privoxy在将请求转发给socks代理，socks代理访问的internet。
+
+
+1.建立socks代理。
+
+要有ssh软件支援。
+
+ssh d-wiki.org -D7979 -ldwikiorg
+
+这步完成以后就建立起了一个127.0.0.1:7979的socks代理，可以配置火狐等支持socks代理的软件那个了。
+
+ 
+
+2.安装Privoxy。
+
+Privoxy is a non-caching web proxy with advanced filtering capabilities for enhancing privacy, modifying web page data and HTTP headers, controlling access, and removing ads and other obnoxious Internet junk. Privoxy has a flexible configuration and can be customized to suit individual needs and tastes. It has application for both stand-alone systems and multi-user networks.
+
+
+apt-get install privoxy
+
+
+3.配置Privoxy。
+
+配置文件默认是/etc/privoxy/config。
+
+编辑它增加一行：
+
+forward-socks5 / 127.0.0.1:7979 .
+
+forward-socks5 表示使用父代理了，这个代理是 SOCKS5 代理。
+/ 表示转发地址开头是 / 的请求，因为 http 的 header 中地址肯定开头是 /，它是部分匹配，所以这个 / 就表示所有 http 数据了。
+127.0.0.1:9050 这个就是父代理的地址。
+最后那个点，意思是父代理直接处理数据了。如果不是点而是个代理地址，那么父代理要把数据再转发到这个代理地址，这样组成一个代理链，穿过N层，防跨省必修技术！
+
+
+
+保存即生效。
+
+现在的127.0.0.1:8118就是一个http代理了。8118是privoxy默认的端口。
+
+*********************************************************************************************************
+
+forward-socks4
+forward-socks4a
+forward-socks5 
+
+不一定是 forward-socks5，如果父代理也是个 http 代理，比如 Gappproxy，关键字是 forward（注意最后不用那个点），可以写任意多行，协议可以不同，网址可以不同，代理也可以不同。新建一个名为 config 文件，加入
+
+forward-socks5 .youtube.com 127.0.0.1:8080 .
+forward-socks5 .ytimg.com 127.0.0.1:8080 .
+forward .twitter.com 127.0.0.1:8000
+forward .blogspot.com 127.0.0.1:8000
+forward feedproxy.google.com 127.0.0.1:8000
+
+很简单，发给 youtube.com 和 ytimg.com 的包转发给 127.0.0.1:8080 这个 SOCKS5 代理，Tor 或者 ssh，twitter.com 和 blogspot.com 发给 127.0.0.1:8000 这个 http 代理，Gappproxy 或其它。你可以写任意行，最后运行
+
+privoxy --no-daemon config
+
+设置 Chrome 代理为 127.0.0.1:8118 测试一下，其程序如 wget、curl、SMPlayer 也行，export 出 http_proxy 环境变量就行了。这样做任意程序都实现了 Foxyproxy 和 Autoproxy 功能了！
+使用 action 文件
+
+config 文件是 Privoxy 的主配置文件，但是修改代理地址是个问题，虽然可以用查找替换，还是比较麻烦，也不直观。理想的设计是，一个规则包括一个代理对应一堆网址表达式，Privoxy 可不可以做到这样呢？答案也是肯定的，我就是看了 Privoxy 的用法后改写 pac 文件。
+
+Privoxy 的方法就是使用 action 文件，都说 Privoxy 强在过滤，action 文件就是 Privoxy 的过滤规则文件，作用是满足某些条件执行相应动作。主配置文件中条件只能用网址，在 action 文件中可以设置更详细的条件，比如 User Agent，其实 Forwarding 也是个动作之一。
+
+重新编辑 config 文件，替换成这一行
+
+actionsfile proxy.action
+
+表示使用 proxy.action 这个文件为 actionsfile。接着在同目录新建 proxy.action，加入下面代码
+
+direct   = +forward-override{forward .}
+ssh      = +forward-override{forward-socks5 localhost:8080 .}
+gappproxy = +forward-override{forward localhost:8000}
+
+{direct}
+.google.com
+.googleusercontent.com
+.mozilla.com
+
+{ssh}
+.youtube.com
+.ytimg.com
+
+{gappproxy}
+.twitter.com
+.blogspot.com
+feedproxy.google.com
+
+前面是定义 alias 动作，后面是 alias 名称跟对应的网址表达式，符合网址表达式就执行 alias 中的动作。
