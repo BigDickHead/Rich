@@ -1,11 +1,11 @@
 #!/usr/bin/expect  
-# expect ½ÓÊÜ²ÎÊıÊµÀı
+# expect æ¥å—å‚æ•°å®ä¾‹
 # file name :rauth  
 # Usages : rauth username [ passworld ]  
-# Description : ×Ô¶¯·¢ËÍÓÃ»§ÃûÓëÃÜÂë  
+# Description : è‡ªåŠ¨å‘é€ç”¨æˆ·åä¸å¯†ç   
 
   
-# ÔËĞĞ myxrgsu -a  
+# è¿è¡Œ myxrgsu -a  
 if { $argc != 2 && $argc != 1 } {  
     send_user "Usage:auth username \[password\]\n"  
     send_user "\tthe default password equals 0000\n"  
@@ -19,7 +19,7 @@ if { $argc == 2 } {
   
 spawn xrgsu  
   
-# expect ¿ªÊ¼  
+# expect å¼€å§‹  
 expect "*user*" { send ${name}\r }  
 expect "*password:" { send ${pass}\r }  
 expect "*DHCP*" { send "\r" }  
