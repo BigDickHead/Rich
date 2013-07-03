@@ -1,0 +1,2 @@
+删除证书
+Firefox以前记住过其他不被信任的证书导致冲突，将profile里面的cert8.db和cert_override.txt删掉就好了。
