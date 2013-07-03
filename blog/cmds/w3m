@@ -1,6 +1,12 @@
 w3m - WWW browsable pager with excellent tables/frames support
 w3m-img - inline image extension support utilities for w3m
 
+********************************************************************
+
+Proxy
+# HTTP_PROXY=http://127.0.0.1:8087 w3m www.youtube.com
+
+********************************************************************
 
 usage: w3m [options] [URL or filename]
 options:
