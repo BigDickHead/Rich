@@ -1,2 +1,119 @@
 //查看硬盘信息，包括硬盘序列号等
 hdparm -I /dev/sda
+
+查看硬盘型号和硬盘序列号
+ 
+hdparm -i /dev/hda
+ 
+显示硬盘的相关设置
+hdparm /dev/sda
+/dev/sda:
+IO_support = 0 (default 16-bit)
+readonly = 0 (off)
+readahead = 256 (on)
+geometry = 19929［柱面数］/255［磁头数］/63［扇区数］, sectors = 320173056［总扇区数］, start = 0［起始扇区数］
+ 
+显示硬盘的柱面、磁头、扇区数
+hdparm -g /dev/sda
+/dev/sda:
+geometry = 19929［柱面数］/255［磁头数］/63［扇区数］, sectors = 320173056［总扇区数］, start = 0［起始扇区数］
+ 
+评估硬盘的读取效率
+hdparm -t /dev/sda
+Timing buffered disk reads: 166 MB in 3.00 seconds = 55.31 MB/sec
+ 
+评估硬盘快取的读取效率
+hdparm -T /dev/sda
+Timing cached reads: 3784 MB in 2.00 seconds = 1894.60 MB/sec
+
+ 
+检测IDE硬盘的电源管理模式
+hdparm -C /dev/sda
+drive state is: standby [省电模式]
+
+直接检测硬盘的硬件规格
+hdparm -I /dev/sda
+ATA device, with non-removable media
+Model Number: Maxtor 6B160M0
+Serial Number: B404PTJH
+Firmware Revision: BANC1BM0
+Standards:
+Supported: 7 6 5 4
+Likely used: 7
+Configuration:
+Logical max current
+cylinders 16383 16383
+heads 16 16
+sectors/track 63 63
+ 
+CHS current addressable sectors: 16514064
+LBA user addressable sectors: 268435455
+LBA48 user addressable sectors: 320173056
+device size with M = 1024*1024: 156334 MBytes
+device size with M = 1000*1000: 163928 MBytes (163 GB)
+Capabilities:
+LBA, IORDY(can be disabled)
+Queue depth: 32
+ 
+Standby timer values: spec’d by Standard, no device specific minimum
+R/W multiple sector transfer: Max = 16 Current = 16
+Advanced power management level: unknown setting (0×0000)
+Recommended acoustic management value: 192, current value: 254
+DMA: mdma0 mdma1 mdma2 udma0 udma1 udma2 udma3 udma4 udma5 *udma6
+Cycle time: min=120ns recommended=120ns
+PIO: pio0 pio1 pio2 pio3 pio4
+Cycle time: no flow control=120ns IORDY flow control=120ns
+Commands/features:
+Enabled Supported:
+* NOP cmd
+* READ BUFFER cmd
+* WRITE BUFFER cmd
+* Host Protected Area feature set
+* Look-ahead
+* Write cache
+ 
+* Power Management feature set
+Security Mode feature set
+* SMART feature set
+* FLUSH CACHE EXT command
+* Mandatory FLUSH CACHE command
+* Device Configuration Overlay feature set
+* 48-bit Address feature set
+* Automatic Acoustic Management feature set
+SET MAX security extension  www.2cto.com  
+Advanced Power Management feature set
+* DOWNLOAD MICROCODE cmd
+* General Purpose Logging feature set
+* SMART self-test
+* SMART error logging
+ 
+Security:
+Master password revision code = 65534
+supported
+not enabled
+not locked
+not frozen
+not expired: security count
+not supported: enhanced erase
+Checksum: correct
+ 
+检测并设置IDE硬盘的32位I/O模式
+检测
+hdparm -c /dev/sda
+IO_support = 0 (default 16-bit) ［默认16位I／O］
+设置
+hdparm -c 1 /dev/sda
+ 
+检测并设置IDE硬盘的DMA模式
+hdparm -d /dev/sda
+hdparm -d 1 /dev/sda
+ 
+检测读取文件时，预先存入快取的扇区数
+hdparm -a /dev/sda
+readahead = 256 (on)
+ 
+查询并设置硬盘多重扇区存取的扇区数，以增进硬盘的存取效率
+hdparm -m /dev/sda
+hdparm -m 参数值为整数值如8 /dev/sda
+将内顾虑缓冲的数据写入硬盘，并清除缓冲区的数据
+hdparm -f /dev/sda
