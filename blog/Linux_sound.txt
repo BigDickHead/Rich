@@ -1,0 +1,35 @@
+音量控制
+apt-get install alsa-utils           //程序建立/etc/modprobe.d/alsa-base.conf文件 安装alsamixer等程序
+
+
+
+http://www.alsa-project.org/main/index.php/Matrix:Module-hda-intel
+modinfo soundcore
+
+If this command returns that you have this module, then you don't need to recompile your kernel. 
+
+modprobe snd-hda-intel 
+modprobe snd-hda-intel model=YOUR_MODEL 
+
+#modprobe snd-pcm-oss ; modprobe snd-mixer-oss ; modprobe snd-seq-oss
+
+alsamixer
+
+echo "options snd-hda-intel model=auto" >> /etc/modprobe.d/alsa-base.conf
+
+//更新模块
+depmod -a 相当于 update-modules, 不可用 depmod -A
+
+**************************************************
+
+How to find the right options?
+cat /proc/asound/card*/codec* | grep Codec
+
+Codec: SigmaTel STAC9227
+
+To see a list of possible models in
+/usr/src/linux/Documentation/sound/alsa/HD-Audio-Models.txt
+OR
+/usr/src/linux/Documentation/sound/alsa/HD-Audio.txt
+
+**************************************************
