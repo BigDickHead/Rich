@@ -1,0 +1,1 @@
+A Java-based web proxy for assessing web application vulnerability. It supports editing/viewing HTTP/HTTPS messages on-the-fly to change items such as cookies and form fields. It includes a web traffic recorder, web spider, hash calculator, and a scanner for testing common web application attacks such as SQL injection and cross-site scripting.

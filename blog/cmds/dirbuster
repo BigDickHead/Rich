@@ -1,0 +1,1 @@
+DirBuster searches for hidden pages and directories on a web server. Sometimes developers will leave a page accessible, but unlinked; DirBuster is meant to find these potential vulnerabilities. This is a Java application developed by OWASP.
