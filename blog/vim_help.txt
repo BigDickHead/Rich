@@ -2,9 +2,10 @@
 
 *Something*          // anchor
 
-note:
-Note:
-NOTE:
+note
+Note
+NOTE
+Notes
 
 {Something}
 
