@@ -1,7 +1,7 @@
 |Something|          // link
 
 *Something*          // anchor
-~
+
 note:
 Note:
 NOTE:
@@ -14,12 +14,11 @@ NOTE:
 
 <Enter>
 
-Something ~
+Something~
 
 http://www.something.com
 
-
-如果打开了语法加亮，一些文字可以有不同的颜色。比如，尖括号<Enter>、花括号{no in Vi}等。如果一行以~结尾，整行都会变色。四个以上减号-----占一行，五个以上个等号======占一行会被上色。单个>用来表示引用段落：
+'something'
 
 >
 空一格开始引文
