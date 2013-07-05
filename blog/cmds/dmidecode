@@ -1,3 +1,6 @@
+vim:tw=78:et:ft=help:norl:
+
+
 //查看主板序列号
 dmidecode |grep -i "serial number"
 
@@ -5,3 +8,19 @@ dmidecode |grep -i "serial number"
 dmidecode -t processor
 
 lscpu
+
+
+***************************************************************************************************************************
+alias bios='[ -f /usr/sbin/dmidecode ] && sudo -v && echo -n "Motherboard" && sudo /usr/sbin/dmidecode -t 1 | grep "Manufacturer\|Product Name\|Serial Number" | tr -d "\t" | sed "s/Manufacturer//" && echo -ne "\nBIOS" && sudo /usr/sbin/dmidecode -t 0 | grep "Vendor\|Version\|Release" | tr -d "\t" | sed "s/Vendor//"'
+
+$ bios
+Motherboard: Dell Inc.
+Product Name: Latitude D620
+Serial Number: XXXXXXXX
+
+BIOS: Dell Inc.
+Version: A10
+Release Date: 05/16/2008
+***************************************************************************************************************************
+
+Get Motherboard deviceID and BIOS serial from */sys/class/dmi/id*

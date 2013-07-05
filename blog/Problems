@@ -1,2 +1,8 @@
 $HTTP_PROXY变量莫名其妙的被改了，最终问题是 ~/.config/dconf/user文件。
 可以用dconf-editor编辑，或者直接删掉就解决问题.
+
+
+IBus 与 gvim冲突的解决方法
+1，关闭IBus中 Embed preedit text in application window 属性
+OR
+2，打开 /usr/share/ibus-pinyin/engine/pinyin.py ，找到 update_preedit 函数的定义，把最后一行的 super 调用注释掉。保存之后在 ibus 的托盘图标那里选择 restart 就可以了
