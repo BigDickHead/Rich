@@ -1,0 +1,2 @@
+$HTTP_PROXY变量莫名其妙的被改了，最终问题是 ~/.config/dconf/user文件。
+可以用dconf-editor编辑，或者直接删掉就解决问题.
