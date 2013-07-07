@@ -1,0 +1,32 @@
+*Identifies* the process (by PID) that are accessing a given file, set of files, or directory. May also be invoked with the *-k* option, which *kills* those processes. *-n* option identifies the processes *accessing* *port.*
+
+
+fuser -u /usr/bin/vim
+
+fuser -u /dev/null
+
+=====================================
+*Exp:*
+bash$ umount /mnt/usb
+umount: /mnt/usb: device is busy
+
+bash$ fuser -um /dev/sdb1
+/dev/sdb1:          1772c
+
+bash$ kill -9 1772
+bash$ umount /mnt/usb
+=====================================
+
+
+
+=====================================
+*Exp:*
+root# fuser -un tcp 25
+25/tcp:             2095(root)
+
+root# ps ax | grep 2095 |grep -v grep
+2095 ?              Ss   0:00   sendmail: accepting connections
+=====================================
+
+ vim:tw=78:ts=8:ft=help:norl:
+

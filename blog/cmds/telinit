@@ -1,0 +1,5 @@
+*Symlinked* *to* *init*
+this is a means of changing the system runlevel, usually done for system maintenance or emergency filesystem repairs. Invoked only by root.~
+
+
+ vim:tw=78:ts=8:ft=help:norl:

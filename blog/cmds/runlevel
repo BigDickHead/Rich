@@ -1,0 +1,6 @@
+Show the current and last runlevel, that is, whether the system is halted(runlevel 0), in single-user mode (1), in multi-user {2 or 3), in X Window (5), or rebooting (6).~
+
+This command accesses the */var/run/utmp* file.
+
+
+ vim:tw=78:ts=8:ft=help:norl:
