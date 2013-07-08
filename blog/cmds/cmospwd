@@ -1,0 +1,16 @@
+cmospwd - decrypt BIOS passwords from CMOS
+
+
+CmosPwd
+http://www.cgsecurity.org/
+
+Usage: cmospwd [/k[de|fr]] [/d]
+       cmospwd [/k[de|fr]] [/d] /[wlr] cmos_backup_file           write/load/restore
+       cmospwd /k                                          kill cmos
+       cmospwd [/k[de|fr]] /m[01]*	execute selected module
+
+ /kfr french AZERTY keyboard, /kde german QWERTZ keyboard
+ /d to dump cmos
+ /m0010011 to execute module 3,6 and 7
+
+NB: For Award BIOS, passwords are differents than original, but work.

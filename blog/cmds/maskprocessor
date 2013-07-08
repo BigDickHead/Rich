@@ -1,0 +1,40 @@
+maskprocessor:~
+
+    Generates dictionaries based on patterns you supply.~
+
+    Not a password cracker in its own right, but can pipe output to oclHashcat-plus for a brute-force attack. 
+
+hashcat:~
+
+    *CPU-based* so slower than the GPU-based software.
+
+    Supports the widest range of hashing algorithms. 
+
+oclHashcat:~
+
+    *GPU-based* password cracker.
+
+    Supports a moderate number of hashing algorithms.
+
+    Built-in support for dictionary, brute-force and mask attacks. 
+
+oclHashcat-plus:~
+
+    *GPU-based*
+
+    Supports the most hashing algorithms of the GPU-based hashcat crackers.
+
+    Optimized for dictionary attacks against multiple hashes.
+
+    Can support dictionary input from a pipe, so brute-force is possible. 
+
+oclHashcat-lite:~
+
+    *GPU-based*
+
+    Optimized for attacks against a single password hash.
+
+    Fastest of the hashcat family, but with the most-limited password hash support. 
+
+
+ vim:tw=78:ts=8:ft=help:norl:

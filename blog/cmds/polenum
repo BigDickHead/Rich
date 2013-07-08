@@ -1,0 +1,11 @@
+polenum - Extracts the password policy from a Windows system
+
+
+  polenum 0.2 - (C) 2008 deanx
+
+			 RID[at]Portcullis-Security.com
+
+  Usage:/usr/bin/polenum [username[:password]@]<address> [protocol list...]
+
+		Available protocols: ['445/SMB', '139/SMB']
+

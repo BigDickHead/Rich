@@ -1,6 +1,8 @@
 hashcat, advanced password recovery
 
-Usage: hashcat [options] hashfile [mask|wordfiles|directories]
+Usage: hashcat [options] hashfile [mask | wordfiles | directories]
+
+Notice input methods for wordlists: mask OR wordfiles OR directories
 
 =======
 Options
