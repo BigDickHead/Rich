@@ -1,3 +1,7 @@
+#include <openssl/md5.h>
+some crypto header file in libssl-dev package.
+apt-get install libssl-dev
+===============================================================================================
 openssl s_client -quiet -connect target:443
 GET / HTTP/1.0
 
