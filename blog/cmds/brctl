@@ -1,4 +1,65 @@
-BRCTL(8)                                                                                                             BRCTL(8)
+brctl 用来管理以太网桥，在内核中建立，维护，检查网桥配置。一个网桥一般用来连接多个不同的网络，这样这些不同的网络就可以像一个网络那样进行通讯。
+      网桥是一种在链路层实现中继，对帧进行转发的技术，根据MAC分区块，可隔离碰撞，将网络的多个网段在数据链路层连接起来的网络设备。网桥工作在数据链路层，将两个LAN连起来，根据MAC地址来转发帧，可以看作一个“底层的路由器”
+      在网桥上每个以太网连接可以对应到一个物理接口，这些以太网借口组合成一个大的逻辑的接口，这个逻辑接口对应于桥接网络。
+
+      brctl addbr <name>  创建一个名为name的桥接网络接口
+      brctl delbr <name>  删除一个名为name的桥接网络接口，桥接网络接口必须先down掉后才能删除。
+      brctl show          显示目前所有的桥接接口
+
+      brctl addif <brname> <ifname>  把一个物理接口ifname加入桥接接口brname中，所有从ifname收到的帧都将被处理，就像网桥处理的一样。所有发往brname的帧，ifname就像输出接口一样。当物理以太网加入网桥后，据处于混杂模式了，所以不需要配置IP。
+
+     brctl delif <brname> <ifname>  从brname中脱离一个ifname接口
+     brctl show <brname>   显示一些网桥的信息
+
+     STP 多个以太网桥可以工作在一起组成一个更大的网络，利用802.1d协议在两个网络之间寻找最短路径，STP的作用是防止以太网桥之间形成回路，如果确定只有一个网桥，则可以关闭STP。
+brctl stp <bridge> <state>  控制网桥是否加入STP树中，<state>可以是'on'或者'yes'表示加入stp树中，这样当lan中有多个网桥时可以防止回环，'off'表示关闭stp。
+
+     brctl setbridgeprio <bridge> <priority>
+     设置网桥的优先级，<priority>的值为0-65535，值小的优先级高，优先级最高的是根网桥。
+
+     brctl setfd <bridge> <time> 
+     设置网桥的'bridge forward delay'转发延迟时间，时间以秒为单位
+
+     brctl sethello <bridge> <time> 
+     设置网桥的'bridge hello time'存活检测时间
+
+     brctl setmaxage <bridge> <time>
+     设置网桥的'maximum message age'时间
+
+     brctl setpathcost <bridge> <port> <cost>
+    设置网桥中某个端口的链路花费值
+
+     brctl  setportprio  <bridge>  <port> <priority>
+     设置网桥中某个端口的优先级
+
+
+实例1：简单网桥
+eth0 eth1 组合成一个网桥br0
+brctl addbr br0   创建一个网桥br0实例
+brctl addif br0 eth0   把eth0 加入网桥br0中
+brctl addif br0 eth1   把eth1 加入网桥br0中
+ifconfig eth0 0.0.0.0  物理网卡处于混杂模式，不用配置IP
+ifconfig eth1 0.0.0.0
+ifconfig br0 10.1.1.2  只需要给网桥配置一个IP即可
+
+实例2：创建多网桥通讯
+创建多网桥通过filtering/NATting进行通讯，在有四个网卡的机器上，把两个网卡划入一个lan中，IP是10.16.0.254，另外两个网卡划入一个lan中，IP是192.168.10.1。
+brctl addbr br_10
+brctl addif br_10 eth0
+brctl addif br_10 eth1
+ifconfig br_10 10.16.0.254
+
+brctl addbr br_192
+brctl addif br_192 eth2
+brctl addif br_192 eth3
+ifconfig br_192 192.168.10.1
+
+现在就有了两个本地的网卡br_10 br_192，打开ipforwd，假如192.168.10.2是在192.*网段被允许访问访问10.*网段：
+ipchains -P forward REJECT
+ipchains -A forward -s 192.168.10.2/32 -d 10.0.0.0/8 -i br_10 -j ACCEPT 
+
+
+BRCTL(8)                                                                                                          BRCTL(8)
 
 
 
@@ -117,5 +178,5 @@ AUTHOR
 
 
 
-                                                       November 7, 2001                                              BRCTL(8)
+                                                   November 7, 2001                                              BRCTL(8)
  vim:tw=78:ts=8:ft=man:norl:                                               
