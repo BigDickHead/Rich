@@ -1,0 +1,8 @@
+Initialized empty Git repository in /xxxx/xxxx/.git/
+Password: 
+error: server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none while accessing https://xxxx@xxxx.xxxx/xxxx/xxxx.git/info/refs
+
+fatal: HTTP request failed
+
+
+export GIT_SSL_NO_VERIFY=1

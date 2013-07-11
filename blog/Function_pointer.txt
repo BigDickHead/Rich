@@ -1,0 +1,751 @@
+Function pointer~
+From Wikipedia
+
+A function pointer (or subroutine pointer) is a type of pointer supported by third-generation programming languages (such as PL/I, COBOL, Fortran 2003, dBASE dBL, and C) and object-oriented programming languages (such as C++ and D).[1] Instead of referring to data values, a function pointer points to executable code within memory. When dereferenced, a function pointer can be used to invoke the function it points to and pass it arguments just like a normal function call. Such an invocation is also known as an "indirect" call, because the function is being invoked indirectly through a variable instead of directly through a fixed name or address. Function pointers can be used to simplify code by providing a simple way to select a function to execute based on run-time values.
+
+Simple function pointers
+
+The simplest implementation of a function (or subroutine) pointer is as a variable containing the address of the function within executable memory. Older third-generation languages such as PL/I and COBOL, as well as more modern languages such as Pascal and C generally implement function pointers in this manner. Such pointers in older languages are generally less type-safe than in more modern languages, though, since the latter associate more typing information with a function pointer variable, such as the data type of the return value of the function and the data type information of the parameters to the function.[2]
+
+=======================================================================================================
+Example in C~
+
+The following C program uses a function pointer to invoke one of two functions (sin or cos) indirectly from another function (compute_sum, computing an approximation of the function's Riemann integration). The program operates by having function main call function compute_sum twice, passing it a pointer to the library function sin the first time, and a pointer to function cos the second time. Function compute_sum in turn invokes one of the two functions indirectly by dereferencing its function pointer argument funcp multiple times, adding together the values that the invoked function returns and returning the resulting sum. The two sums are written to the standard output by main.
+
+// To compile:
+// gcc demo.c -lm -o demo
+#include <math.h>
+#include <stdio.h>
+
+// Function taking a function pointer as an argument
+double compute_sum(double (*funcp)(double), double lo, double hi)
+{
+    double  sum = 0.0;
+
+    // Add values returned by the pointed-to function '*funcp'
+    for (int i = 0;  i <= 100;  i++)
+    {
+        double  x, y;
+
+        // Use the function pointer 'funcp' to invoke the function
+        x = i/100.0 * (hi - lo) + lo;
+        y = (*funcp)(x);
+        sum += y;
+    }
+    return sum / 100;
+}
+
+int main(void)
+{
+    double  (*fp)(double);      // Function pointer
+    double  sum;
+
+    // Use 'sin()' as the pointed-to function
+    fp = sin;
+    sum = compute_sum(fp, 0.0, 1.0);
+    printf("sum(sin): %f\n", sum);
+
+    // Use 'cos()' as the pointed-to function
+    fp = cos;
+    sum = compute_sum(fp, 0.0, 1.0);
+    printf("sum(cos): %f\n", sum);
+    return 0;
+}
+
+=======================================================================================================
+Functors~
+Main article: Function objects
+
+Functors, or function objects, are similar to function pointers, and can be used in similar ways. A functor is an object of a class type that implements the function-call operator, allowing the object to be used within expressions using the same syntax as a function call. Functors are more powerful than simple function pointers, being able to contain their own data values, and allowing the programmer to emulate closures. They are also used as callback functions if it is necessary to use a member function as a callback function.[3]
+
+Many "pure" object-oriented languages do not support function pointers. Something similar can be implemented in these kinds of languages, though, using references to interfaces that define a single member function. CLI languages such as C# and Visual Basic .NET implement type-safe function pointers with delegates.
+
+In other languages that support first-class functions, functions are regarded as data, and can be passed, returned, and created dynamically directly by other functions, eliminating the need for function pointers.
+
+Extensively using function pointers to call functions may produce a slow-down for the code on modern processors, because branch prediction may not be able to figure out where to branch to (it depends on the value of the function pointer at run time) although this effect can be overstated as it is often amply compensated for by significantly reduced non indexed table lookups. This makes the memory allocation independent from execution. The concept later was used by the multithreading processing ability.
+
+=======================================================================================================
+Method pointers~
+
+C++ is object-oriented, so classes can have methods. Non-static member functions (instance methods) have an implicit parameter (the this pointer) which is the pointer to the object it is operating on, so the type of the object must be included as part of the type of the function pointer. The method is then used on an object of that class by using one of the "pointer-to-member" operators: .* or ->* (for an object or a pointer to object, respectively).
+
+Although function pointers in C and C++ can be implemented as simple addresses, so that typically sizeof(Fx)==sizeof(void *), member pointers in C++ are often implemented as "fat pointers", typically two or three times the size of a simple function pointer, in order to deal with virtual inheritance[citation needed].
+In C++[edit]
+
+A C++ typical use of "pointers to functions" is for passing a function as an argument to another function, since these cannot be passed dereferenced:
+
+// Pointer to functions
+// compile: g++ -g functPointCpp.cc -o functPointCpp
+
+#include <iostream>
+
+using namespace std;
+
+int add(int first, int second)
+{
+    return first + second;
+}
+
+int subtract(int first, int second)
+{
+    return first - second;
+}
+
+int operation(int first, int second, int (*functocall)(int, int))
+{
+    return (*functocall)(first, second);
+}
+
+int main()
+{
+    int  a, b;
+    int  (*plus)(int, int) = add;
+    a = operation(7, 5, plus);
+    b = operation(20, a, subtract);
+    cout << "a = " << a << " and b = " << b << endl;
+    return 0;
+}
+
+=======================================================================================================
+In Ruby~
+
+class ExampleClass
+[
+  def method_name(x, y)
+    x + y
+  end
+]
+end
+
+e = ExampleClass.new
+
+#'method' is a direct descendant of the Object class, as is 'call'
+function_pointer_example = e.method(:method_name)
+function_pointer_example.call(5, 6)                        #=> 11
+
+=======================================================================================================
+
+Functions as Arguments to Other Functions~
+If you were to write a sort routine, you might want to allow the function's caller to choose the order in which the data is sorted; some programmers might need to sort the data in ascending order, others might prefer descending order while still others may want something similar to but not quite like one of those choices. One way to let your user specify what to do is to provide a flag as an argument to the function, but this is inflexible; the sort function allows only a fixed set of comparison types (e.g., ascending and descending).
+
+A much nicer way of allowing the user to choose how to sort the data is simply to let the user pass in a function to the sort function. This function might take two pieces of data and perform a comparison on them. We'll look at the syntax for this in a bit.
+Callback Functions
+Another use for function pointers is setting up "listener" or "callback" functions that are invoked when a particular event happens. The function is called, and this notifies your code that something of interest has taken place.
+
+Why would you ever write code with callback functions? You often see it when writing code using someone's library. One example is when you're writing code for a graphical user interface (GUI). Most of the time, the user will interact with a loop that allows the mouse pointer to move and that redraws the interface. Sometimes, however, the user will click on a button or enter text into a field. These operations are "events" that may require a response that your program needs to handle. How can your code know what's happening? Using Callback functions! The user's click should cause the interface to call a function that you wrote to handle the event.
+
+To get a sense for when you might do this, consider what might happen if you were using a GUI library that had a "create_button" function. It might take the location where a button should appear on the screen, the text of the button, and a function to call when the button is clicked. Assuming for the moment that C (and C++) had a generic "function pointer" type called function, this might look like this:
+
+void create_button( int x, int y, const char *text, function callback_func );
+
+Whenever the button is clicked, callback_func will be invoked. Exactly what callback_func does depends on the button; this is why allowing the create_button function to take a function pointer is useful.
+Function Pointer Syntax
+The syntax for declaring a function pointer might seem messy at first, but in most cases it's really quite straight-forward once you understand what's going on. Let's look at a simple example:
+
+void (*foo)(int);
+
+In this example, foo is a pointer to a function taking one argument, an integer, and that returns void. It's as if you're declaring a function called "*foo", which takes an int and returns void; now, if *foo is a function, then foo must be a pointer to a function. (Similarly, a declaration like int *x can be read as *x is an int, so x must be a pointer to an int.)
+
+The key to writing the declaration for a function pointer is that you're just writing out the declaration of a function but with (*func_name) where you'd normally just put func_name.
+
+Reading Function Pointer Declarations
+Sometimes people get confused when more stars are thrown in:
+
+void *(*foo)(int *);
+
+Here, the key is to read inside-out; notice that the innermost element of the expression is *foo, and that otherwise it looks like a normal function declaration. *foo should refer to a function that returns a void * and takes an int *. Consequently, foo is a pointer to just such a function.
+Initializing Function Pointers
+To initialize a function pointer, you must give it the address of a function in your program. The syntax is like any other variable:
+
+#include <stdio.h>
+void my_int_func(int x)
+{
+    printf( "%d\n", x );
+}
+
+int main()
+{
+    void (*foo)(int);
+    /* the ampersand is actually optional */
+    foo = &my_int_func;
+
+    return 0;
+}
+
+(Note: all examples are written to be compatible with both C and C++.)
+Using a Function Pointer
+To call the function pointed to by a function pointer, you treat the function pointer as though it were the name of the function you wish to call. The act of calling it performs the dereference; there's no need to do it yourself:
+
+#include <stdio.h>
+void my_int_func(int x)
+{
+    printf( "%d\n", x );
+}
+
+
+int main()
+{
+    void (*foo)(int);
+    foo = &my_int_func;
+
+    /* call my_int_func (note that you do not need to write (*foo)(2) ) */
+    foo( 2 );
+    /* but if you want to, you may */
+    (*foo)( 2 );
+
+    return 0;
+}
+
+Note that function pointer syntax is flexible; it can either look like most other uses of pointers, with & and *, or you may omit that part of syntax. This is similar to how arrays are treated, where a bare array decays to a pointer, but you may also prefix the array with & to request its address.
+Function Pointers in the Wild
+Let's go back to the sorting example where I suggested using a function pointer to write a generic sorting routine where the exact order could be specified by the programmer calling the sorting function. It turns out that the C function qsort does just that.
+
+From the Linux man pages, we have the following declaration for qsort (from stdlib.h):
+
+ void qsort(void *base, size_t nmemb, size_t size,
+            int(*compar)(const void *, const void *));
+
+Note the use of void*s to allow qsort to operate on any kind of data (in C++, you'd normally use templates for this task, but C++ also allows the use of void* pointers) because void* pointers can point to anything. Because we don't know the size of the individual elements in a void* array, we must give qsort the number of elements, nmemb, of the array to be sorted, base, in addition to the standard requirement of giving the length, size, of the input.
+
+But what we're really interested in is the compar argument to qsort: it's a function pointer that takes two void *s and returns an int. This allows anyone to specify how to sort the elements of the array base without having to write a specialized sorting algorithm. Note, also, that compar returns an int; the function pointed to should return -1 if the first argument is less than the second, 0 if they are equal, or 1 if the second is less than the first.
+
+For instance, to sort an array of numbers in ascending order, we could write code like this:
+
+#include <stdlib.h>
+
+int int_sorter( const void *first_arg, const void *second_arg )
+{
+    int first = *(int*)first_arg;
+    int second = *(int*)second_arg;
+    if ( first < second )
+    {
+        return -1;
+    }
+    else if ( first == second )
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+int main()
+{
+    int array[10];
+    int i;
+    /* fill array */
+    for ( i = 0; i < 10; ++i )
+    {
+        array[ i ] = 10 - i;
+    }
+    qsort( array, 10 , sizeof( int ), int_sorter );
+    for ( i = 0; i < 10; ++i )
+    {
+        printf ( "%d\n" ,array[ i ] );
+    }
+
+}
+
+Using Polymorphism and Virtual Functions Instead of Function Pointers (C++)
+You can often avoid the need for explicit function pointers by using virtual functions. For instance, you could write a sorting routine that takes a pointer to a class that provides a virtual function called compare:
+
+class Sorter
+{
+    public:
+    virtual int compare (const void *first, const void *second);
+};
+
+// cpp_qsort, a qsort using C++ features like virtual functions
+void cpp_qsort(void *base, size_t nmemb, size_t size, Sorter *compar);
+
+inside cpp_qsort, whenever a comparison is needed, compar->compare should be called. For classes that override this virtual function, the sort routine will get the new behavior of that function. For instance:
+
+class AscendSorter : public Sorter
+{
+
+    virtual int compare (const void*, const void*)
+    {
+        int first = *(int*)first_arg;
+        int second = *(int*)second_arg;
+        if ( first < second )
+        {
+            return -1;
+        }
+        else if ( first == second )
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+};
+
+and then you could pass in a pointer to an instance of the AscendSorter to cpp_qsort to sort integers in ascending order.
+But Are You Really Not Using Function Pointers?
+Virtual functions are implemented behind the scenes using function pointers, so you really are using function pointers--it just happens that the compiler makes the work easier for you. Using polymorphism can be an appropriate strategy (for instance, it's used by Java), but it does lead to the overhead of having to create an object rather than simply pass in a function pointer.
+Function Pointers Summary
+Syntax
+Declaring
+Declare a function pointer as though you were declaring a function, except with a name like *foo instead of just foo:
+
+void (*foo)(int);
+
+Initializing
+You can get the address of a function simply by naming it:
+
+void foo();
+func_pointer = foo;
+
+or by prefixing the name of the function with an ampersand:
+
+void foo();
+func_pointer = &foo;
+
+Invoking
+Invoke the function pointed to just as if you were calling a function.
+
+func_pointer( arg1, arg2 );
+
+or you may optionally dereference the function pointer before calling the function it points to:
+
+(*func_pointer)( arg1, arg2 );
+
+Benefits of Function Pointers~
+    Function pointers provide a way of passing around instructions for how to do something~
+    You can write flexible functions and libraries that allow the programmer to choose behavior by passing function pointers as arguments~
+    This flexibility can also be achieved by using classes with virtual functions~
+=======================================================================================================
+
+函数指针~
+函数指针是指向函数的指针变量。 因而“函数指针”本身首先应是指针变量，只不过该指针变量指向函数。这正如用指针变量可指向整型变量、字符型、数组一样，这里是指向函数。如前所述，C在编译时，每一个函数都有一个入口地址，该入口地址就是函数指针所指向的地址。有了指向函数的指针变量后，可用该指针变量调用函数，就如同用指针变量可引用其他类型变量一样，在这些概念上是一致的。函数指针有两个用途：调用函数和做函数的参数。
+
+函数指针的声明方法为：
+函数类型 (标志符指针变量名) (形参列表);
+注1：“函数类型”说明函数的返回类型，“(标志符指针变量名 )”中的括号不能省，若省略整体则成为一个函数说明，说明了一个返回的数据类型是指针的函数，后面的“形参列表”表示指针变量指向的函数所带的参数列表。例如：~
+
+int func(int x);   /* 声明一个函数 */~
+int (*f) (int x);  /* 声明一个函数指针 */~
+f=func;            /* 将func函数的首地址赋给指针f */~
+
+赋值时函数func不带括号，也不带参数，由于func代表函数的首地址，因此经过赋值以后，指针f就指向函数func(x)的代码的首地址。~
+
+注2：函数括号中的形参可有可无，视情况而定。~
+下面的程序说明了函数指针调用函数的方法：
+例一、
+#include<stdio.h>
+int max(int x,int y)
+{
+    return (x > y ? x: y);
+}
+
+void main()
+{
+    int (*ptr)(int, int);~
+    int a,b,c;
+    ptr=max;~
+    scanf("%d%d",&a,&b);
+    c=(*ptr)(a,b);
+    printf("a=%d,b=%d,max=%d",a,b,c);
+}
+
+ptr是指向函数的指针变量，所以可把函数max()赋给ptr作为ptr的值，即把max()的入口地址赋给ptr,以后就可以用ptr来调用该函数，实际上ptr和max都指向同一个入口地址，不同就是ptr是一个指针变量，不像函数名称那样是固定的，它可以指向任何函数，就看你想怎么做了。在程序中把哪个函数的地址赋给它，它就指向哪个函数。而后用指针变量调用它，因此可以先后指向不同的函数。~
+
+
+NOTE:不过注意，指向函数的指针变量没有++和--运算，用时要小心。~
+NOTE:不过，在某些编译器中这是不能通过的。这个例子的补充如下。~
+应该是这样的：~
+1. "定义" 函数指针类型：~
+typedef int (*fun_ptr)(int,int);~
+
+2. "声明" 变量，赋值：~
+fun_ptr max_func=max;~
+也就是说，赋给函数指针的函数应该和函数指针所指的函数原型是一致的。~
+
+例二、
+#include<stdio.h>
+void FileFunc()
+{
+    printf("FileFunc\n");
+}
+
+void EditFunc()
+{
+    printf("EditFunc\n");
+}
+
+void main()
+{
+    typedef void (*funcp)();
+    funcp pfun= FileFunc;
+    pfun();
+    pfun = EditFunc;
+    pfun();
+}
+
+
+指针函数和函数指针的区别：~
+1,这两个概念都是简称，指针函数是指返回值是指针的函数，即本质是一个函数。我们知道函数都有返回类型（如果不返回值，则为无值型），只不过指针函数返回类型是某一类型的指针。
+其定义格式如下所示：
+返回类型标识符* 函数名称（形式参数表）
+{函数体}
+返回类型可以是任何基本类型和复合类型。返回指针的函数的用途十分广泛。事实上，每一个函数，即使它不带有返回某种类型的指针，它本身都有一个入口地址，该地址相当于一个指针。比如函数返回一个整型值，实际上也相当于返回一个指针变量的值，不过这时的变量是函数本身而已，而整个函数相当于一个“变量”。例如下面一个返回指针函数的例子：
+//指针函数是指返回值是指针的函数，即本质是一个函数
+#include<iostream>
+using namespace std;
+int main()
+{
+    float *find(float (*p)[4],int m);//查询序号为m的学生的四门课程的成绩
+    float score[][4]={{50,51,52,55},{70,70,40,80},{77,99,88,67}};//定义成绩数组，第一维可以为变量
+    float *pf=NULL;//定义一个指针时一定要初始化
+    int i,m;
+    cout<<"请输入您想查询的学生的序号:";
+    cin>>m;
+    pf=find(score,m);//返回为一维数组指针，指向一个学生成绩
+    for(i=0;i<4;i++)
+        cout<<*(pf+i)<<" ";
+    cout<<endl;
+    return 0;
+}
+
+float *find(float (*p)[4],int m)
+{
+    float *pf=NULL;
+    pf=*(p+m);//p是指向二维数组的指针，加*取一维数组的指针
+    return pf;
+}
+学生学号从0号算起，函数find()被定义为指针函数，其形参pointer是指针指向包含4个元素的一维数组的指针变量。pointer+1指向 score的第一行。*(pointer+1)指向第一行的第0个元素。pf是一个指针变量，它指向浮点型变量。main()函数中调用find()函数，将score数组的首地址传给pointer.
+
+
+2,“函数指针”是指向函数的指针变量，因而“函数指针”本身首先应是指针变量，只不过该指针变量指向函数。这正如用指针变量可指向整型变量、字符型、数组一样，这里是指向函数。如前所述，C在编译时，每一个函数都有一个入口地址，该入口地址就是函数指针所指向的地址。有了指向函数的指针变量后，可用该指针变量调用函数，就如同用指针变量可引用其他类型变量一样，在这些概念上一致的。函数指针有两个用途：调用函数和做函数的参数。
+
+定义
+关于函数指针数组的定义方法，有两种：一种是标准的方法；一种是蒙骗法。
+
+第一种，标准方法：~
+{
+分析：函数指针数组是一个其元素是函数指针的数组。那么也就是说，此数据结构是一个数组，且其元素是一个指向函数入口地址的指针。
+根据分析：首先说明是一个数组：数组名[]
+其次，要说明其元素的数据类型指针:*数组名[].
+再次，要明确这每一个数组元素是指向函数入口地址的指针：函数返回值类型 (*数组名[])().请注意，这里为什么要把“*数组名[]”用括号扩起来呢？因为圆括号和数组说明符的优先级是等同的，如果不用圆括号把指针数组说明表达式扩起来，根据圆括号和方括号的结合方向，那么 *数组名[]() 说明的是什么呢？是元素返回值类型为指针的函数数组。有这样的函数数组吗？不知道。所以必须括起来，以保证数组的每一个元素是指针。
+}
+第二种，蒙骗法：~
+尽管函数不是变量，但它在内存中仍有其物理地址，该地址能够赋给指针变量。获取函数地址的方法是：用不带有括号和参数的函数名得到。
+函数名相当于一个指向其函数入口指针常量。 那么既然函数名是一个指针常量，那么就可以对其进行一些相应的处理，如强制类型转换。
+那么我们就可以把这个地址放在一个整形指针数组中，然后作为函数指针调用即可。
+
+完整例子：
+#include "stdio.h"
+int add1(int a1,int b1);
+int add2(int a2,int b2);
+
+void main()
+{
+    int numa1=1,numb1=2;
+    int numa2=2,numb2=3;
+    int (*op[2])(int a,int b);
+    op[0]=add1;
+    op[1]=add2;
+    printf("%d %d\n",op[0](numa1,numb1),op[1](numa2,numb2));
+}
+
+int add1(int a1,int b1)
+{
+    return a1+b1;
+}
+
+int add2(int a2,int b2)
+{
+    return a2+b2;
+}
+
+赋值~
+为函数指针数组赋值有两种方式：静态定义和动态赋值。~
+1. 静态定义~
+在定义函数指针数组的时候，已经确定了每个成员所对应的函数。例如：
+void (*INTARRAY[])(void) = {Stop,Run,Jump};
+从根本上讲函数指针数组依然是数组，所以和数组的定义类似，由于是静态赋值，[ ]里面的数字可以
+省略。这个函数指针数组的成员有三个。
+INTARRAY[1](); //执行Run函数
+
+2. 动态赋值~
+也可以先定义一个函数指针数组，在需要的时候为其赋值。为了还原它本来的面目，我们先对这个执行特定类型的函数指针进行类型重定义，然后再用这个新数据类型来定义数组。如下：
+typedef void (*INTFUN)(void); //此类型的函数指针指向的是无参、无返回值的函数。
+INTFUN INTARRAY[32]; //定义一个函数指针数组，其每个成员为INTFUN类型的函数指针
+INTARRAY[10] = INT_TIMER0; //为其赋值
+INTARRAY[10](); //调用函数指针数组的第11个成员指向的函数
+
+
+=================================================================================
+
+void f();                 // 函数原型,语句声明了一个函数，没有输入参数并返回void~
+那么函数指针的声明方法如下：
+
+void (*) ();              //左边圆括弧中的星号是函数指针声明的关键。另外两个元素是函数的返回类型（void）和由边圆括弧中的入口参数（本例中参数是空）。注意本例中还没有创建(使用typedef)指针变量-只是声明了变量类型。目前可以用这个变量类型来创建类型定义名及用sizeof表达式获得函数指针的大小：~
+
+// 获得函数指针的大小~
+unsigned psize = sizeof (void (*) ());~
+
+// 为函数指针声明类型定义~
+typedef void (*pfv) ();~
+
+pfv是一个函数指针的自定义类型，它指向的函数没有输入参数，返回类行为void。使用这个类型定义名可以隐藏复杂的函数指针语法。~
+
+指针变量应该有一个变量名：~
+
+void (*p) (); //p是指向某函数的指针~
+
+p是指向某函数的指针，该函数无输入参数，返回值的类型为void。左边圆括弧里星号后的就是指针变量名。有了指针变量便可以赋值，值的内容是署名匹配的函数名和返回类型。~
+例如：
+
+void func()
+{
+/* do something */
+}
+p = func;
+
+p的赋值可以不同，但一定要是函数的地址，并且署名和返回类型相同。~
+
+
+
+现在可以将p传递给另一个函数（调用者）- caller()，它将调用p指向的函数，而此函数名是未知的：
+
+void caller(void(*ptr)())
+{
+    ptr(); /* 调用ptr指向的函数 */
+}
+
+void func();
+
+int main()
+{
+    p = func;
+    caller(p); /* 传递函数地址到调用者 */
+}
+
+    如果赋了不同的值给p（不同函数地址），那么调用者将调用不同地址的函数。赋值可以发生在运行时，这样使你能实现动态绑定。~
+
+
+调用规范~
+    到目前为止，我们只讨论了函数指针及回调而没有去注意ANSI C/C++的编译器规范。许多编译器有几种调用规范。如在Visual C++中，可以在函数类型前加_cdecl，_stdcall或者_pascal来表示其调用规范（默认为_cdecl）。C++ Builder也支持_fastcall调用规范。调用规范影响编译器产生的给定函数名，参数传递的顺序（从右到左或从左到右），堆栈清理责任（调用者或者被调用者）以及参数传递机制（堆栈，CPU寄存器等）。
+
+    将调用规范看成是函数类型的一部分是很重要的；不能用不兼容的调用规范将地址赋值给函数指针。例如：
+
+// 被调用函数是以int为参数，以int为返回值
+__stdcall int callee(int);
+
+// 调用函数以函数指针为参数
+void caller( __cdecl int(*ptr)(int));
+
+// 在p中企图存储被调用函数地址的非法操作
+__cdecl int(*p)(int) = callee; // 出错
+
+指针p和callee()的类型不兼容，因为它们有不同的调用规范。因此不能将被调用者的地址赋值给指针p，尽管两者有相同的返回值和参数列。
+
+
+====================================================================================================
+NOTE:试问double (*(*(*fp3)())[10])() 定义的是什么？？这是什么样的复杂声明？谁遇上这样的定义都会感到费解的。我们来看看书中(C++编程思想)介绍方法——通过遵循编译器分析“定义”的法则：从变量名开始，先右后左，遇括号返回。  (right-left规则)~
+　　double ( * ( * ( * fp3 ) ( ) ) [10] ) ( )~
+　　变量名为fp3，向右探测遇括号返回，向左发现*，故fp3是指针；再向右发现一对空括号，遇右括号返回，向左发现*，该指针指向一个函数（函数无参数，返回指针）；再向右发现[10]，向左发现*，函数返回的指针指向一个10元素指针数组；再向右是（），向左是double，指针数组的指针指向一个无参数返回double类型数据的函数。~
+====================================================================================================
+
+复杂C声明~
+
+法則：右左法則~
+       从变量开始，从右下角开始，按逆时针旋转，看到符合进行释义。其中()作为括号时，为分界符不用释义，作为函数时释义为“返回××类型的函数”。~
+
+实例1
+int (*pA[10])(int,int);~
+
+分析结果： pA开始首先看到的是[],说明pA是一个数组，逆时针旋转，看到的是×，说明数组内元素是指针，再看到的是括号，继续旋转，看到的是函数，因此说明这个指针指向函数。以此pA的含义是，10个函数指针的数组。 利用typedef定义此实例。typedef int(*MyType)(int,int);MyType pA[10];
+
+实例2
+int *Fun(int,int)[10];~
+
+分析结果：Fun，开始首先看到的是函数，说明Fun是一个函数，然后看到的是指针，说明Fun函数的功能返回一个指针，然后看到的是数组，说明返回的指针是一个10个元素数组的指针。即Fun是一个返回指向10个元素数组指针的函数。利用typedef定义 typedef int *MyType[10]; MyType Fun(int,int);
+
+说明：
+        其实这些复杂符号在编程过程中不应该频繁出现，这样程序可读性会变得生涩难懂。基本上都是通过 typedef 来定义说明增加其可读性。例如上面的两个实例可以用 typedef 按如下模式定义。程序可读性就大大增强。~
+
+//实例1的typedef实现
+typedef int(*MyType)(int,int);      //typedef 一个函数指针~
+MyType pA[10];                      //定义函数指针数组。~
+
+//实例2的typedef实现
+typedef int *MyType[10];            //定义数组指针~
+MyType Fun(int,int);                //定义返回数组指针的函数。~
+
+
+
+一、“right-left”规则~
+
+0. 规则中符号
+
+ *  读作 “指向...的指针”
+
+ []   读作 “...的数组”
+
+ ()  读作 “返回...的函数”
+
+1. 起始点
+
+ 找到声明中的标识符(Identifier)，它就是你分析的起始点，读作：“$(Identifier)是...”；
+
+2. 右边
+
+ 看你的标识符右边
+
+ a) 如果发现“()”，你将知道这是一个函数声明，这时你可以说“$(Identifier)是返回...的函数”；
+
+ b) 如果发现“[]”，你将知道这是一个数组声明，这时你可以说“$(Identifier)是...的数组”；
+
+ c) 继续向右，直到遇到右边声明结束或者遇到“)”，继续下面。
+
+3. 左边
+
+ 看你的标识符左边
+
+ a) 如果碰到的不是我们在0.中定义的符号，则直接说出它；否则按照0.中定义的符号含义说出。继续向左，直到遇到左边声明结束或“(”。
+
+4. 重复2和3的步骤，直到声明分析完毕。
+
+二、例子详解~
+
+[Example 1] int *p[];~
+
+1) 找到标识符：p，读作：“p是...”；
+
+2) 向右看：发现一“[]”，然后遇到右边声明结尾，读作：“p是...的数组”；
+
+3) 向左看：发现一“*”， 读作：“p是指向...的指针的数组”；
+
+4) 继续向左看：没有发现0.中定义的符号，则分析结束，读作：“p是指向int类型的指针的数组”。
+
+[Example 2] int *(*func())();~
+
+1) 找到标识符：func，读作：“func是...”；
+
+2) 向右看：发现一“()”，然后遇到“)”，读作：“func是返回...的函数”；
+
+3) 向左看：发现一“*”，然后遇到“(”，读作：“func是返回指向...的指针的函数”；
+
+4) 向右看：发现一“()”，然后右边声明结束，读作：“func是返回指向返回...的函数的指针的函数”；
+
+5) 向左看：发现一“*”，读作：“func是返回指向返回指向...的指针的函数的指针的函数”；
+
+6) 向左看：没有发现.中定义的符号，则分析结束，读作：“func是返回指向返回指向int类型的指针的函数的指针的函数”。
+
+
+
+实例：
+int (*s_calc_func(char op))(int, int); ~
+
+如果不知道，请看下面的程序，里面有比较详细的说明
+
+// 定义四个函数
+int add(int, int);
+
+int sub(int, int);
+
+int mul(int, int);
+
+int div(int, int);
+
+
+// 定义指向这类函数的指针
+
+
+typedef int (*FP_CALC)(int, int); ~
+
+
+// 我先不介绍，大家能看懂下一行的内容吗？
+
+int (*s_calc_func(char op))(int, int);
+
+// 下一行的内容与上一行完全相同，
+// 定义一个函数calc_func，它根据操作字符 op 返回指向相应的计算函数的指针
+
+FP_CALC calc_func(char op);
+
+
+
+// 根据 op 返回相应的计算结果值
+
+int calc(int a, int b, char op);
+
+int add(int a, int b)
+{
+    return a + b;
+}
+
+
+int sub(int a, int b)
+{
+    return a - b;
+}
+
+int mul(int a, int b)
+{
+    return a * b;
+}
+
+int div(int a, int b)
+{
+    return b? a/b : -1;
+}
+
+// 这个函数的用途与下一个函数作业和调用方式的完全相同，
+
+// 参数为op，而不是最后的两个整形
+
+int (*s_calc_func(char op)) (int, int)
+{
+    return calc_func(op);
+}
+
+FP_CALC calc_func(char op)
+{
+    switch (op)
+    {
+    case '+': return add;
+    case '-': return sub;
+    case '*': return mul;
+    case '/': return div;
+    default:
+        return NULL;
+    }
+    return NULL;
+}
+
+int calc(int a, int b, char op)
+{
+    FP_CALC fp = calc_func(op); // 下面是类似的直接定义指向函数指针变量
+       // 下面这行是不用typedef，来实现指向函数的指针的例子，麻烦！
+        int (*s_fp)(int, int) = s_calc_func(op);
+        // ASSERT(fp == s_fp);  // 可以断言这俩是相等的
+    if (fp) return fp(a, b);
+    else return -1;
+}
+
+void test_fun()
+{
+    int a = 100, b = 20;
+    printf("calc(%d, %d, %c) = %d\n", a, b, '+', calc(a, b, '+'));
+    printf("calc(%d, %d, %c) = %d\n", a, b, '-', calc(a, b, '-'));
+    printf("calc(%d, %d, %c) = %d\n", a, b, '*', calc(a, b, '*'));
+    printf("calc(%d, %d, %c) = %d\n", a, b, '/', calc(a, b, '/'));
+}
+
+
+运行结果
+   calc(100, 20, +) = 120
+   calc(100, 20, -) = 80
+   calc(100, 20, *) = 2000
+   calc(100, 20, /) = 5
+
+
+
+ vim:tm=78:ts=8:ft=help:norl:nospell:
