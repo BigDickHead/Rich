@@ -1,0 +1,2 @@
+ rpm包解压
+ rpm2cpio oracle-instantclient.rpm | cpio -div
