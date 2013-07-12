@@ -29,7 +29,7 @@ automake1.9
 
 *********************************************************************************
 apt-get install ibus ibus-pinyin
-
+//apt-get install pinyin-database
 
 sogou词库
 https://code.google.com/p/hslinuxextra/downloads/list
