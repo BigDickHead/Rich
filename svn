@@ -1,0 +1,9 @@
+建立本地SVN
+svnadmin create /mnt/svn_working
+
+svn co file:///mnt/svn_working
+
+   
+如果在windows下使用，路径名仍然要以"file:///"开头，注意是三个斜杠。比如路径“D:\Dropbox\SVNRepos”，应当写作：
+
+file:///D:/Dropbox/SVNRepos
