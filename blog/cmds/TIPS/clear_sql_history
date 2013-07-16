@@ -1,0 +1,13 @@
+SQL Server如何清除连接过的服务器名称历史？
+
+
+删除Ｘ:\Documents and Settings\ＸＸＸ\Application Data\Microsoft\Microsoft SQL Server\100\Tools\Shell\SqlStudio.bin文件，即可。
+
+如果Windows Server 2008 标准版安装SQL Express 2008，则在这里删除：
+Ｘ:\Users[SomeUser]\AppData\Roaming\Microsoft\Microsoft SQL Server\100\Tools\Shell\SqlStudio.bin
+
+对于SQL Server 2008以前的版本：
+SQL Server 2005:
+删除X:\Documents and Settings\XXX\Application Data\Microsoft\Microsoft SQL Server\90\Tools\Shell\mru.dat
+SQL Server 2000:
+清除注册表HKEY_CURRENT_USER\Software\Microsoft\Microsoft  SQL  Server\80\Tools\Client\PrefServers\相应的内容即可。
