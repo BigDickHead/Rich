@@ -1,0 +1,45 @@
+Fix metasploit “Database not connected or cache not built”
+
+This is a short post explaining how to deal with metasploit instance not connected to its database (I’m using the new Kali Linux but it is the same for Backtrack 5). The issue usually surfaces when you try to search auxiliary or exploit.
+Assuming that you use msfconsole you get something like this:
+
+msf > search oracle
+[!] Database not connected or cache not built, using slow search
+
+The error says that there are 2 probable causes of the problem
+- either your metasploit framework is not connected to its database (postgresql instance called msf3 by default)
+- or the metasploit cache was not built.
+To check if the database is connected you can use db_status command. If your database is connected you will get:
+
+msf > db_status
+[*] postgresql connected to msf3
+
+If the database is connected you can skip the next step and go directly to “Step 2: Build the cache”.
+Stpe 1: Start up PostgreSQL and Metasploit services
+
+If the database is not connected exit your metasploit console and start both postgresql and metasploit services using the following commands:
+
+#service postgresql start~
+#service metasploit start~
+
+Note: if you are using user different then root make sure that he has the privilege level to start those services
+
+Start PostgreSQL and Metasploit Services
+
+After you’ve dealt with both services start the msfconsole again and check if the database is connected using db_status again.
+
+Note: If you want to start the postgresql and metasploit services on each reboot you need to use update-rc.d
+
+#update-rc.d postgresql enable~
+#update-rc.d metasploit enable~
+
+
+Stpe 2: Build the cache
+
+To build/rebuild metasploit cache use db_rebuild_cache command:
+
+msf > db_rebuild_cache~
+
+It takes some time for the cache to be rebuild so be patient.
+
+ vim:tw=78:ts=8:ft=help:norl:

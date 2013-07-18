@@ -1,0 +1,249 @@
+SQLMAP(1)                                                                                                           SQLMAP(1)
+
+
+
+NAME
+       sqlmap - automatic SQL injection tool
+
+SYNOPSIS
+       sqlmap [options] {-u <URL> | -g <google dork> | -c <config file>}
+
+DESCRIPTION
+       sqlmap  is  an automatic SQL injection tool entirely developed in Python.  Its goal is to detect and take advantage of
+       SQL injection vulnerabilities on web applications. Once it detects one or more SQL injections on the target host,  the
+       user  can  choose  among a variety of options to perform an extensive back-end database management system fingerprint,
+       retrieve DBMS session user and database, enumerate users, password  hashes,  privileges,  databases,  dump  entire  or
+       user's specific DBMS tables/columns, run his own SQL SELECT statement, read specific files on the file system and much
+       more.
+
+
+OPTIONS
+       This program can be configured with the options listed below.  The options may be given in any order.
+
+
+       Standard:
+
+       --version
+              show program's version number and exit
+
+       -h, --help
+              show this help message and exit
+
+
+       Target:
+              At least one of these options has to be specified to set the source to get target urls from.
+
+       -u URL, --url=URL
+              Target url
+
+       -l LIST
+              Parse targets from Burp or WebScarab logs
+
+       -g GOOGLEDORK
+              Process Google dork results as target urls
+
+       -c CONFIGFILE
+              Load options from a configuration INI file
+
+
+       Request:
+              These options can be used to specify how to connect to the target url.
+
+       --method=METHOD
+              HTTP method, GET or POST (default: GET)
+
+       --data=DATA
+              Data string to be sent through POST
+
+       --cookie=COOKIE
+              HTTP Cookie header
+
+       --referer=REFERER
+              HTTP Referer header
+
+       --user-agent=AGENT
+              HTTP User-Agent header
+
+       -a USERAGENTSFILE
+              Load a random HTTP User-Agent header from file
+
+       --headers=HEADERS
+              Extra HTTP headers '0 separated
+
+       --auth-type=ATYPE
+              HTTP Authentication type, value: Basic or Digest
+
+       --auth-cred=ACRED
+              HTTP Authentication credentials, value: name:password
+
+       --proxy=PROXY
+              Use a HTTP proxy to connect to the target url
+
+       --threads=THREADS
+              Maximum number of concurrent HTTP requests (default 1)
+
+       --delay=DELAY
+              Delay in seconds between each HTTP request
+
+       --timeout=TIMEOUT
+              Seconds to wait before timeout connection (default 10)
+
+
+       Injection:
+              These options can be used to specify which parameters to test for, provide custom injection payloads and how to
+              parse and compare HTTP responses page content when using the blind SQL injection technique.
+
+       -p TESTPARAMETER
+              Testable parameter(s)
+
+       --dbms=DBMS
+              Force back-end DBMS to this value
+
+       --prefix=PREFIX
+              Injection payload prefix string
+
+       --postfix=POSTFIX
+              Injection payload postfix string
+
+       --string=STRING
+              String to match in page when the query is valid
+
+       --regexp=REGEXP
+              Regexp to match in page when the query is valid
+
+       --excl-str=ESTRING
+              String to be excluded before calculating page hash
+
+       --excl-reg=EREGEXP
+              Regexp matches to be excluded before calculating page hash
+
+
+       Techniques:
+              These  options  can  be  used to test for specific SQL injection technique or to use one of them to exploit the
+              affected parameter(s) rather than using the default blind SQL injection technique.
+
+       --stacked-test
+              Test for stacked queries (multiple statements) support
+
+       --time-test
+              Test for Time based blind SQL injection
+
+       --union-test
+              Test for UNION query (inband) SQL injection
+
+       --union-use
+              Use the UNION query (inband) SQL injection to retrieve the queries output.  No need to go blind
+
+
+       Fingerprint:
+
+       -f, --fingerprint
+              Perform an extensive DBMS version fingerprint
+
+
+       Enumeration:
+              These options can be used to enumerate the back-end database management system information, structure and  data
+              contained in the tables. Moreover you can run your own SQL SELECT queries.
+
+       -b, --banner
+              Retrieve DBMS banner
+
+       --current-user
+              Retrieve DBMS current user
+
+       --current-db
+              Retrieve DBMS current database
+
+       --users
+              Enumerate DBMS users
+
+       --passwords
+              Enumerate DBMS users password hashes (opt: -U)
+
+       --privileges
+              Enumerate DBMS users privileges (opt: -U)
+
+       --dbs  Enumerate DBMS databases
+
+       --tables
+              Enumerate DBMS database tables (opt: -D)
+
+       --columns
+              Enumerate DBMS database table columns (req: -T, opt: -D)
+
+       --dump Dump DBMS database table entries (req: -T, opt: -D, -C, --start, --stop)
+
+       --dump-all
+              Dump all DBMS databases tables entries
+
+       -D DB  DBMS database to enumerate
+
+       -T TBL DBMS database table to enumerate
+
+       -C COL DBMS database table column to enumerate
+
+       -U USER
+              DBMS user to enumerate
+
+       --exclude-sysdbs
+              Exclude DBMS system databases when enumerating tables
+
+       --start
+              First table entry to dump
+
+       --stop Last table entry to dump
+
+       --sql-query=QUERY
+              SQL SELECT query to be executed
+
+       --sql-shell
+              Prompt for an interactive SQL shell
+
+
+       File system access:
+              These  options  can  be  used to access the back-end database management system file system taking advantage of
+              native DBMS functions or specific DBMS design weaknesses.
+
+       --read-file=RFILE
+              Read a specific OS file content (only on MySQL)
+
+       --write-file=WFILE
+              Write to a specific OS file (not yet available)
+
+
+       Operating system access:
+              This option can be used to access the back-end database management system operating system taking advantage  of
+              specific DBMS design weaknesses.
+
+       --os-shell
+              Prompt  for  an  interactive  OS  shell (only on PHP/MySQL environment with a writable directory within the web
+              server document root for the moment)
+
+
+       Miscellaneous:
+
+       --eta  Retrieve each query output length and calculate the estimated time of arrival in real time
+
+       -v VERBOSE
+              Verbosity level: 0-5 (default 1)
+
+       --update
+              Update sqlmap to the latest stable version
+
+       -s SESSIONFILE
+              Save and resume all data retrieved on a session file
+
+       --save Save options on a configuration INI file
+
+       --batch
+              Never ask for user input, use the default behaviour
+
+
+SEE ALSO
+       The program provides inline documentation, refer also to the official README file.
+
+AUTHOR
+       This manual page was written by Bernardo Damele A. G.  <bernardo.damele@gmail.com>.
+
+
+ vim:ft=man:
