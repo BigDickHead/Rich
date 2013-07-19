@@ -1,8 +1,12 @@
 ndisasm           反汇编
 readelf
 strace
+ar
+ranlib
+objdump
+valgrind          a suite of tools for debugging and profiling programs
 nm                查看库包含的文件
-gzexec            压缩执行文件
+gzexe             压缩执行文件
 axel              命令行多线程可断点续传下载工具
 gprof             打印出程序运行中各个函数消耗的时间,可以帮助程序员找出众多函数中最耗时的函数,产生程序运行过程中的调用关系,
                   包括调用次数,可以帮助程序员分析程序的运行流程

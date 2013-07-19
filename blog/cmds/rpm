@@ -1,2 +1,7 @@
  rpm包解压
  rpm2cpio oracle-instantclient.rpm | cpio -div
+
+
+ //rpmbuild
+ rpmbuild --rebuild http://nmap.org/dist/nmap-4.68-1.src.rpm
+ rpm -vhU nmap-4.68.1.i386.rpm
