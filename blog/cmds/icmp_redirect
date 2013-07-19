@@ -1,0 +1,5 @@
+icmp_redirect [-v[v[v]]] -i <interface> 
+    [-s <source net>/<source mask>]
+    [-d <destination net>/<destination mask>]
+    [-G <gateway IP>] [-w <delay>]
+    [-S <ip address>]

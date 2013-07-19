@@ -1,0 +1,16 @@
+Usage: verify_data <algorithm> <key file> <signature file> <input file>
+
+where <algorithm> depends on the signature algorithm used:
+    0 for RSA1024 SHA1
+    1 for RSA1024 SHA256
+    2 for RSA1024 SHA512
+    3 for RSA2048 SHA1
+    4 for RSA2048 SHA256
+    5 for RSA2048 SHA512
+    6 for RSA4096 SHA1
+    7 for RSA4096 SHA256
+    8 for RSA4096 SHA512
+    9 for RSA8192 SHA1
+    10 for RSA8192 SHA256
+    11 for RSA8192 SHA512
+

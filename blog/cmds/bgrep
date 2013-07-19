@@ -1,0 +1,2 @@
+bgrep version: 0.2
+usage: bgrep <hex> [<path> [...]]
