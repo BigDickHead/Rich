@@ -1,0 +1,47 @@
+INETD2RLINETD(8)                                        rlinetd 0.8.2                                        INETD2RLINETD(8)
+
+
+
+NAME
+       inetd2rlinetd - configuration file converter
+
+SYNOPSIS
+       inetd2rlinetd [--force-overwrite] [--print-file-names] [--add-from-comment] [-f file] [-l entry] [directory]
+
+DESCRIPTION
+       inetd2rlinetd is a script to convert typical inetd.conf(5) style configuration files to rlinetd.conf(5) style configu‐
+       ration files.
+
+OPTIONS
+       -f file
+              File in inetd.conf(5) format which will be converted. Default in stdin.
+
+       -l entry
+              A line in inetd.conf(5) format. Only that line will be converted. On Debian systems, this option is used inter‐
+              nally by the update-inetd(8) command.
+
+       directory
+              Output files directory. Default is /etc/rlinetd.d.
+
+       --force-overwrite
+              Forces overwriting existing files with new version.
+
+       --print-file-names
+              Prints to standard output list of generated files.
+
+       --add-from-comment
+              Puts special comment with original inetd.conf(5) line in front of each converted service.
+
+   NOTE
+       Options -f and -l cannot be used together.
+
+SEE ALSO
+       rlinetd.conf(5), inetd.conf(5), inetd(8), rlinetd(8)
+
+AUTHOR
+       This   manual   page   was   written   by   Mikolaj  J.  Habryn  <dichro-doc@rcpt.to>.   Modified  by  Robert  Luberda
+       <robert@debian.org>.
+
+
+
+Debian                                                  July 4th, 2011                                       INETD2RLINETD(8)
