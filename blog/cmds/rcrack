@@ -1,0 +1,27 @@
+RainbowCrack 1.5
+Copyright 2003-2010 RainbowCrack Project. All rights reserved.
+Official Website: http://project-rainbowcrack.com/
+
+usage: rcrack rt_files [rt_files ...] -h hash
+       rcrack rt_files [rt_files ...] -l hash_list_file
+       rcrack rt_files [rt_files ...] -f pwdump_file
+       rcrack rt_files [rt_files ...] -n pwdump_file
+rt_files:               path to the rainbow table(s), wildchar(*, ?) supported
+-h hash:                load single hash
+-l hash_list_file:      load hashes from a file, each hash in a line
+-f pwdump_file:         load lanmanager hashes from pwdump file
+-n pwdump_file:         load ntlm hashes from pwdump file
+
+hash algorithms implemented in alglib0.so:
+    lm, plaintext_len limit: 0 - 7
+    ntlm, plaintext_len limit: 0 - 15
+    md5, plaintext_len limit: 0 - 15
+    sha1, plaintext_len limit: 0 - 20
+    mysqlsha1, plaintext_len limit: 0 - 20
+    halflmchall, plaintext_len limit: 0 - 7
+    ntlmchall, plaintext_len limit: 0 - 15
+    oracle-SYSTEM, plaintext_len limit: 0 - 10
+    md5-half, plaintext_len limit: 0 - 15
+
+example: rcrack *.rt -h 5d41402abc4b2a76b9719d911017c592
+         rcrack *.rt -l hash.txt
