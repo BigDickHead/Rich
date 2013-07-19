@@ -3,33 +3,38 @@ sqlsh: mssql cli query tool
 sqsh -S 10.0.0.10:1433 -U sa -P sa
 
 $sqsh -S10.168.1.46:5000 -Usa -D andy -p asdf
-Use: sqsh [-a count] [-A packet_size] [-b] [-B] [-c [cmdend]] [-C sql]
-          [-d severity] [-D database] [-e] [-E editor] [-f severity] [-h]
-          [-H hostname] [-i filename] [-I interfaces] [-J charset]
-          [-k keywords] [-l level] [-m mode] [-n on|off] [-L var=value]
-          [-o filename] [-p] [-P [password]] [-r [sqshrc]] [-s colsep]
-          [-S server] [-t [filter]] [-U username] [-v] [-w width] [-▒] [-X]
-          [-y dir] [-z language]
 
- -a  Max. # of errors before abort       -m  Set display mode (normal)
- -A  Adjust TDS packet size (512)        -n  Set chained transaction mode
- -b  Suppress banner message on startup  -L  Set the value of a given variable
+Use: sqsh [-a count] [-A packet_size] [-b] [-B] [-c [cmdend]] [-C sql]
+          [-d severity] [-D database] [-e] [-E editor] [-f severity]
+          [-G TDS version] [-h] [-H hostname] [-i filename] [-I interfaces]
+          [-J charset] [-k keywords] [-K keytab] [-l level|flags]
+          [-L var=value] [-m style] [-n {on|off}] [-N appname] [-o filename]
+          [-p] [-P [password]] [-Q query_timeout] [-r [sqshrc]]
+          [-R principal] [-s colsep] [-S server] [-t [filter]]
+          [-T login_timeout] [-U username] [-v] [-V [bcdimoqru]] [-w width]
+          [-X] [-y directory] [-z language] [-Z [secmech]]
+
+ -a  Max. # of errors before abort       -m  Set display mode
+ -A  Adjust TDS packet size              -n  Set chained transaction mode
+ -b  Suppress banner message on startup  -N  Set Application Name (sqsh)
  -B  Turn off file buffering on startup  -o  Direct all output to file
  -c  Alias for the 'go' command          -p  Display performance stats
- -C  Send sql statment to server         -P  Sybase password (NULL)
- -d  Min. severity level to display      -r  Specify name of .sqshrc
- -D  Change database context on startup  -s  Alternate column separator (\t)
- -e  Echo batch prior to executing       -S  Name of Sybase server ($DSQUERY)
- -E  Replace default editor (vi)         -t  Filter batches through program
- -f  Min. severity level for failure     -U  Name of Sybase user
- -h  Disable headers and footers         -v  Display current version and exit
- -H  Set the client hostname             -w  Adjust result display width
- -i  Read input from file                -▒
- -I  Alternate interfaces file           -X  Enable client password encryption
- -J  Client character set                -y  Override value of $SYBASE
- -k  Specify alternate keywords file     -z  Alternate display language
- -l  Set debugging level
- 
+ -C  Send sql statement to server        -P  Sybase password (NULL)
+ -d  Min. severity level to display      -Q  Query timeout period in seconds
+ -D  Change database context on startup  -r  Specify name of .sqshrc
+ -e  Echo batch prior to executing       -R  Network security server principal
+ -E  Replace default editor (vi)         -s  Alternate column separator (\t)
+ -f  Min. severity level for failure     -S  Name of Sybase server ($DSQUERY)
+ -G  TDS version to use                  -t  Filter batches through program
+ -h  Disable headers and footers         -T  Login timeout period in seconds
+ -H  Set the client hostname             -U  Name of Sybase user
+ -i  Read input from file                -v  Display current version and exit
+ -I  Alternate interfaces file           -V  Request network security services
+ -J  Client character set                -w  Adjust result display width
+ -k  Specify alternate keywords file     -X  Enable client password encryption
+ -K  Network security keytab file (DCE)  -y  Override value of $SYBASE
+ -l  Set debugging level                 -z  Alternate display language
+ -L  Set the value of a given variable   -Z  Network security mechanism
 
 // 1. To connect to a database on startup use the -D option
 
