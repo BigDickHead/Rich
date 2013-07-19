@@ -1,0 +1,1 @@
+usage: cutb.bin offset [length] < infile > outfile

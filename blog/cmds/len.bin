@@ -1,0 +1,1 @@
+usage: len.bin min max < infile > outfile

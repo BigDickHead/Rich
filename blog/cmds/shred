@@ -74,3 +74,5 @@ DESCRIPTION
 
        In addition, file system backups and remote mirrors may contain copies of the file that cannot be removed,  and
        that will allow a shredded file to be recovered later.
+
+ vim:tw=78:ts=8:ft=man:norl:
