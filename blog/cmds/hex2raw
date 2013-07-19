@@ -1,0 +1,9 @@
+Hex2Raw 1.5 [convert hexstrings on stdin to raw data on stdout]
+written by: Emanuele Acri <crossbower@gmail.com>
+
+Usage:
+    hex2raw [-r|-h]
+
+Options:
+    -r  reverse mode (raw to hexstring)
+    -h  this help screen
