@@ -1,1 +1,2 @@
 dpkg -l           list those software that already installed.
+dpkg --get-selections
