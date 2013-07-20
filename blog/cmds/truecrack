@@ -1,0 +1,23 @@
+TrueCrack v2.5
+Website: http://code.google.com/p/truecrack
+Contact us: infotruecrack@gmail.com
+Bruteforce password cracker for Truecrypt volume. Optimazed with Nvidia Cuda technology.
+Based on TrueCrypt, freely available at http://www.truecrypt.org/
+Copyright (c) 2011 by Luca Vaccaro.
+
+Usage:
+ truecrack -t <truecrypt_file> -w <wordlist_file> [-b <parallel_block>]
+ truecrack -t <truecrypt_file> -c <charset> -m <maxlength>
+
+Options:
+ -h --help            Display this usage information.
+ -t --truecrypt FILE  Truecrypt volume file.
+ -w --wordlist FILE   Wordlist file for dictionary attack.
+ -b --blocksize INT   Number of concurrent parallel computation for dictionary attack (board dependent).
+ -c --charset STRING  Alphabet to generate the passwords for charset attack.
+ -m --maxlength INT   Max length of passwords for charset attack.
+ -v --verbose         Show verbose computation messages.
+
+Sample:
+ Dictionary mode: truecrack --truecrypt ./volume --wordlist ./dictionary.txt 
+ Charset mode: truecrack --truecrypt ./volume --charset ./dictionary.txt --maxlength 10
