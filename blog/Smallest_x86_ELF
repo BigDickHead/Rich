@@ -1,0 +1,153 @@
+http://timelessname.com/elfbin/
+
+Smallest x86 ELF Hello World
+(That I could achieve)
+Final size: 142 bytes
+Intro
+
+This page is a combination tutorial/documentary about my attempts at creating the smallest x86 ELF binary that would execute saying Hello World on Ubuntu Linux. My first attempts started with C then progressed to x86 assembly and finally to a hexeditor. I ended up compromising and switching to a "Hi World" app instead in order to fit the string data into the elf magic number. The final result is a completely corrupted x86 ELF Binary that still runs.
+From start to finish.
+
+    The first thing you need to do is get an a proper environment setup.
+        Install Ubuntu (or a distro of your choice)
+        run: sudo apt-get install g++ gcc nasm
+        System versions
+
+        user@computer:~$ lsb_release -a
+        No LSB modules are available.
+        Distributor ID: Ubuntu
+        Description:    Ubuntu 8.04.1
+        Release:    8.04
+        Codename:   hardy
+        user@computer:~$ uname -a
+        Linux ryanh-desktop 2.6.24-19-generic #1 SMP Wed Jun 18 14:43:41 UTC 2008 i686 GNU/Linux
+        user@computer:~$ gcc --version
+        gcc (GCC) 4.2.3 (Ubuntu 4.2.3-2ubuntu7)
+        Copyright (C) 2007 Free Software Foundation, Inc.
+        This is free software; see the source for copying conditions.  There is NO
+        warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        user@computer:~$ nasm -version
+        NASM version 0.99.06-20071101 compiled on Nov 15 2007
+
+    My first attempts started with C, the following is what I used for chello.c
+    Code: chello.c
+
+    #include <stdio.h>
+    int main() {
+      printf ("Hi World\n");
+      return 0;
+    }
+
+    Command: gcc
+
+    user@computer:~$ gcc -o chello chello.c
+    user@computer:~$ ./chello 
+    Hi World
+
+    My initial executable was 6363 bytes.
+    You can use readelf to dump the ELF header from the executable.
+    Command: readelf
+
+    user@computer:~$ readelf -h chello
+    ELF Header:
+      Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+      Class:                             ELF32
+      Data:                              2's complement, little endian
+      Version:                           1 (current)
+      OS/ABI:                            UNIX - System V
+      ABI Version:                       0
+      Type:                              EXEC (Executable file)
+      Machine:                           Intel 80386
+      Version:                           0x1
+      Entry point address:               0x80482f0
+      Start of program headers:          52 (bytes into file)
+      Start of section headers:          3220 (bytes into file)
+      Flags:                             0x0
+      Size of this header:               52 (bytes)
+      Size of program headers:           32 (bytes)
+      Number of program headers:         7
+      Size of section headers:           40 (bytes)
+      Number of section headers:         36
+      Section header string table index: 33
+
+    ldd is useful for showing all the dynamic libraries an executable is linked to.
+    Command: ldd
+
+    user@computer:~$ ldd chello
+        linux-gate.so.1 =>  (0xb7f77000)
+        libc.so.6 => /lib/tls/i686/cmov/libc.so.6 (0xb7e18000)
+        /lib/ld-linux.so.2 (0xb7f78000)
+
+    file will give you a description of what a file is.
+    Command: file
+
+    user@computer:~$ file chello
+    chello: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.8, dynamically linked (uses shared libs), not stripped
+
+    The "not stripped" returned from the file command means that the debugging symbols haven't been stripped from the excutable.
+    Command: strip
+
+    user@computer:~$ strip -s chello
+
+    After stripping the executable was now 2984 bytes, still unacceptable! Time to take drastic measures...
+    I scratched the C attempt and dropped using printf, instead opting for nasm x86 assembly.
+    file: hello.asm
+
+        SECTION .data
+    msg:    db "Hi World",10
+    len:    equ $-msg
+
+        SECTION .text
+
+            global main
+    main:
+        mov edx,len
+        mov ecx,msg
+        mov ebx,1
+        mov eax,4
+
+        int 0x80
+        mov ebx,0
+        mov eax,1
+        int 0x80
+
+    Compiling the asm
+
+    user@computer:~$ nasm -f elf hello.asm
+    user@computer:~$ gcc -o hello hello.o -nostartfiles -nostdlib -nodefaultlibs
+    user@computer:~$ strip -s hello
+    user@computer:~$ ./hello
+    Hi World
+
+    Before stripping the file was 770 bytes after stripping 448 bytes. However there is still useless headers and sections to destroy.
+    Open the binary in your favorite hex editor, I use the curses hexeditor and ghex2.
+    Delete everything including and past offset 0xAD, this will drop it down to 173 bytes
+    Move 0xA4-0xAC to 0x7 and Change offset 0x86 from 0xA4 to its new location 0x07. Delete 0xA2 and 0xA3
+    The file should be 164 bytes and now its time to enter the twilight zone... The rest is a lot to explain, basically I attempted to find what I could change in the elf head with out having it segfault on me.I added some jmps and completely corrupted the executable, however it still runs :). Here is some useful information: In x86 0xD9D0 is nop or no operation, useful for just filling space if you need to. 0xEB followed by a single signed byte is a relative jmp. Really you should read the intel docs on x86 instructions A-M N-Z .
+
+    typedef struct {
+            unsigned char   e_ident[EI_NIDENT];
+            Elf32_Half      e_type;
+            Elf32_Half      e_machine;
+            Elf32_Word      e_version;
+            Elf32_Addr      e_entry;
+            Elf32_Off       e_phoff;
+            Elf32_Off       e_shoff;
+            Elf32_Word      e_flags;
+            Elf32_Half      e_ehsize;
+            Elf32_Half      e_phentsize;
+            Elf32_Half      e_phnum;
+            Elf32_Half      e_shentsize;
+            Elf32_Half      e_shnum;
+            Elf32_Half      e_shtrndx;
+    } Elf32_Ehdr;
+
+Conclusion.
+Final size: 142 bytes
+helloworld.tar.gz
+
+I am certain that there are ways to get it even smaller. There may also be more things that can be removed from the header to increase size, but I didn't spend the enough time fully researching the ELF header format. Another option might be to use the a.out format instead of ELF may allow you to get even smaller.
+Comments, suggestions, and critical criticism accepted: henszey@gmail.com
+
+
+Home
