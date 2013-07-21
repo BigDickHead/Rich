@@ -21,3 +21,8 @@ Options:
 Sample:
  Dictionary mode: truecrack --truecrypt ./volume --wordlist ./dictionary.txt 
  Charset mode: truecrack --truecrypt ./volume --charset ./dictionary.txt --maxlength 10
+
+
+
+NOTE:
+the other tools called "TChead" also can crack the truecypt volume.
