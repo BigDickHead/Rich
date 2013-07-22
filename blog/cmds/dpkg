@@ -1,1 +1,10 @@
 dpkg -l           list those software that already installed.
+
+查看软件版本，aptitude version xx , apt-cache policy xx
+
+
+
+To clone the packages installed in other system.
+dpkg --get-selections > ~/files/selections.list
+dpkg --set-selections < ~/files/selections.list
+apt-get dselect-upgrade
