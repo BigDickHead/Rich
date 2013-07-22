@@ -1,9 +1,5 @@
-AR(1)                                               GNU Development Tools                                               AR(1)
 
-
-
-NAME
-       ar - create, modify, and extract from archives
+ar - create, modify, and extract from archives
 
 SYNOPSIS
        ar [--plugin name] [-X32_64] [-]p[mod [relpos] [count]] [--target bfdname] archive [member...]
@@ -211,3 +207,8 @@ COPYRIGHT
 
 
 binutils-2.21.90                                          2011-11-21                                                    AR(1)
+
+ar -x foo.deb
+
+
+ vim:tw=78:ts=8:ft=man:norl:

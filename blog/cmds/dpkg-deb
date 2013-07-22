@@ -1,0 +1,23 @@
+==================================================================================
+NOTE:
+Build a .deb packages.~
+
+dpkg-deb -x foo.deb some-dir                    //extract the common files from .deb~
+dpkg-deb -e foo.deb some-dir/DEBIAN             //extract the install scripts from .deb~
+
+Rebuild is even simpler:~
+
+dpkg-deb -b some-dir foo.deb                    //build a directory to .deb~
+
+==================================================================================
+
+
+
+dpkg-deb -c foo.deb |more
+-c      //list contents of .deb file~
+
+better than ar -x and untar/tar and will try that in future 
+ar  -x  foo.deb~
+
+
+ vim:tw=78:ts=8:ft=help:norl:
