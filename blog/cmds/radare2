@@ -1,0 +1,101 @@
+
+radare2: Advanced commandline hexadecimal editor~
+
+Usage: radare2 [-dDwntLqv] [-P patch] [-p prj] [-a arch] [-b bits] [-i file]
+               [-s addr] [-B blocksize] [-c cmd] [-e k=v] [file]
+ -a [arch]    set asm.arch eval var
+ -b [bits]    set asm.bits eval var
+ -B [size]    initial block size
+ -c 'cmd..'   execute radare command
+ -d           use 'file' as a program to debug
+ -D [backend] enable debug mode (e cfg.debug=true)
+ -e k=v       evaluate config var
+ -f           block size = file size
+ -i [file]    run script file
+ -l [lib]     load plugin file
+ -L           list supported IO plugins
+ -n           do not run ~/.radare2rc
+ -q           quite mode (no prompt)
+ -p [prj]     set project file
+ -P [file]    apply rapatch file and quit
+ -s [addr]    initial seek
+ -t           load rabin2 info in thread
+ -v           show radare2 version
+ -w           open file in write mode
+ -h           show this help
+ -H           show extended help (files and environment)
+
+
+SYNOPSIS
+     radare2 [-a arch] [-b bits] [-B blocksize] [-c cmd] [-e k=v] [-i file] [-p project] [-P patch] [-s addr] [-dDwntLqv]
+             file
+
+DESCRIPTION
+     radare2 is a commandline hexadecimal editor.
+
+     "r2" is the alias program name for radare2.
+
+     This manpage is not updated yet. Feel free to contribute.
+
+     The options are:
+
+     -a arch     force asm.arch (x86, ppc, arm, mips, bf, java, ...)
+
+     -b bits     force asm.bits (16, 32, 64)
+
+     -B bsize    Set block size
+
+     -c cmd      Execute the given command before giving prompt
+
+     -d          Start in debugger mode
+
+     -D dbg.backend
+                 Enable debug mode. Set cfg.debug=true
+
+     -e k=v      Set configuration eval variable key=value. For example -e scr.color=false
+
+     -f          Blocksize = file size
+
+     -i file     Run script file
+
+     -l plugfile
+                 Load given plugin file
+
+     -L          List supported IO plugins.
+
+     -n          Do not load r_bin information and ~/.radare2rc
+
+     -q          Quiet mode (no prompt)
+
+     -p prj      Set project file
+
+     -P file     Apply rapatch file and quit
+
+     -s addr     Start seeking at this address
+
+     -t          Get binary information using a thread
+
+     -v          Show version information and exits.
+
+     -w          Open in write mode
+
+     -h          Show help message
+
+     -H          Show files and environment help
+
+SHELL
+     Type '?' for help.
+
+VISUAL
+     To enter visual mode use the 'V' command. Then press '?' for help.
+
+DEBUGGER
+     In r2 the debugger commands are implemented under the 'd' command. Type 'd?' for help.
+
+ENVIRONMENT
+     These values can be used from scripts launched from inside radare ('!' command) FILE path to the current working file
+
+SEE ALSO
+     rahash2(1), rafind2(1), rabin2(1), radiff2(1), ranal2(1), rasm2(1), rax2(1), ragg2(1), rarun2(1),
+
+ vim:tw=78:ts=8:ft=help:norl:

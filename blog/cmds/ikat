@@ -1,0 +1,7 @@
+
+iKAT - Interactive Kiosk Attack Tool~
+
+iKAT was designed to aid security consultants with the task of auditing the security of browser controlled environments such as Kiosks, Citrix Terminals and WebTV's by providing methods to access the underlying operating system and automatically escalate local privileges. iKAT has been used by software vendors and security consultants since 2006 to help increase the security bar.
+
+
+ vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,6 @@
+node_query6 v2.1 (c) 2012 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: node_query6 interface target
+
+Sends an ICMPv6 node query request to the target and dumps the replies.
+
