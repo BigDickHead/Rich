@@ -1,0 +1,7 @@
+beef + metasploit
+# msfconsole
+# load msgrpc
+
+to edit /pentest/web/beef/config.yaml
+        /pentest/web/beef/extensions/metasploit/config.yaml
+        /pentest/web/beef/modules/metasploit/config.yaml
