@@ -1,0 +1,60 @@
+      ________                      __
+     |  |  |  |-----.----.-.--.----'  |--.--.
+     |  |  |  |  -__| -__| |  | -__|  |  |  |
+     |________|_____|____|___/|____|__|___  | v1.0
+                                      |_____|
+              Stealth tiny web shell
+
+[+] Start ssh-like terminal session
+    weevely <url> <password>
+
+[+] Run command directly from command line
+    weevely <url> <password> [ "<command> .." | :<module> .. ]  
+
+[+] Generate PHP backdoor
+    weevely generate <password> [ <path> ] ..
+
+[+] Show credits
+    weevely credits
+    
+[+] Show available module and backdoor generators
+    weevely help
+
+
+weevely help
++--------------------+------------------------------------------------------+
+| generator          | description                                          |
++--------------------+------------------------------------------------------+
+| :generate.img      | Backdoor existing image and create related .htaccess |
+| :generate.htaccess | Generate backdoored .htaccess.                       |
+| :generate.php      | Generate obfuscated PHP backdoor                     |
++--------------------+------------------------------------------------------+
++----------------------+-----------------------------------------------------------------------+
+| module               | description                                                           |
++----------------------+-----------------------------------------------------------------------+
+| :audit.mapwebfiles   | Enumerate webroot files properties                                    |
+| :audit.etcpasswd     | Enumerate users and /etc/passwd content                               |
+| :audit.userfiles     | Enumerate common users restricted files                               |
+| :bruteforce.sql      | Bruteforce SQL username                                               |
+| :bruteforce.sqlusers | Bruteforce all SQL users                                              |
+| :system.info         | Collect system informations                                           |
+| :find.perms          | Find files with write, read, execute permissions                      |
+| :find.suidsgid       | Find files with superuser flags                                       |
+| :backdoor.tcp        | Open a shell on TCP port                                              |
+| :backdoor.reversetcp | Send reverse TCP shell                                                |
+| :shell.php           | PHP shell                                                             |
+| :shell.sh            | System shell                                                          |
+| :file.check          | Check remote files type, md5 and permission                           |
+| :file.read           | Read files from target filesystem                                     |
+| :file.upload2web     | Upload binary/ascii file into web folders and guess corresponding url |
+| :file.upload         | Upload binary/ascii file to the target filesystem                     |
+| :file.download       | Download binary/ascii files from target filesystem                    |
+| :file.enum           | Check remote files type, md5 and permission                           |
+| :file.rm             | Remove remote files and folders                                       |
+| :sql.console         | Execute SQL queries                                                   |
+| :sql.dump            | Get SQL database dump                                                 |
+| :net.ifaces          | Print interface addresses                                             |
+| :net.scan            | Print interface addresses                                             |
+| :net.phpproxy        | Install remote PHP proxy                                              |
+| :net.proxy           | Install and run Proxy to tunnel traffic through target                |
++----------------------+-----------------------------------------------------------------------+
