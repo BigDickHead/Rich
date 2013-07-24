@@ -1,0 +1,93 @@
+A good way~
+
+Notice how I said “capturing packets requires root” above? Here’s a secret — Wireshark doesn’t capture packets. A separate program called *dumpcap* does. Compared to Wireshark, dumpcap is tiny. It’s much less complex and much safer to run as root. We can make it so that dumpcap runs as root and that only users in a particular group can run it:
+
+$ sudo -s~
+# groupadd  wireshark~
+# usermod -a -G wireshark gerald~
+# newgrp wireshark                              //force the effect of the new group~
+# chgrp wireshark /usr/bin/dumpcap~
+# chmod 4750 /usr/bin/dumpcap~
+
+
+
+A better way~
+
+It’s also possible to let *dumpcap* do its job without involving root access at all. For a very long time Linux has allowed the use of fine-grained permissions called capabilities. In many recent distributions you can use the *setcap* utility to add capabilities to individual files.
+
+*Dumpcap* needs *CAP_NET_RAW* and *CAP_NET_ADMIN* , so what do we need to feed *setcap* ? On my Ubuntu Karmic system the setcap man page points you to cap_from_text. Cap_from_text points you to _cap_names, an array in the kernel. It would be nice if the setcap man page included a list of capability names along with a few examples. As it turns out, the names need to be in lower-case.
+
+$ sudo -s~
+# sudo apt-get install libcap2-bin~
+# groupadd wireshark~
+# usermod -a -G wireshark gerald~
+# newgrp wireshark                              //force the effect of the new group~
+# chmod 750 /usr/bin/dumpcap~
+# setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap~
+
+
+
+====================================================================================
+
+Sniffing with Wireshark as a Non-Root User~
+
+Indeed, due to the complexity and sheer number of its many protocol dissectors, Wireshark is inherently vulnerable to malformed traffic (accidental or otherwise), which may result in denial of service conditions or possibly arbitrary code execution. But if we shouldn't run Wireshark with root privileges, how are we to capture packets?
+
+The lead developer of Wireshark, Gerald Combs, points out some that Linux distributions are beginning to implement Linux filesystem capabilities for raw network access. 
+Filesystem Capabilities
+
+What are filesystem capabilities? From the man page:
+
+    For the purpose of performing permission checks, traditional Unix implementations distinguish two categories of processes: privileged processes (whose effective user ID is 0, referred to as superuser or root), and unprivileged processes (whose effective UID is non-zero). Privileged processes bypass all kernel permission checks, while unprivileged processes are subject to full permission checking based on the process's credentials (usually: effective UID, effective GID, and supplementary group list).
+
+    Starting with kernel 2.2, Linux divides the privileges traditionally associated with superuser into distinct units, known as capabilities, which can be independently enabled and disabled. Capabilities are a per-thread attribute.
+
+The manual goes on to list over two dozen distinct POSIX capabilities which individual executables may be granted. For sniffing, we're interested in two specifically:
+
+    CAP_NET_ADMIN - Allow various network-related operations (e.g., setting privileged socket options, enabling multicasting, interface configuration, modifying routing tables).~
+    CAP_NET_RAW - Permit use of RAW and PACKET sockets.~
+
+CAP_NET_ADMIN allows us to set an interface to promiscuous mode, and CAP_NET_RAW permits raw access to an interface for capturing directly off the wire. These capabilities are assigned using the setcap utility.
+
+
+Enabling Non-root Capture~
+Step 1: Install setcap~
+
+First, we'll need to install the setcap executable if it hasn't been already. We'll use this to set granular capabilities on Wireshark's dumpcap executable. setcap is part of the libcap2-bin package.
+
+$ sudo apt-get install libcap2-bin~
+
+Step 2: Create a Wireshark Group (Optional)~
+
+Since the application we'll be granting heightened capabilities can by default be executed by all users, you may wish to add a designated group for the Wireshark family of utilities (and similar applications) and restrict their execution to users within that group. However, this step isn't strictly necessary.
+
+$ sudo groupadd wireshark~
+$ sudo usermod -a -G wireshark Username~
+
+After adding yourself to the group, your normal user may have to log out and back in. Or, you can run newgrp to force the effect of the new group.~
+
+$ newgrp wireshark~
+
+We assign the dumpcap executable to this group instead of Wireshark itself, as dumpcap is responsible for all the low-level capture work. Changing its mode to 750 ensures only users belonging to its group can execute the file.
+
+$sudo chgrp wireshark /usr/bin/dumpcap~
+$sudo chmod 750 /usr/bin/dumpcap~
+
+
+Step 3: Grant Capabilities~
+
+Granting capabilities with setcap is a simple matter:
+
+$sudo setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap~
+
+In case you're wondering, that =eip bit after the capabilities list grants them in the effective, inheritable, and permitted bitmaps, respectively. A more thorough explanation is provided in section 2 of this FAQ.
+
+To *verify* our change, we can use getcap:
+
+$ getcap /usr/bin/dumpcap
+/usr/bin/dumpcap = cap_net_admin,cap_net_raw+eip
+
+Now, as the user who we added to the wireshark group in step 2, execute Wireshark. You should now see the full list of available adapters and can begin sniffing. (If not, double-check that the wireshark group is listed in the output of groups. You may need to log out and back in for the new group assignment to take effect.)
+
+
+ vim:tw=78:ts=8:ft=help:norl:
