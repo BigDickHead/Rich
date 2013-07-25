@@ -1,0 +1,5 @@
+
+# Add follow lines to .bashrc, then the mutt can use 256 color in terminal.
+if [ "$TERM" == "xterm" ]; then
+    export TERM=xterm-256color
+fi
