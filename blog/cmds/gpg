@@ -59,6 +59,25 @@
 
 
 
+1, 导出公钥发布
+gpg --export mike@mynet.net >mike.gpg
+or
+gpg -a --export mike@mynet.net >mike.gpg
+
+
+2, 查看指纹, 核对公钥是否正确
+gpg --fingerprint mike.gpg
+
+
+3, 导入公钥
+gpg --import mike.gpg
+
+
+4, 公钥签名
+gpg --sign-key mike.gpg
+
+
+
 NAME
        gpg - OpenPGP encryption and signing tool
 
