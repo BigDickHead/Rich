@@ -1,0 +1,7 @@
+================================================================
+conflicted with ocs (cisco-ocs)
+
+Solved
+mv /usr/bin/ocs /usr/bin/cisco-ocs
+sed -i 's/ocs;/cisco-ocs;/' /usr/share/applications/kali-cisco-ocs.desktop
+================================================================
