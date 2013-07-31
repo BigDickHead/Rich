@@ -1,4 +1,73 @@
-java 反编译
+java 反编译工具
+
+
+如果要简单的反编译一个.class文件的话，用以下命令 jad example1.class这个命 令在当前文件夹下创建了一个example1.jad文件如果jad文件已经存在的话，会提示你是否要覆盖这个jad文件
+-o 允许你直接覆盖掉以前存在的jad文件
+-s 允许你改变输出文件的扩展类型，如下所示将输出文件类型变成 *.java
+jad -sjava example1.class
+这个命令创建了一个example1.java文件
+要注意的是连用-o,-s命令，可能会将你自己的源文件也覆盖掉的
+jad用class自己的名字作为一个输出文件的名字，比如如果'example1.class'包含一个test1的类就会创建一个test1.jad文件而不是创建example1.jad文件
+如果你想指定输出文件的名字的话，用以下的转移命令
+jad -p example1.class > myexm1.java
+-d允许你指定另外一个文件目录作为输出文件的目录，没有指定的情况下会输出到缺省路径下
+jad -o -dtest -sjava *.class
+或者 jad -o -d test -s java *.class
+以下的命令反编译了所有的*.class文件，并且将输出文件放置到test文件目录下
+如果你想反编译tree目录下的所有*.class文件，用下面的命令
+jad -o -r -sjava -dsrc tree/**/*.class
+这个命令反编译了tree目录下所有*.class文件，将输出文件以*.java的形式
+放置到src目录下
+注意到**了吗？在unix可以表示为：
+jad -o -r -sjava -dsrc 'tree/**/*.class'
+
+如果你想测试一下反编译的精确度的话，用-a
+jad支持所有内部和匿名的类
+4. 命令行选择的列表
+-a - 用JVM字节格式来注解输出
+-af - 同 -a,但是注解的时候用全名称
+-clear - 清除所有的前缀
+-b - 输出多于的括号 (e.g., if(a) { b(); }, default: no)
+-d <dir> - 指定输出文件的文件目录
+-dead -试图反编译代码的dead 部分(default: no)
+-disass - 不用用字节码的方式反编译 (no JAVA source generated)
+-f - 输出整个的名字,无论是类还是方法
+-ff -输出类的成员在方法之前 (default: after methods)
+-i - 输出所有的变量的缺省的最初值
+-l<num> - 将strings分割成指定数目的块的字符 (default: no)
+-lnc - 将输出文件用行号来注解 (default: no)
+-nl - 分割strings用新行字符 newline character (default: no)
+-nodos -不要去检查class文件是否以dos方式写 (CR before NL, default: check)
+-nocast - 不要生成辅助文件
+-nocode -不要生成方法的源代码
+-noconv - 不要转换java的定义符 (default: do)
+-noctor - 不允许空的构造器存在
+-noinner ?关掉对内部类的支持 (default: turn on)
+-nolvt - 忽略局部变量的表信息
+-nonlb - 不要输出一个新行在打开一个括号之前 (default: do)
+-o - 无需确认直接覆盖输出 (default: no)
+-p - 发送反编译代码到标准输出 STDOUT (e.g., for piping)
+-pi<num> -在<num> 的导入之后将其他引用包裹成一行导入 (default: 3)
+-pv<num> -将同类型的成员包裹成一行 (default: no)
+-pa <pfx>- 在生成源代码时将所有的包加前缀
+-pc <pfx>- 用数字名字给所有的类加前缀 (default: _cls)
+-pf <pfx>- 用数字名字给所有的成员变量加前缀 (default: _fld)
+-pe <pfx>-给没有用到的异常的名字加前缀
+-pl <pfx>- 给局部变量用数字名字加前缀 (default: _lcl)
+-pm <pfx>-给方法用数字名字加前缀 (default: _mth)
+-pp <pfx>- 给方法的参数用数字名字加前缀 (default: _prm)
+-r - 恢复包的目录结构
+-s <ext> - 指定输出文件的类型 (by default '.jad')
+-space -遇到关键字(if/for/while/etc)输出空格和表达式 (default: off)
+-stat - 显示所有的类，方法，成员变量的总数
+-t - 用tabs代替空格对于边缘
+-t<num> -用 <num>个的空格 (default: 4)
+-v - 正在反编译的时候 显示方法的名字
+-8 - 将 UNICODE strings 转换成 8-bit strings
+用当前的 ANSI 码页 (Win32 only)
+-& - 重新定向 STDERR to STDOUT (Win32 only)
+
+
 
 Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov (kpdus@yahoo.com).
 Usage:    jad [option(s)] <filename(s)>
