@@ -1,0 +1,45 @@
+qemu-img version 1.1.2, Copyright (c) 2004-2008 Fabrice Bellard
+usage: qemu-img command [command options]
+QEMU disk image utility
+
+Command syntax:
+  check [-f fmt] filename
+  create [-f fmt] [-o options] filename [size]
+  commit [-f fmt] [-t cache] filename
+  convert [-c] [-p] [-f fmt] [-t cache] [-O output_fmt] [-o options] [-s snapshot_name] [-S sparse_size] filename [filename2 [...]] output_filename
+  info [-f fmt] filename
+  snapshot [-l | -a snapshot | -c snapshot | -d snapshot] filename
+  rebase [-f fmt] [-t cache] [-p] [-u] -b backing_file [-F backing_fmt] filename
+  resize filename [+ | -]size
+
+Command parameters:
+  'filename' is a disk image filename
+  'fmt' is the disk image format. It is guessed automatically in most cases
+  'cache' is the cache mode used to write the output disk image, the valid
+    options are: 'none', 'writeback' (default, except for convert), 'writethrough',
+    'directsync' and 'unsafe' (default for convert)
+  'size' is the disk image size in bytes. Optional suffixes
+    'k' or 'K' (kilobyte, 1024), 'M' (megabyte, 1024k), 'G' (gigabyte, 1024M)
+    and T (terabyte, 1024G) are supported. 'b' is ignored.
+  'output_filename' is the destination disk image filename
+  'output_fmt' is the destination format
+  'options' is a comma separated list of format specific options in a
+    name=value format. Use -o ? for an overview of the options supported by the
+    used format
+  '-c' indicates that target image must be compressed (qcow format only)
+  '-u' enables unsafe rebasing. It is assumed that old and new backing file
+       match exactly. The image doesn't need a working backing file before
+       rebasing in this case (useful for renaming the backing file)
+  '-h' with or without a command shows this help and lists the supported formats
+  '-p' show progress of command (only certain commands)
+  '-S' indicates the consecutive number of bytes that must contain only zeros
+       for qemu-img to create a sparse image during conversion
+
+Parameters to snapshot subcommand:
+  'snapshot' is the name of the snapshot to create, apply or delete
+  '-a' applies a snapshot (revert disk to saved state)
+  '-c' creates a snapshot
+  '-d' deletes a snapshot
+  '-l' lists all snapshots in the given image
+
+Supported formats: vvfat vpc vmdk vdi sheepdog raw host_cdrom host_floppy host_device file qed qcow2 qcow parallels nbd iscsi dmg tftp ftps ftp https http cow cloop bochs blkverify blkdebug
