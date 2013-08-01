@@ -1,0 +1,59 @@
+TUNCTL(8)                                                                                                           TUNCTL(8)
+
+
+
+NAME
+       tunctl — create and manage persistent TUN/TAP interfaces
+
+SYNOPSIS
+       tunctl [-f tun-clone-device]  [-u owner]  [-t device-name]
+
+       tunctl [-f tun-clone-device]  -d device-name
+
+DESCRIPTION
+       This manual page documents briefly the tunctl command.
+
+       This manual page was written for the Debian GNU/Linux distribution because the original program does not have a manual
+       page.  Instead, it has documentation in HTML format; see below.
+
+       tunctl allows the host sysadmin to preconfigure a TUN/TAP device for use by a particular user.  That user may open and
+       use the device, but may not change any aspects of the host side of the interface.
+
+USAGE
+       To create an interface for use by a particular user, invoke tunctl without the -d option:
+
+       #
+       tunctl -u someuser
+       Set 'tap0' persistent and owned by 'someuser'
+
+
+       Then, configure the interface as normal:
+
+       #
+       ifconfig tap0 192.168.0.254 up
+       #
+       route add -host 192.168.0.253 dev tap0
+       #
+       bash -c 'echo 1 > /proc/sys/net/ipv4/conf/tap0/proxy_arp'
+       #
+       arp -Ds 192.168.0.253 eth0 pub
+
+       To delete the interface, use the -d option:
+
+       #
+       tunctl -d tap0
+       Set 'tap0' nonpersistent
+
+
+SEE ALSO
+       The UserModeLinux-HOWTO (link to URL http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html)
+
+AUTHOR
+       tunctl was written by Jeff Dike jdike@karaya.com
+
+       This  manual page was written by Matt Zimmerman mdz@debian.org for the Debian GNU/Linux system, based on examples from
+       Jeff Dike.
+
+
+
+                                                                                                                    TUNCTL(8)
