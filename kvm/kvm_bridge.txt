@@ -45,10 +45,10 @@ step 5:
 -boot d    //boot from cdrom
 -boot c    //boot from hard disk
 NAT:
-kvm -m 512 -drive file=winxp.img,cache=writeback,if=virtio,boot=on -localtime -net nic,model=virtio -net user -smp 2 -redir tcp:3389::3389 -redir tcp:8580::8580 -nographic -soundhw es1370 >/dev/null 2>&1 & ####-vnc 127.0.0.1:0  ###-vnc :0
+kvm -m 512 -drive file=winxp.img,cache=writeback,if=virtio -localtime -net nic,model=virtio -net user -smp 2 -redir tcp:3389::3389 -redir tcp:8580::8580 -nographic -soundhw es1370 >/dev/null 2>&1 & ####-vnc 127.0.0.1:0  ###-vnc :0
 
 Bridge:
-kvm -m 512 -drive file=winxp.img,cache=writeback,if=virtio,boot=on -localtime -net nic -net tap,ifname=tap0,script=no -smp 2 -redir tcp:3389::3389 -redir tcp:8580::8580 -nographic -soundhw es1370 >/dev/null 2>&1 & ####-vnc 127.0.0.1:0  ###-vnc :0 ###-net nic,macaddr=52-52-00-66-98-66 -net tap,ifname=tap0,script=no
+kvm -m 512 -drive file=winxp.img,cache=writeback,if=virtio -localtime -net nic -net tap,ifname=tap0,script=no -smp 2 -redir tcp:3389::3389 -redir tcp:8580::8580 -nographic -soundhw es1370 >/dev/null 2>&1 & ####-vnc 127.0.0.1:0  ###-vnc :0 ###-net nic,macaddr=52-52-00-66-98-66 -net tap,ifname=tap0,script=no
 ===============================================================
 
 
