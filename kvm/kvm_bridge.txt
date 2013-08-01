@@ -1,0 +1,119 @@
+Auto:
+step 1:  
+apt-get install bridge-utils
+apt-get install uml-utilities
+
+===============================================================
+step 2:
+vim /etc/network/interfaces
+
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+allow-hotplug eth0
+iface eth0 inet static
+address 192.168.0.116
+netmask 255.255.255.0
+
+#若想手动建立tap0,则注释掉下方tap0配置, 使用tunctl -b -u Richard -t tap0, 若多个Guest系统，则tap1, tap2...即可
+auto tap0
+iface tap0 inet manual
+up ifconfig $IFACE 0.0.0.0 up
+down ifconfig $IFACE down
+tunctl_user Richard             //tap0 belongs to somebody.
+
+auto br0
+iface br0 inet dhcp
+bridge_ports eth1
+bridge_stp off
+bridge_fd 0
+bridge_maxwait 0
+===============================================================
+
+step 3:
+sudo /sbin/ifup tap0
+sudo /sbin/ifup br0
+OR
+/etc/init.d/networking restart
+
+step 4:
+chmod o+rw /dev/net/tun
+
+===============================================================
+step 5:
+-boot d    //boot from cdrom
+-boot c    //boot from hard disk
+NAT:
+kvm -m 512 -drive file=winxp.img,cache=writeback,if=virtio,boot=on -localtime -net nic,model=virtio -net user -smp 2 -redir tcp:3389::3389 -redir tcp:8580::8580 -nographic -soundhw es1370 >/dev/null 2>&1 & ####-vnc 127.0.0.1:0  ###-vnc :0
+
+Bridge:
+kvm -m 512 -drive file=winxp.img,cache=writeback,if=virtio,boot=on -localtime -net nic -net tap,ifname=tap0,script=no -smp 2 -redir tcp:3389::3389 -redir tcp:8580::8580 -nographic -soundhw es1370 >/dev/null 2>&1 & ####-vnc 127.0.0.1:0  ###-vnc :0 ###-net nic,macaddr=52-52-00-66-98-66 -net tap,ifname=tap0,script=no
+===============================================================
+
+
+
+
+
+Manual:
+===========================================================================================
+# Create a bridge is not just as simple as brctl addbr br0, some extra configurations must be done.
+#!/bin/bash
+
+addr="192.168.1.50/24"
+gw="192.168.1.1"
+
+echo "remove ip from eth0"
+sudo ip addr del $addr dev eth0
+sudo ip link set eth0 up
+
+echo "create br0"
+sudo brctl addbr br0
+echo "add eth0 to br0"
+sudo brctl addif br0 eth0
+
+echo "bring up br0"
+sudo ip addr add $addr dev br0
+sudo ip link set br0 up
+
+echo "set default gateway"
+sudo ip route add default via $gw dev br0
+===========================================================================================
+# Delete a bridge
+#!/bin/bash
+
+addr="192.168.1.50/24"
+gw="192.168.1.1"
+
+echo "shut down br0"
+sudo ip link set br0 down
+
+echo "remove eth0 from br0"
+sudo brctl delif br0 eth0
+echo "remove br0"
+sudo brctl delbr br0
+
+echo "bring up eth0"
+sudo ip addr add $addr dev eth0
+sudo ip link set eth0 up
+
+echo "set default gateway"
+sudo ip route add default via $gw dev eth0
+===========================================================================================
+# Add tap0 to br0
+#!/bin/bash
+
+echo "bring up tap0"
+sudo ip link set tap0 up            //tunctl -b -u Richard -t tap0
+echo "add tap0 to br0"
+sudo brctl addif br0 tap0
+
+===========================================================================================
+# Del tap0 from br0
+#!/bin/bash
+
+echo "remove tap0 from br0"
+sudo brctl delif br0 tap0
+echo "shut down tap0"
+sudo ip link set tap0 down         //tunctl -d tap0
+===========================================================================================

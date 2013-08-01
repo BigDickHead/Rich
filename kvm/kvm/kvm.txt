@@ -1,4 +1,8 @@
 apt-get install kvm
+sudo modprobe kvm
+sudo modprobe kvm-intel  //INTEL处理器
+sudo modprobe kvm-amd  //AMD处理器
+
 安装:
 1, 建立硬盘
 qemu-img create -f qcow2 winxp.img 50G
