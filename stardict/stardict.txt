@@ -25,9 +25,8 @@ sudo apt-get install mpg321
 
 2.3 建立发音脚本speakall
 ======= Start of file ============
-#!/bin/sh
-words_voice="/mnt/D/words_voice"
-#words_voice="/mnt/D/Program\ Files/Lingoes/Translator2/speech/voice/"
+#!/bin/bash
+words_voice="/mnt/D/Program Files/Lingoes/Translator2/speech/voice"
 
 for i in $@
 do
@@ -40,16 +39,12 @@ do
 
     words="$words_voice/$firstchar/$lowerword"
 
-    if [ -e $words.mp3 ]; then
-        mpg321 $words.mp3
-    elif [ -e $words.wav ];then
-        aplay $words.wav
-    else
-        espeak $i --stdout | aplay
+    if [ -e "$words.mp3" ]; then
+        mpg321 "$words.mp3" > /dev/null 2>&1
+    elif [ -e  "$words.wav" ];then
+        aplay  "$words.wav" > /dev/null 2>&1
     fi
 done
-
-exit 0
 ======== End of File ===========
 
 至此，就配置好了。
