@@ -16,7 +16,7 @@ iface eth0 inet static
 address 192.168.0.116
 netmask 255.255.255.0
 
-#若想手动建立tap0,则注释掉下方tap0配置, 使用tunctl -b -u Richard -t tap0, 若多个Guest系统，则tap1, tap2...即可
+#若想手动建立tap0,则注释掉下方tap0配置, 使用tunctl -b -u Richard -t tap0, 若多个Guest系统，则tap1, tap2...即可, 或tap1, tap2配置到/etc/network/interfaces
 auto tap0
 iface tap0 inet manual
 up ifconfig $IFACE 0.0.0.0 up
@@ -38,7 +38,10 @@ OR
 /etc/init.d/networking restart
 
 step 4:
-chmod o+rw /dev/net/tun
+usermod -a -G uml-net Richard
+newgrp uml-net
+OR
+chmod o+rw /dev/net/tun             //only once, 重启后/dev/net/tun权限恢复为crw-rw----
 
 ===============================================================
 step 5:

@@ -1,0 +1,14 @@
+
+sdcv - console version of StarDict.~
+
+Usage: sdcv [OPTIONS] words
+-h, --help               display this help and exit
+-v, --version            display version information and exit
+-l, --list-dicts         display list of available dictionaries and exit
+-u, --use-dict bookname  for search use only dictionary with this bookname
+-n, --non-interactive    for use in scripts
+--utf8-output            output must be in utf8
+--utf8-input             input of sdcv in utf8
+--data-dir path/to/dir   use this directory as path to stardict data directory
+
+ vim:ft=help
