@@ -1,5 +1,5 @@
 Auto:
-step 1:  
+step 1:
 apt-get install bridge-utils
 apt-get install uml-utilities
 
@@ -10,25 +10,44 @@ vim /etc/network/interfaces
 auto lo
 iface lo inet loopback
 
-# The primary network interface
-allow-hotplug eth0
-iface eth0 inet static
-address 192.168.0.116
-netmask 255.255.255.0
 
-#若想手动建立tap0,则注释掉下方tap0配置, 使用tunctl -b -u Richard -t tap0, 若多个Guest系统，则tap1, tap2...即可, 或tap1, tap2配置到/etc/network/interfaces
-auto tap0
-iface tap0 inet manual
-up ifconfig $IFACE 0.0.0.0 up
-down ifconfig $IFACE down
-tunctl_user Richard             //tap0 belongs to somebody.
+/*auto br0*/
+/*iface br0 inet dhcp*/
+/*bridge_ports eth0 tap0*/
+/*bridge_stp off*/
+/*bridge_fd 0*/
+/*bridge_maxwait 0*/
+
+Or
 
 auto br0
-iface br0 inet dhcp
-bridge_ports eth1
-bridge_stp off
+iface br0 inet static
+bridge-ports eth0 tap0
+bridge-stp off
 bridge_fd 0
 bridge_maxwait 0
+address 192.168.0.107
+netmask 255.255.255.0
+network 192.168.0.0
+broadcast 192.168.0.255
+gateway 192.168.0.1
+
+auto eth0
+iface eth0 inet manual
+up ip link set $IFACE up
+up brctl addif br0 $IFACE
+down brctl delif br0 $IFACE || true
+down ip link set $IFACE down
+
+
+# If you have many Guest systems, just put tap1, tap2, tap3...configuration to /etc/network/interfaces.
+auto tap0
+iface tap0 inet manual
+up ip link set $IFACE up
+up brctl addif br0 $IFACE
+down brctl delif br0 $IFACE || true
+down ip link set $IFACE down
+pre-up /usr/sbin/tunctl -t tap0 -u Richard
 ===============================================================
 
 step 3:
@@ -41,7 +60,7 @@ step 4:
 usermod -a -G uml-net Richard
 newgrp uml-net
 OR
-chmod o+rw /dev/net/tun             //only once, 重启后/dev/net/tun权限恢复为crw-rw----
+chmod o+rw /dev/net/tun             //only once, if host restarted, that will be not work.
 
 ===============================================================
 step 5:
