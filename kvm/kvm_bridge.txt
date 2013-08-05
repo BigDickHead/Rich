@@ -48,6 +48,7 @@ up brctl addif br0 $IFACE
 down brctl delif br0 $IFACE || true
 down ip link set $IFACE down
 pre-up /usr/sbin/tunctl -t tap0 -u Richard
+#tunctl_user Richard
 ===============================================================
 
 step 3:
