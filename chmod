@@ -1,0 +1,2 @@
+chmod -R go-rwx /root/
+chmod -R go-rwx /home/Richard/
