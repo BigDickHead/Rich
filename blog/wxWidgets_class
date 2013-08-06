@@ -1,0 +1,361 @@
+wxWidgets 类列表
+
+//管理窗口
+wxTopLevelWindow //(任意的顶层窗口,dialog或frame)
+wxDialog //(对话框)
+wxFrame //(通用的frame)
+wxMDIChildFrame //(MDI"多文档界面"child frame)
+wxMDIParentFrame //(MDI parent frame)
+wxMiniFrame //(带有瘦标题栏的frame)
+wxSplashScreen //(飞溅屏幕类)
+wxPropertySheetDialog //(属性表对话框)
+wxTipWindow //(在一个小窗口中显示文本)
+wxWizard //(向导对话框)
+
+//公共对话框,公共对话框是在应用程序中被频繁使用的现成的对话框类
+wxDialog //(公共对话框的基类)
+wxColourDialog //(颜色选择对话框)
+wxDirDialog //(目录选择对话框)
+wxFileDialog //(文件选择对话框)
+wxFindReplaceDialog //(文本搜索/替换对话框)
+wxMultiChoiceDialog //(从列表获得一个或多个选择的对话框)
+wxSingleChoiceDialog //(从列表中获得一个选择的对话框，并且返回一个字符串)
+wxTextEntryDialog //(从用户那里获得一行文本的对话框)
+wxPasswordEntryDialog //(从用户那里获得一个密码的对话框)
+wxFontDialog //(字体选择对话框)
+wxPageSetupDialog //(标准页面设置对话框)
+wxPrintDialog //(标准打印对话框)
+wxProcessDialog //(进程指示对话框)
+wxMessageDialog //(简单的消息对话框)
+wxWizard //(向导对话框)
+
+//其它窗口,这里有由wxWindow派生的各种类
+
+wxPanel //(跟随当前用户设置而改变颜色的窗口)
+wxScrolledWindow //(自动管理滚动条的窗口)
+wxGrid //(表格窗口)
+wxSplitterWindow //(可以被拆分为水平或垂直的窗口)
+wxStatusBar //(在frame上实现状态栏)
+wxToolBar //(工具栏类)
+wxNotebook //(笔记本类)
+wxListbook //(类似于笔记本,但使用列表控件)
+wxChoicebook //(类似于笔记本,但使用选择控件)
+wxSashWindow //(包含四个可拖拽框格的窗口)
+wxSashLayoutWindow
+wxVScrolledWindow //(与wxScrolledWindow一样,但支持可变高度的行)
+wxWizardPage //(向导对话框中页面的基类)
+wxWizardPageSimple //(向导对话框中的页面)
+控件wxControl //控件的基类wxButton //按钮控件,显示文本
+wxBitmapButton //按钮控件,显示一张位图
+wxToggleButton //一个按钮,当用户单击时保持按下(状态)
+wxCalendarCtrl //显示一个完整的月历的控件
+wxCheckBox //检查框控件
+wxCheckListBox //每个条目左边都有一个检查框的列表框
+wxChoice //选择控件(一个没有可编辑区的组合框)
+wxComboBox //包含一个可编辑区的选择框
+wxDatePickerCtrl //简单的日期选择控件
+wxGauge //显示一个变化数量的控件,如剩余时间
+wxGenericDirCtrl //显示一个目录树的控件
+wxHtmlListBox //显示HTML内容的列表框
+wxStaticBox //一个静态的或将相关控件在视觉上组合在一起的方框
+wxListBox //单选或多选的字符串列表
+wxListCtrl //显示字符串列表，和/或图标，加上一个多列报表视图
+wxListView //一个简单的界面(wxListCtrl的报表视图外观)
+wxTextCtrl //单行或多行文本编辑控件
+wxTreeCtrl //树(层次)控件
+wxScrollBar //滚动条控件
+wxSpinButton //一个旋转或"up-down"控件
+wxSpinCtrl //一个旋转控件,e.g.:旋转按钮和文本控件
+wxStaticText //一行或多行的不可编辑文本
+wxStaticBitmap //显示一张位图的控件
+wxRadioBox //一个单选按钮的组合
+wxRadioButton //以相互排斥的方式和其它圆形按钮一起使用的圆形按钮
+wxSlider //用户可拖拽的滑块
+wxVListBox //支持可变行高的列表框
+窗口布局//有两种不同的窗口(特别是对话框)布局系统.一个是基于号称sizer的,它需要少量的定位,思考和计算,并且在所有平台下产生看起来一样的对话框.另一个是基于所谓的约束的,虽然它仍然可用,但是已经被废弃了.
+//Sizer概述 描述基于sizer的布局,这些类是有关基于sizer布局的.
+wxSizer //抽象基类
+wxGridSizer //在所有单元有着相同大小的网格中布局窗口的sizer
+wFlexGridSizer //在一个可变网格中布局窗口的sizer
+wxGridBagSizer //另一个网格sizer,让你指定一个条目的单元,且条目可以跨越行和/或列
+wxBoxSizer //在一行或一列中布局窗口的sizer
+wxStaticBoxSizer //与wxBoxSizer相同,但是包含一个静态框的边框
+//约束概述 描述基于约束的布局,这些类是有关基于约束的窗口布局.
+wxIndividualLayoutConstraint //描述单个约束尺寸
+wxLayoutConstraints //描述一个窗口类的约束设备环境,图形设备接口//设备环境,是一个能够在上面绘图的界面,并且提供一个允许传递不同的设备环境给你的.
+wxBufferedDC //双缓冲绘图的设备环境助手
+wxBufferedPaintDC //OnPaint内部的双缓冲绘图设备环境助手
+wxClientDC //在OnPaint事件之外访问客户区的设备环境
+wxPaintDC //在OnPaint事件内部访问客户区的设备环境
+wxWindowDC //访问非客户区的设备环境
+wxScreenDC //访问整个屏幕的设备环境
+wxDC //设备环境基类
+wxMemoryDC //在位图上绘图的设备环境
+wxMetafileDC //在元文件上绘图的设备环境
+wxMirrorDC //允许简单映射的代理设备环境
+wxPostScriptDC //在PostScript文件上绘图的设备环境
+wxPrinterDC //在打印机上绘图的设备环境
+
+//图形设备接口,这里是在设备环境和窗口上绘图的相关类.
+wxColour //描绘红,蓝和绿的颜色元素
+wxDCClipper //包装设置操作并销毁剪切区域
+wxBitmap //描绘一张位图
+wxBrush //用于在设备环境上填充区域
+wxBrushList //预定义刷子的列表
+wxCursor //一个小的透明的描绘光标的位图
+wxFont //描述字体
+wxFontList //预定义字体的列表
+wxIcon //一个小的透明的指派给帧的在设备环境上绘制位图，
+wxImage //一个平台独立的图像类
+wxImageList //一个图像列表，用于某些控件
+wxMask //描绘一个掩码用于透明地绘制位图
+wxPen //用于在设备环境上画线
+wxPenList //预定义的画笔列表
+wxPalette //描绘一个RGB值的索引表
+wxRegion //描绘一个窗口或设备环境中简单或复杂的区域
+wxRendererNative //抽象高水平的绘图原语事件//事件,一个事件对象包含具体事件的信息.事件处理器(通常为成员函数)有一个单独的事件参数.
+wxActivateEvent // 一个窗口或应用程序的激活事件
+wxCalendarEvent //用于wxCalendarCtrl
+wxCalculateLayoutEvent //用于计算窗口布局
+wxCloseEvent //一个关闭窗口或结束会话事件
+wxCommandEvent //来自各种标准控件的事件
+wxContextMenuEvent //当用户发出一个索引菜单命令时产生该事件
+wxDateEvent //用于wxDatePickerCtrl
+wxDialUpEvent //由wxDialUpManager发出的事件
+wxDropFilesEvent //一个撤销文件事件
+wxEraseEvent //一个擦除背景事件
+wxEvent //事件基类
+wxFindDialogEvent //由wxFindReplaceDialog发出的事件
+wxFocusEvent //一个窗口聚焦事件
+wxKeyEvent //一次击键事件
+wxIconizeEvent //一个图标化/还原事件
+wxIdleEvent //一个空闲事件
+wxInitDialogEvent //一个对话框初始化事件
+wxJoystickEvent //一个操纵杆事件
+wxListEvent //一个列表控件事件
+wxMaximizeEvent //一个最大化事件
+wxMenuEvent //菜单事件
+wxMouseCaptureChangedEvent //一个鼠标捕获变化事件
+wxMouseEvent //鼠标事件
+wxMoveEvent //移动事件
+wxNotebookEvent //一个记事本控件事件
+wxNotifyEvent //一个可以被禁止的通知事件
+wxPaintEvent //绘画事件
+wxProcessEvent //进程结束事件
+wxQueryLayoutInfoEvent //用于查询布局信息
+wxScrollEvent //来自滑块,独立的滚动条和旋转按钮的卷动事件
+wxScrollWinEvent //来自滚动窗口的卷动事件
+wxSizeEvent //一个大小化事件
+wxSocketEvent //一个socket事件
+wxSpinEvent //来自wxSpinButton的事件
+wxSplitterEvent //来自wxSplitterWindow的事件
+wxSysColourChangedEvent //一个系统颜色变化事件
+wxTimerEvent //一个定时器到期事件
+wxTreeEvent //树控件事件
+wxUpdateUIEvent //用户界面更新事件
+wxWindowCreateEvent //一个窗口建立事件
+wxWindowDestroyEvent //一个窗口销毁事件
+wxWizardEvent //一个向导事件
+校验器,数据结构,运行时类信息系统//校验器,这些窗口校验器用于过滤和校验用户输入。
+wxValidator //基本的检验器类
+wxTextValidator //文本控件检验器类
+wxGenericValidator //通用控件检验器类
+
+//数据结构,这些是wxWidgets支持的数据结构类。
+wxCmdLineParser //命令行分析器类
+wxDateSpan //一个合理的时间间隔
+wxDateTime //操纵日期/时间的类
+wxArray //一个动态数组的实现
+wxArrayString //一个保存wxString对象的高效容器
+wxHaskMap //一个简单的哈希map的实现
+wxHashSet //一个简单的哈希集合的实现
+wxHaskTable //一个简单的哈希表的实现(不建议使用,建议使用wxHaskMap)
+wxList //一个简单的链表实现
+wxLongLong //一种可移植的64位整型
+wxNode //表示wxList中的一个节点
+wxObject //大多数wxWidgets类的基类
+wxPathList //帮助查找多个路径的类
+wxPoint //一个点的表示
+wxRect //表示一个矩形的类
+wxRegEx //正则表达式支持
+wxRegion //表示一个区域的类
+wxString //一个字符串类
+wxStringTokenizer //表示一种记号或单词列表的字符串类
+wxRealPoint //一个用浮点数表示的点
+wxSizer //一个size的表示
+wxTimeSpan //一个时间间隔
+wxURI //表示一个统一资源标识符
+wxVariant //可保存任意类型的运行时刻可改变的类
+//运行时类信息系统,wxWidgets支持运行时类信息的处理和指定类名的动态对象的建立.
+wxClassInfo //保存运行时的类信息
+wxObject //带有运行时信息类的基类
+RTTI macros //处理运行时信息的宏日志特征,调试特征//日志特征,wxWidgets为消息日志提供了若干类和函数,详见wxLog概述.
+wxLog //基本的日志类
+wxLogStderr //记录消息到一个C STDIO 流
+wxLogStream //记录消息到一个C++ iostream
+wxLogTextCtrl //记录消息到一个wxTextCtrl
+wxLogWindow //记录消息到一个日志frame
+wxLogGui //GUI程序的默认日志目标
+wxLogNull //临时禁止消息日志
+wxLogChain //允许链接两个日志目标
+wxLogPassThrough //允许过滤日志消息
+wxStreamToTextRedirector //允许重定向cout到wxTextCtrl的输出
+Log functions //错误和警告日志函数
+//调试特征,wxWidgets通过类,函数和宏支持一些应用程序的调试方式.
+wxDebugContext //提供内存检查设施
+Debugging macros //支持断言和检查的调试宏
+WXDEBUG_NEW //使用该宏得到进一步的调试信息
+wxDebugReport //在一个程序崩溃的情况下建立调试报告的基类
+wxDebugReportCompress //建立压缩的调试报告的类
+wxDebugReportUpload //通过HTTP上载压缩的调试报告的类
+wxDebugReportPreview //预览一个调试报告内容的抽象基类
+wxDebugReportPreviewStd //wxDebugReportPreview的标准实现联网技术类,进程间通讯//联网技术类,wxWidgets提供了它自己的基于联网的socket类。
+wxDialUpManager //提供函数来检测网络连接状态并确定它
+wxIPV4adress //描绘一个因特网地址
+wxIPadress //描绘一个因特网地址
+wxSocketBase //描绘一个socket基本对象
+wxSocketClient //描绘一个socket客户端
+wxSocketServer //描绘一个socket服务端
+wxSocketEvent //一个socket事件
+wxFTP //FTP协议类
+wxHTTP //HTTP协议类
+wxURL //描绘一个URL（统一资源定位符）
+//进程间通讯,wxWidgets提供基于Windows DDE的简单的进程间通讯设施,而大部分平台则使用TCP.
+wxClient,wxDDEClient //描绘一个客户
+wxConnection，wxDDEConnection //描绘一个客户端与一个服务端的连接
+wxServer，wxDDEServer //描述一个服务端文档/视图框架,打印框架,拖拽和剪切板类//文档/视图框架,wxWidgets支持一种文档/视图框架,它为以文档为中心的应用程序提供了内部管理.
+wxDocument //表示一个文档
+wxView //表示一个视图
+wxDocTemplate //管理一个文档与一个视图之间的关系
+wxDocManager //管理应用程序中的文档与视图
+wxDocChildFrame //一个显示文档视图的子框架
+wxDocParentFrame //用于包含视图的父框架
+//打印框架,实现一个打印和预览框架让提供文档打印设施变得相对简单.
+wxPreviewFrame //显示一个打印预览的框架
+wxPreviewCanvas //显示一个打印预览的画布
+wxPreviewControlBar //一个打印预览的标准控制栏
+wxPrintDialog //标准打印对话框
+wxPageSetupDialog //标准的页面设置对话框
+wxPrinter //表示打印机的类
+wxPrinterDC //打印机的设备环境
+wxPrintout //表示一个详细的打印输出的类
+wxPrintPreview //表示一个打印预览的类
+wxPrintData //表示将被打印的文档的信息
+wxPrintDialogData //表示打印对话框的信息
+wxPageSetupDialogData //表示页面设置对话框的信息
+//拖拽和剪切板类
+wxDataObject //数据对象类
+wxDataFormat //表示一个数据格式
+wxTextDataObject //文本数据对象类
+wxFileDataObject //文件数据对象类
+wxBitmapDataObject //位图数据对象类
+wxCustomDataObject //自定义数据对象类
+wxClipboard //剪贴板类
+wxDropTarget //拖拽目标类
+wxFileDropTarget //文件拖拽目标类
+wxTextDropTarget //文本拖拽目标类
+wxDropSource //拖拽源类
+文件相关类,流类//文件相关类,wxWidgets有若干个小类来操作磁盘文件,更多细节见文件类概述.
+wxFileName //操作文件名和属性
+wxDir //列举文件/子目录的类
+wxDirTraverser //和wxDir一起递归的列举文件/子目录的类
+wxFile //低级文件输入/输出类
+wxFFile //另一个低级文件输入/输出类
+wxTempFile //安全的替换一个存在文件的类
+wxTextFile //操作以行数组方式表示的文本文件的类
+wxStandardPaths //标准目录路径
+
+//流类,wxWidgets有它自己的流类集合,作为经常出现bug的标准流库的另外一个选择,并且提供了更加强大的功能.
+wxStreamBase //流基类
+wxStreamBuffer //流缓冲类
+wxInputStream //输入流类
+wxOutputStream //输出流类
+wxCountingOutputStream //查询一个流的大小的流类
+wxFilterInputStream //过滤输入流类
+wxFilterOutputStream //过滤输出流类
+wxBufferedInputStream //缓冲输入流类
+wxBufferedOutputStream //缓冲输出流类
+wxMemoryInputStream //内存输入流类
+wxMemoryOuputStream //内存输出流类
+wxDataInputStream //平台无关的二进制数据输入流类
+wxDataOutputStream //平台无关的二进制数据输出流类
+wxTextInputStream //平台无关的文件数据输入流类
+wxTextOutputStream //平台无关的文件数据输出流类
+wxFileInputStream //文件输入流类
+wxFileOutputStream //文件输出流类
+wxFFileInputStream //另一个文件输入流类
+wxFFileOutputStream //另一个文件输出流类
+wxTempFileOutputStream //安全的替代一个已存在的文件的流
+wxStringInputStream //字符串输入流
+wxStringOutputStream //字符串输出流
+wxZlibInputStream //Zlib(压缩)输入流
+wxZlibOutputStream //Zlib(压缩)输出流
+wxZipInputStream //读一个ZIP档案的输入流
+wxZipOutputStream //写一个ZIP档案的输出流
+wxSocketInputStream //Socket输入流类
+wxSocketOutputStream //Socket输出流类
+虚拟文件系统类,HTML类,基于XML的资源系统的类,在线帮助//虚拟文件系统类,wxWidgets提供了一组实现一个易扩展的虚拟文件系统的类,它们由HTML类内部使用.
+wxFSFile //表示一个虚拟文件系统中的文件
+wxFileSystem //虚拟文件系统的主要接口
+wxFileSystemHandler //用于通知文件系统类型的类
+
+//HTML类,wxWidgets提供一个类的集合来显示HTML格式的文本.这些类包含一个基于HTML窗口部件的帮助系统.wxHtmlHelpController //HTML帮助控制器类
+wxHtmlWindow //HTML窗口类
+wxHtmlEasyPrinting //打印HTML的简单类
+wxHtmlPrintout //一般的HTML wxPrintout类
+wxHtmlParser //一般的HTML分析器类
+wxHtmlTagHandler //HTML标签处理器,可以插入到wxHtmlParser中
+wxHtmlWinParser //wxHtmlWindow的HTML分析器类
+wxHtmlWinTagHandler //HTML标签处理器,可以插入到wxHtmlWinParser中
+//基于XML的资源系统的类,允许你的应用程序以保存在一个XML格式中的规格来建立控件和其它用户界面元素的资源.
+wxXmlResource //操作资源的主类
+wxXmlResourceHandler //XML资源处理器的基类
+//在线帮助
+wxHelpController //控制帮助窗口的类族
+wxHtmlHelpController //HTML帮助控制器类
+wxContextHelp //使应用程序进入上下文敏感的帮助模式中的类
+wxContextHelpButton //使应用程序进入上下文敏感的帮助模式中的按钮类
+wxHelpProvider //提供上下文敏感的帮助准备的抽象类
+wxSimpleHelpProvider //简单地提供上下文敏感的帮助准备的类
+wxHelpControllerHelpProvider //通过一个帮助控制器来提供上下文敏感的帮助准备的类
+wxToolTip //实现工具提示的类线程类,数据库类//线程类,wxWidgets提供了一个类的集合来保证在多种平台上使用本地线程的能力.
+wxThread //线程类
+wxThreadHelper //轻松地管理后台线程
+wxMutex //互斥体类
+wxMutexLocker //互斥锁实用程序类
+wxCriticalSection //临界区类
+wxCriticalSectionLocker //临界区锁实用程序类
+wxCondition //条件类
+wxSemaphore //信号量类
+//数据库类,wxWidgets提供一组类来访问微软的ODBC(开放数据互连)产品,它由Remstar捐赠.这就是大家知道的wxODBC.
+wxDb //ODBC数据库连接
+wxDbTable //提供访问一个数据库表
+wxDbInf
+wxDbTableInf
+wxDbColDef
+wxDbColInf
+wxDbColDataPtr
+wxDbColFor
+wxDbConnectInf
+wxDbIdxDef其它//其它
+wxApp //应用程序类
+wxCaret //一个光标对象
+wxCmdLineParser //命令行分析器类
+wxConfig //读/写配置的类(使用INI文件或注册表)
+wxDllLoader //操作共享库的类
+wxGLCanvas //可由OpenGL调用来着色的画布
+wxGLContext //简单共享OpenGL数据资源的类
+wxLayoutAlgorithm //一个可选的窗口布局设施
+wxProcess //进程类
+wxTimer //定时器类
+wxStopWatch //秒表类
+wxMimeTypesManager //MIME类型管理器类
+wxSystemSettings //获取多种全局参数的系统设置类
+wxSystemOptions //运行时配置的系统选项类
+wxAcceleratorTable //加速表
+wxAutomationObject //OLE自动化类
+wxFontManager //字体映射,查找适合给定编码的字体
+wxEncodingConverter //编码转换
+wxCalendarDateAttr //由wxCalendarCtrl使用
+wxQuantize //完成量化或颜色还原的类
+wxSingleInstanceChecker //检查仅有单个程序实例运行 
