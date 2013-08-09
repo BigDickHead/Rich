@@ -2442,9 +2442,7 @@ diabolical           [daiә'bɒlikl]                   a.恶毒的，狠毒的
 diabolical           [daiә'bɒlikl]                   adj.恶毒的，狠毒的
 diagnose             ['daiәgnәuz]                    v.判断，诊断
 diagonal             [dai'ægәnl]                     a.对角的；n.对角线
-diagram              ['daiәgræf]
-['ænәgræm]
-[dis'greis]             n.图解，图表
+diagram              [ˈdaɪəˌɡræm]                    n.图解，图表
 dialect              ['daiәlekt]                     n.方言
 diameter             [dai'æmitә]                     n.直径
 diaphanous           [dai'æfәnәs]                    a.精致的，透明的
@@ -2567,10 +2565,7 @@ discretion           [dis'kreʃәn]                    n.谨慎，审慎
 discretionary                                        a.自由决定的
 discriminate         [dis'krimineit]                 v.区分
 discriminating       [dis'krimineitiŋ]               adj.有辨别能力的
-discriminatory       [dis'krimineitә]
-[in'kriminәtәri]             a.歧视的                ，差别待遇的
-discriminatory       [dis'krimineitә]
-[in'kriminәtәri]             n.歧视的                ，差别待遇的
+discriminatory       [dɪˈskrɪmənəˌtɔri]              a.歧视的，差别待遇的
 discursive           [dis'kә:siv]                    a.散漫的，无层次的
 discursive           [dis'kә:siv]                    adj.散漫的，无层次的
 disdain              [dis'dein]                      n./v.轻视，鄙视
@@ -3669,9 +3664,7 @@ fictitious           [fik'tiʃәs]                     adj.假的、虚构的
 fidelity             [fi'deliti]                     n.忠实，忠诚
 fidget               ['fidʒit]                       v.坐立不安；n.烦躁之人
 fidget               ['fidʒit]                       v.坐立不安
-fidgety              ['fidʒit]
-['gædʒiti]
-['midʒit]             adj.烦躁的，不                 的.
+fidgety              ['fɪdʒɪtɪ]                      adj.烦躁的，不安定的
 fief                 [fi:f]                          n.封地，活动范围
 fiend                [fi:nd]                         n.恶魔，魔鬼
 fiendish             ['fi:ndiʃ]                      adj.极凶恶的
@@ -4829,11 +4822,7 @@ illicit              [i'lisit]                       adj.违法的，违禁的
 illiterate           [i'litәrәt]                     a.文盲的
 illiterate           [i'litәrәt]                     adj.文盲的
 illuminate           [i'lju:mineit]                  v.阐明，解释；照亮
-illuminati           [i,lju:mi'neiʃәn]
-[i'lju:minәtiv]
-[i'lju:mineit]
-[i'lju:mineitә]
-[i'lju:minәnt]             n.先觉者，                智者
+illuminati           [ɪˌluməˈnɑti]                   n.先觉者，智者
 illuminating                                         adj.启示性的，启发的
 illumination         [i,lju:mi'neiʃәn]               n.照明，古书上的图案、装饰
 illusion             [i'lju:ʒәn]                     n.假象，错觉
@@ -5268,8 +5257,7 @@ ingratitude          [in'grætitju:d]                 n.忘恩负义
 ingredient           [in'gri:diәnt]                  n.成分
 ingredient           [in'gri:diәnt]                  n.成份
 ingress              ['ingres]                       n.进入
-ingénue              [,indʒi'nju:iti]
-[in'dʒenjuәs]             n.天真无邪                 少女
+ingenue              [,indʒi'nju:iti]                n.天真无邪的少女, 阅历不深的人
 inhabit              [in'hæbit]                      v.栖居于，占据
 inhabitant           [in'hæbitәnt]                   n.居民；栖息的动物
 inhale               [in'heil]                       v.吸气
@@ -5709,13 +5697,7 @@ kindred              ['kindrid]                      a.同类的，种族的
 kinetic              [kai'netik]                     a.运动的
 kinetic              [kai'netik]                     adj.运动的
 kiosk                [ki'ɒsk]                        n.售货亭，电话亭
-kitsch               [bitʃ]
-[ditʃ]
-[fitʃ]
-[hitʃ]
-[itʃ]
-[ketʃ]
-['kitʃin]             n.迎合低级趣味                 拙劣作品
+kitsch               [kɪtʃ]                          n.迎合低级趣味, 拙劣作品
 kitten               ['kitn]                         n.小猫
 kleptomania                                          n.盗窃癖
 knack                [næk]                           n.特殊能力；窍门
@@ -5776,55 +5758,38 @@ lance                [lɑ:ns]                         n.长矛；鱼叉
 lance                [lɑ:ns]                         n.长矛、鱼叉
 lancet               ['lɑ:nsit]                      n.手术刀
 lancinate            ['lɑ:nsineit]                   v.刺、戳
-landfill             ['lændfɒ:l]
-['hændbil]
-['mændril]             n.垃圾堆
-landlocked                                           a.被陆地包围的
+landfill             ['lændfɪl']                     n.废渣埋填法,垃圾堆
 landlocked                                           adj.被陆地包围的
 landmark             ['lændmɑ:k]                     n.陆标；里程碑
-landslide            ['lændslaid]                    n.山崩；压倒性胜利
 landslide            ['lændslaid]                    n.山崩，压倒性胜利
-languid              ['læŋgwid]                      a.没精打采的，倦怠的
 languid              ['læŋgwid]                      adj.没精打采的，怠倦的
-languish             ['læŋgwiʃ]                      v.变得消瘦；衰弱
 languish             ['læŋgwiʃ]                      v.衰弱，变得消瘦
 languor              ['læŋgә]                        n.身心疲惫
-lank                 [læŋk]                          a.瘦削的；长而软的
 lank                 [læŋk]                          adj.瘦削的，稀疏的
 lap                  [læp]                           v.舔食；泼溅
 lapidary             ['læpidәri]                     n.宝石工，宝石专家
 lapse                [læps]                          n.失误；(时间等)流逝
-lapse                [læps]                          n.失误，（时间等）流逝
 larceny              ['lɑ:sәni]                      n盗窃
 larch                [lɑ:tʃ]                         n.落叶松
 lard                 [lɑ:d]                          n.猪油
 larder                                               n.食品室
 largess                                              n.赠送，赏赐；赠品；贺礼
 largesse             [lɑ:'dʒes]                      n.慷慨援助；施舍
-largesse             [lɑ:'dʒes]                      n.慷慨援助，施舍
 lark                 [lɑ:k]                          n./v.玩乐，嬉耍
-lark                 [lɑ:k]                          n.玩笑，嬉耍
 larva                ['lɑ:vә]                        n.(昆虫的)幼虫
-larva                ['lɑ:vә]                        n.（昆虫的）幼虫
 laryngitis           [,lærin'dʒaitis]                n.喉炎
 larynx               ['læriŋks]                      n.喉
 lascivious           [lә'siviәs]                     adj.淫乱的，好色的
 lash                 [læʃ]                           n.鞭子；v.鞭打；捆住
-lash                 [læʃ]                           n.鞭子，鞭打
 lassitude            ['læsitju:d]                    n.无力；没精打采
-lassitude            ['læsitju:d]                    n.无力，没精打采
 lasso                ['læsәu]                        n.套索(捕捉牛、马用)
-lasso                ['læsәu]                        n.套索（捕捉牛、马用）
 lasting              ['lɑ:stiŋ]                      a.持久的，永久的
 latency              ['leitnsi]                      n.潜伏期
-latent               ['leitnt]                       a.潜伏的
 latent               ['leitnt]                       adj.潜伏的
 lateral              ['lætәrәl]                      a.侧面的
 lathe                [leið]                          n.车床
 latitude             ['lætitju:d]                    n.言行自由；纬度
-latitude             ['lætitju:d]                    n.言行自由，纬度
 lattice              ['lætis]                        n.(做篱笆或爬藤架等的)格子架
-lattice              ['lætis]                        n.（做篱笆或爬藤架等的）格子架
 laud                 [lɒ:d]                          v.称赞
 laudable             ['lɒ:dәbl]                      adj.值得称赞的
 laudatory            ['lɒ:dәtәri]                    adj.表扬的，赞扬的
@@ -5832,11 +5797,9 @@ laurel               ['lɒ:rәl]                       n.月桂树，桂冠
 laurels                                              n.荣誉
 lava                 ['lɑ:vә]                        n.熔岩
 lave                 [leiv]                          v.洗浴；慢慢冲刷
-lave                 [leiv]                          v.洗浴，慢慢冲刷
 lavish               ['læviʃ]                        a.浪费的；丰富的
 lax                  [læks]                          adj.懒散的，松弛的
 laxative             ['læksәtiv]                     a.(药)通便的；放松的；n.轻泻药
-laxative             ['læksәtiv]                     n.轻泻药adj.通便的，放松的
 laxity               ['læksәti]                      n.松弛，放纵
 layabout                                             n.懒汉
 layman               ['leimәn]                       n.普通信徒，门外汉
@@ -5846,86 +5809,61 @@ leak                 [li:k]                          v.泄漏；n.泄漏；漏�
 leakage              ['li:kidʒ]                      n.渗漏，漏出
 lean                 [li:n]                          v.倾斜，斜靠adj.瘦骨嶙峋的
 lease                [li:s]                          n.租约；租期；v.出租
-lease                [li:s]                          n.租约，租期，v.出租
 leaven               ['levn]                         n.发酵剂；影响力；v.发酵；影响
-leaven               ['levn]                         n.发酵剂，影响力v.发酵，影响或改变
 lecherous                                            adj.好色的
 lechery              ['letʃәri]                      n.好色，纵欲
 lectern              ['lektә:n]                      n.教堂里的读经台
-ledger               ['ledʒә]                        n.账簿
 ledger               ['ledʒә]                        n.帐簿
 leer                 [liә]                           v.斜眼看，送秋波
-leer                 [liә]                           v.斜眼看，睨视
 leery                ['liәri]                        a.机警的，怀疑的
 leeward              ['li:wә:d]                      adj.顺风的
 legacy               ['legәsi]                       n.遗产；遗留之物
-legacy               ['legәsi]                       n.遗产，遗留之物
 legend               ['ledʒәnd]                      n.地图里的说明文字或图例
-legend               ['ledʒәnd]                      n.地图里的说明文字或图
 legerdemain          [,ledʒәdә'mein]                 n.手法；戏法
-legerdemain          [,ledʒәdә'mein]                 n.手法，戏法
 legible              ['ledʒәbl]                      adj.可辩认的，易读的
 legion               ['li:dʒәn]                      n.兵团；一大群
-legion               ['li:dʒәn]                      n.兵团，一大群
 legislate            ['ledʒisleit]                   v.制定法律
 legislation          [,ledʒis'leiʃәn]                n.法律，法规，立法
 legislature          ['ledʒisleitʃә]                 n.立法机关，立法团体
-legislature          ['ledʒisleitʃә]                 n.立法机关
-legitimate           [li'dʒitimәt]                   a.合法的；正当的
 legitimate           [li'dʒitimәt]                   adj.合法的，正当的
 leisureliness        ['li:ʒәlinis]                   n.悠然，从容
 lengthy              ['leŋθi]                        adj.很长的，冗长的
-lenience             ['li:njәnsi]
-['li:njәnt]
-['sentәns]
-['tenpәns]             n.宽大，温和
+lenience             ['li:nɪrns']                    n.宽大，温和
 leniency             ['li:njәnsi]                    n.温和，宽容
-lenient              ['li:njәnt]                     a.宽大的；仁慈的
 lenient              ['li:njәnt]                     adj.宽大的，仁慈的
 leonine              ['li:әnain]                     adj.狮子的
 leprosy              ['leprәsi]                      n.麻疯病
 lesion               ['li:ʒәn]                       n.伤口，损害
 lessee               [le'si:]                        n.（房地产的）租户
-lethal               ['li:θәl]                       a.致命的
 lethal               ['li:θәl]                       adj.致命的
 lethargic                                            a.昏睡的
 lethargy             ['leθәdʒi]                      n.昏睡；倦怠；呆滞懒散
-lethargy             ['leθәdʒi]                      n.昏睡，倦怠
 leucocyte            ['lu:kәsait]                    n.白血病
 levee                ['levi]                         n.防洪堤；堤岸
-levee                ['levi]                         n.防洪堤，堤岸
 levelheaded                                          a.头脑冷静的，稳健的
 lever                ['levә]                         n.杠杆；v.撬动
 leviathan            [li'vaiәθәn]                    n.大海兽，巨大之物
 levitate             ['leviteit]                     v.（使）浮于空中
 levity               ['levәti]                       n.轻率；轻浮
-levity               ['levәti]                       n.轻率，轻浮
 levy                 ['levi]                         v./n.征税；征兵
-levy                 ['levi]                         v.n.征税、征兵
 lewd                 [lu:d]                          adj.好色的，猥亵的
 lexical              ['leksikl]                      adj.词汇的、词典的
 lexicographer        [,leksi'kɒgrәfә]                n.词典编纂人
 lexicon              ['leksikәn]                     n.词典
 liability            [laiә'biliti]                   n.责任；债务
-liability            [laiә'biliti]                   n.倾向，债务
 liable               ['laiәbl]                       adj.易于……的，有（还债）责任的
 liaison              [li:'eizɒn]                     n.联系；暧昧关系
-liaison              [li:'eizɒn]                     n.联系，暖昧关系
 libation             [lai'beiʃәn]                    n.奠酒（给神献酒），饮酒
 libel                ['laibәl]                       v./n.(文字)诽谤，中伤
-libel                ['laibәl]                       v.n.（文字）诽谤，中伤
 libellous                                            adj.诽谤的
 liberality                                           n.慷慨；心胸开阔
-liberality                                           n.慷慨，心胸开阔
 liberate             ['libәreit]                     v.释放，解放
 liberated                                            adj.无拘束的，放纵的
 libertine            ['libәti:n]                     n.性行为放纵者，浪荡的人
-libertine            ['libәti:n]                     n.性行为放纵者，浪荡子
 liberty              ['libәli]                       n.随意，冒失
 libidinous           [li'bidinәs]                    adj.性欲强的，好色的
 libido               [li'bi:dәu]                     n.性欲，生命力
 libretto             [li'bretәu]                     n.(歌剧等)歌词；剧本
-libretto             [li'bretәu]                     n（歌剧等）歌词，剧本
 licence              ['laisns]                       n.自由，放肆
 license              ['laisns]                       n.放肆，自由；许可证，执照
 licentious           [lai'senʃәs]                    a.纵欲的；放肆的
@@ -5933,29 +5871,22 @@ licentious           [lai'senʃәs]                    adj.纵欲的，放肆的
 licit                                                adj.不禁止的，合法的
 lido                                                 n.浴场，公共游泳池
 lien                 ['li:әn]                        n.扣押权；留置权
-lien                 ['li:әn]                        n.扣押权，留置权
 ligature             ['ligәtʃuә]                     n.绑缚之物（尤指系住血管以免失血的线）
-ligneous             ['ligniәs]                      a.木质的，木头的
 ligneous             ['ligniәs]                      adj.木质的，木头的
 liken                ['laikәn]                       v.把…比作…
 liken                ['laikәn]                       v.把……比作，比拟
 lilliputian          [,lili'pju:ʃjәn]                adj.小人国的，气量小的
 limb                 [lim]                           n.肢(手或脚)，翼
-limb                 [lim]                           n.肢（手或脚），翼
 limber               ['limbә]                        a.易弯曲的；敏捷的
-limber               ['limbә]                        adj.（肌肉）松软的，柔软的
 limbo                ['limbәu]                       n.不稳定，中间状态
 limerick             ['limәrik]                      n.五行打油诗
 limestone            ['laimstәun]                    n.石灰岩
 limited              ['limitid]                      a.有限的
-limn                 [lim]                           v.描写；画
 limn                 [lim]                           v.描述，绘画
 limnetic             [kai'netik]                     adj.湖泊的
 limousine            ['limәzi:n]                     n.大型轿车，大客车
 limousine            ['limәzi:n]                     n.轿车，小客车
 limp                 [limp]                          v.跛行；a.软弱的，松软的
-limp                 [limp]                          v.跛行
-limpid               ['limpid]                       a.清澈的；透明的
 limpid               ['limpid]                       adj.清澈的，透明的
 lineage              ['liniidʒ]                      n.宗系，血统
 lineal               ['liniәl]                       adj.直系的，嫡系的
@@ -5987,18 +5918,7 @@ listless             ['listlis]                      adj.无精打采的
 literal              ['litәrәl]                      a.字面上的；忠实原义的；精确的
 literal              ['litәrәl]                      adj.精确的、忠实原义的
 literate             ['litәrit]                      a.有读写能力的；有文化修养的
-literati             ['litәrit]
-[,sinә'reiʃәn]
-['itәreit]
-[,itә'reiʃәn]
-['itәrәtiv]
-[,læsә'reiʃәn]             n.文人；学                者(复数)
-literati             ['litәrit]
-[,sinә'reiʃәn]
-['itәreit]
-[,itә'reiʃәn]
-['itәrәtiv]
-[,læsә'reiʃәn]             n.文人，学                者（复数）
+literati             [ˌlɪtəˈrɑti]                    n.文人；学者(复数)
 lithe                [laið]                          a.柔软的，易弯曲的；敏捷的，轻快的
 lithe                [laið]                          adj.柔软的，易弯曲的
 litigant             ['litigәnt]                     n.诉讼当事人
@@ -6664,9 +6584,7 @@ muzzy                ['mʌzi]                         adj.
 mycology             [mai'kɒlәdʒi]                   n.真菌学
 myopia               [mai'әupiә]                     n.近视；缺乏远见
 myopia               [mai'әupiә]                     n.近视，缺乏远见
-myopic               [mai'әupiә]
-[mai'ɒtik]             a.近视眼的；缺                乏辨别力的
-myriad               ['miriәd]                       a.许多的，无数的
+myopic               [maɪˈɑpɪk]                      a.近视眼的；缺乏辨别力的
 myriad               ['miriәd]                       adj.许多，无数
 mystic               ['mistik]                       a.神秘的，不可思议的；n.神秘主义者
 myth                 [miθ]                           n.神话故事
@@ -6767,12 +6685,7 @@ nippers              ['nipә]                         n.钳子，镊子
 nipping              ['nipiŋ]                        adj.尖酸的，剌骨的
 nippy                ['nipi]                         adj.辛辣的，寒冷的
 nirvana              [nә:'vɑ:nә]                     n.心灵的平静，解脱
-nitpick              ['nʌtpik]
-['niblik]
-['naitrik]             v.挑剔，吹毛求                疵
-nitpick              ['nʌtpik]
-['niblik]
-['naitrik]             v.挑剔，吹毛求                疵
+nitpick              ['nɪtpɪk']                      v.挑剔，吹毛求疵
 nocturnal            [nɒk'tә:nәl]                    a.夜晚的，夜间发生的
 nocturnal            [nɒk'tә:nәl]                    adj.夜晚的，夜间发生的
 noggin               ['nɒgin]                        n.一小杯，少量的饮料
@@ -6806,8 +6719,7 @@ nonobservance        [,nɒnәb'zә:vәns]                n.不遵守，违犯（
 nonpareil                                            adj.n.无匹敌的（人）
 nonplus              ['nɒnplʌs]                      v.使窘困迷惑；n.迷惑，窘境
 nonplus              ['nɒnplʌs]                      v.使窘困，狼狈不堪
-nonporous            [sәu'nɒ:rәs]
-['sәupәrәs]             a.无孔的，不                 透的
+nonporous            ['nɒn'pɔ:rəs]                   a.无孔的，不透的
 nonradioactive                                       a.非放射性的
 nonsensical          [nɒn'sensikl]                   a.荒唐的，无意义的
 nonskid              [nɒn'skid]                      adj.（轮胎）防滑的
@@ -7239,28 +7151,20 @@ pantheon             ['pænθiәn]                      n.万神殿，众神
 panther              ['pænθә]                        n.黑豹
 pantomime            ['pæntәmaim]                    n.哑剧
 pantry               ['pæntri]                       n.食品室
-papoose              [æ'pәuz]
-[kә'bu:s]
-[prә'pәuz]
-[prә'pәuzә]
-[vә'mu:s]             n.幼儿，背婴儿                 袋子，(
+papoose              [pæ'pus]                        n.幼儿，背婴儿袋子
 papyrus              [pә'paiәrәs]                    n.莎草；莎草纸
-papyrus              [pә'paiәrәs]                    n.莎草，沙草纸
 par                  [pɑ:]                           n.同等，平均量
 parable              ['pærәbl]                       n.寓言，比喻
 parabola             [pә'ræbәlә]                     n.抛物线
 paradigm             ['pærәdaim]                     n.范例，示范
-paradigm             ['pærәdaim]                     n.范
 paradigmatic         [,pærәdig'mætik]                adj.作为示范的，典范的
 paradox              ['pærәdɒks]                     n.矛盾；似矛盾而正确的说法
-paradox              ['pærәdɒks]                     n.矛盾、似矛盾而正确的说法
 paragon              ['pærәgәn]                      n.模范，典型
 parallel             ['pærәlel]                      a.平行的；类似的；n.平行线；v.与…相似
 parallelism          ['pærәlelizm]                   n.平行，类似
 paralysis            [pә'rælisis]                    n.瘫痪，中风
 paralyze             ['pærәlaiz]                     v.使瘫痪，使无效
 parameter            [pә'ræmitә]                     n.参量，变量
-paramount            ['pærәmaunt]                    a.最重要的，最高权力的
 paramount            ['pærәmaunt]                    adj.最重要的，最高权力的
 paranoia             [,pærә'nɒiә]                    n.偏执狂，多疑症
 paranoid                                             a.偏执狂的，过分怀疑的
@@ -7903,8 +7807,7 @@ preen                [pri:n]                         v.整理羽毛；(人)打�
 preen                [pri:n]                         v.整理羽毛,(人)打扮修饰
 preface              ['prefis]                       n.序言,开端
 prefigure            [pri:'figә]                     v.预示,预想
-pregnancy            ['pɒinәnsi]
-['pregnәnt]             n.怀孕,丰富
+pregnancy            ['prɛɡnənsi]                    n.怀孕,丰富
 pregnant             ['pregnәnt]                     a.怀孕的；充满的
 pregnant             ['pregnәnt]                     adj.怀孕的,充满的
 prehistoric                                          a.史前的
@@ -9196,8 +9099,7 @@ schizophrenia        [,skizәu'fri:niә]               n.精神分裂症
 school               [sku:l]                         n.鱼群
 schooner             ['sku:nә]                       n.大酒杯，大篷车
 scintilla            [sin'tilә]                      n.一点，丝毫
-scintillate          [sin'tilә]
-['sintilәnt]             v.闪烁、（淡                吐）流露机智
+scintillate          ['sɪntl]                        v.闪烁、(淡吐)流露机智
 scintillating                                        adj.才气横溢的
 scion                ['saiәn]                        n.嫩芽；子孙
 scion                ['saiәn]                        n.嫩芽，子孙
@@ -10304,12 +10206,7 @@ tacit                ['tæsit]                        adj.心照不宣的，静�
 taciturn             ['tæsitә:n]                     a.沉默寡言的
 taciturn             ['tæsitә:n]                     adj.沉默寡言的
 tack                 [tæk]                           n.大头钉，图钉
-tackiness            ['kɒkinis]
-['læŋkinis]
-['lɑ:kinis]
-['lʌkinis]
-['reisinis]
-['tɑ:dinis]             n.胶粘性
+tackiness            ['tækɪnəs]                      n.胶粘性
 tackle               ['tækl]                         v.处理；n.滑车
 tacky                ['tæki]                         adj.粘的，破烂的
 tact                 [tækt]                          n.机智；圆滑
@@ -10397,17 +10294,7 @@ teetotal             [ti:'tәutl]                     adj.
 telepathy            [ti'lepәθi]                     n.心灵感应，精神感应
 telling              ['teliŋ]                        a.有效的，显著的
 temerity             [ti'merәti]                     n.鲁莽，大胆
-temp                 ['tempәu]
-[tempt]
-[hemp]
-[kemp]
-[tæmp]               v.做临时工作
-temp                 ['tempәu]
-[tempt]
-[hemp]
-[kemp]
-[tæmp]               n.临时雇员,v.临时               工
-temper               ['tempә]                        v.锤炼；缓和；n.脾气
+temp                 [tɛmp]                          v.做临时工作; n.临时雇员
 temper               ['tempә]                        v.锻炼，缓和n.脾气
 temperamental        [,temprә'mentl]                 adj.性情的，喜怒无常的
 temperance           ['tempәrәns]                    n.自制，节制，禁酒
@@ -10471,11 +10358,7 @@ terse                [tә:s]                          a.简洁的，简明的
 terse                [tә:s]                          adj.简洁的，简明的
 testament                                            n.遗嘱；证明
 testament                                            n.遗嘱，证明
-testator             ['gʌstәtәri]
-['steitә]
-[te'steimә]
-['testeit]
-[te'steitriks]             n.立遗嘱的                人
+testator             [tes'teɪtə]                     n.(尤指死者)立遗嘱的人
 testify              ['testifai]                     v.见证，证实
 testimonial                                          n.证明书，奖状
 testimony            ['testimәni]                    n.证言，证明
@@ -10524,13 +10407,7 @@ thrust               [θrʌst]                         v.猛力推，刺，戳
 thwart               [θwɒ:t]                         v.阻挠，使…受挫
 tickler              ['tiklә]                        n.棘手的问题，难题
 ticklish             ['tikliʃ]                       a.怕痒的；易怒的
-tiddler              ['fidlә]
-['aidlә]
-['medlә]
-['midl]
-['midlmæn]
-['mʌdlә]
-['pedlә]             n.很小的鱼，小孩                
+tiddler              ['tɪdlər]                       n.很小的鱼，非常小的东西
 tidy                 ['taidi]                        a.整齐的，整洁的
 tiff                 [tif]                           n.吵嘴，呕气
 tiff                 [tif]                           v.n.吵嘴，呕气
@@ -10861,14 +10738,7 @@ unearthly            [,ʌn'ә:θli]                     a.奇异的
 unenlightened        [,ʌnin'laitnd]                  a.愚昧无知的；不文明的
 unexampled           [,ʌnig'zæmpld]                  adj.空前的，无前
 unexceptionable      [,ʌnik'sepʃәnәbl]               a.无可非议的
-unfailing            ['feiliŋ]
-['neiliŋ]
-[,ʌn'feidiŋ]
-[,ʌn'fi:liŋ]             a.无尽的，无                穷的
-unfailing            ['feiliŋ]
-['neiliŋ]
-[,ʌn'feidiŋ]
-[,ʌn'fi:liŋ]             adj.无尽的，                无穷的
+unfailing            [ʌn'felɪŋ]                      a.无尽的，无穷的
 unfasten             [,ʌn'fɑ:sn]                     v.解开
 unfathomed           [,ʌn'fæðәmd]                    adj.深不可测的，无法理解的
 unfeigned            [,ʌn'feind]                     a.真实的；不作假的
@@ -10934,9 +10804,7 @@ unseemly             [,ʌn'si:mli]                    adj.不适当，不宜
 unsettle             [,ʌn'setl]                      v.使不安宁，搅乱
 unsettling                                           a.令人不安的，扰乱的，使窘困的
 unsound              [,ʌn'saund]                     a.不结实的，不坚固的；无根据的
-unspoiled            [,ʌn'pәuld]
-[,ʌn'spɒtid]             a.未损坏的，                未宠坏的
-unspotted            [,ʌn'spɒtid]                    a.清白的，无污点的
+unspoiled            [,ʌnˈspɔɪld]                    a.未损坏的，未宠坏的
 unspotted            [,ʌn'spɒtid]                    adj.清白的，无污点的
 unstinting                                           a.极为慷慨的，大方的
 unstudied                                            adj.不造作的，优雅的
@@ -10946,7 +10814,6 @@ unthreatening        ['θretniŋ]                      a.不威胁的
 untimely             [,ʌn'taimli]                    a.过早的；不适时的
 untold                                               a.无数的，数不清的
 untoward             [ʌn'tәuәd]                      a.不幸的，(坏事)没料到的
-untoward             [ʌn'tәuәd]                      adj.不幸的，（坏事）没料到的
 untutored            [,ʌn'tju:tәd]                   a.未经教育的
 unversed             [,ʌn'vә:st]                     adj不熟练的，不熟知的
 unwarranted          [,ʌn'wɒrәntid]                  a.没有根据的
@@ -11379,9 +11246,7 @@ yolk                 [jәuk]                          n.蛋黄
 zealot               ['zelәt]                        n.狂热份子，热心者
 zealotry             ['zelәtri]                      n.狂热行为
 zealous              ['zelәs]                        adj.热心的，一心一意的
-zenith               ['dʒenitl]
-['dʒenitiv]
-['lesiθin]                                           n.天顶，极点
+zenith               ['zi:nɪθ]                       n.天顶，极点
 zephyr               ['zefә]                         n.和风，西风
 zest                 [zest]                          n.刺激性，热心，兴趣
 zigzag               ['zigzæg]                       n./a.之字形(的)；v.弯弯曲曲地行进
