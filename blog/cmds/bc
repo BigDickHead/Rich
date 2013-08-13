@@ -403,6 +403,9 @@ DESCRIPTION
               The Bessel function of integer order n of x.
 
    EXAMPLES
+
+       echo "10 + 10" | bc
+
        In /bin/sh,  the following will assign the value of "pi" to the shell variable pi.
                pi=$(echo "scale=10; 4*a(1)" | bc -l)
 
@@ -621,3 +624,5 @@ ENVIRONMENT VARIABLES
 DIAGNOSTICS
        If any file on the command line can not be opened, bc will report that the file is unavailable and  terminate.   Also,
        there are compile and run time diagnostics that should be self-explanatory.
+
+ vim:ft=man:
