@@ -127,7 +127,8 @@ sudo ip route add default via $gw dev eth0
 #!/bin/bash
 
 echo "bring up tap0"
-sudo ip link set tap0 up            //tunctl -b -u Richard -t tap0
+tunctl -b -u Richard -t tap0
+sudo ip link set tap0 up
 echo "add tap0 to br0"
 sudo brctl addif br0 tap0
 
