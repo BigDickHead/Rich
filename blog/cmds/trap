@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+trap "rmdir $lockdir; exit 1" 1 2 15
