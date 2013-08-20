@@ -1,5 +1,5 @@
 
-exec: usage: exec [-cl] [-a name] [command [arguments ...]] [redirection ...]
+source: usage: source filename [arguments]
 
 在bash shell中，source、exec以及sh都可以用来执行shell script,但是它们的差别在哪里呢？
 
