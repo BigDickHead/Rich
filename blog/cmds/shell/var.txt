@@ -1,0 +1,53 @@
+
+bash 中 ${ } 用法总结~
+
+假设我们定义了一个变量为：
+1   file=/dir1/dir2/dir3/my.file.txt
+
+我们可以用 ${ } 分别替换获得不同的值：
+1   ${file#*/} #拿掉第一条 / 及其左边的字串：dir1/dir2/dir3/my.file.txt
+2   ${file##*/} #拿掉最后一条 / 及其左边的字串：my.file.txt
+3   ${file#*.} #拿掉第一个 . 及其左边的字串：file.txt
+4   ${file##*.} #拿掉最后一个 . 及其左边的字串：txt
+5   ${file%/*} #拿掉最后一条 / 及其右边的字串：/dir1/dir2/dir3
+6   ${file%/*} #拿掉第一条 / 及其右边的字串：(空值)
+7   ${file%.*} #拿掉最后一个 . 及其右边的字串：/dir1/dir2/dir3/my.file
+8   ${file%%.*} #拿掉第一个 . 及其右边的字串：/dir1/dir2/dir3/my
+
+记忆的方法为：
+# 是去掉左边(在键盘上 # 在 $ 之左边)
+% 是去掉右边(在键盘上 % 在 $ 之右边)
+单一符号是最小匹配；两个符号是最大匹配。
+还可以按下标取指定长度的子串：
+1   ${file:0:5} #提取最左边的 5 个字?：/dir1
+2   ${file:5:5} #提取第 5 个字右边的连续 5 个字：/dir2
+
+我们也可以对变量值里的字串作替换：
+1   ${file/dir/path}：将第一个 dir 提换为 path：/path1/dir2/dir3/my.file.txt
+2   ${file//dir/path}：将全部 dir 提换为 path：/path1/path2/path3/my.file.txt
+
+利用 ${ } 还可针对不同的变数状态赋值(没设定、空值、非空值)：
+1   ${file-my.file.txt} #假如 $file 为空值，则使用 my.file.txt 作默认值。(保留没设定及非空值)
+2   ${file:-my.file.txt} #假如 $file 没有设定或为空值，则使用 my.file.txt 作默认值。 (保留非空值)
+3   ${file+my.file.txt} #不管 $file 为何值，均使用 my.file.txt 作默认值。 (不保留任何值)
+4   ${file:+my.file.txt} #除非 $file 为空值，否则使用 my.file.txt 作默认值。 (保留空值)
+5   ${file=my.file.txt} #若 $file 没设定，则使用 my.file.txt 作默认值，同时将 $file 定义为非空值。 (保留空值及非空值)
+6   ${file:=my.file.txt} #若 $file 没设定或为空值，则使用 my.file.txt 作默认值，同时将 $file 定义为非空值。 (保留非空值)
+7   ${file?my.file.txt} #若 $file 没设定，则将 my.file.txt 输出至 STDERR。 (保留空值及非空值))
+8   ${file:?my.file.txt} #若 $file 没设定或为空值，则将 my.file.txt 输出至 STDERR。 (保留非空值)
+
+还有，${#var} 可计算出变量值的长度：
+${#file} 可得到 27 ，因为 /dir1/dir2/dir3/my.file.txt 刚好是 27 个字?…
+
+接下来介绍一下 bash 的数组(array)处理方法：
+一般而言，A=”a b c def” 这样的变量只是将 $A 替换为一个单一的字串，
+但是改为 A=(a b c def) ，则是将 $A 定义为数组。
+
+bash 的数组替换方法可参考如下方法：
+1   ${A[@]} 或 ${A[*]} 可得到 a b c def (全部数组)
+2   ${A[0]} 可得到 a (第一个数组)，${A[1]} 则为第二个数组...
+3   ${#A[@]} 或 ${#A[*]} 可得到 4 (全部数组数量)
+4   ${#A[0]} 可得到 1 (即第一个数组(a)的长度)，${A[3]} 可得到 3 (第一个数组(def)的长度)
+5   A[3]=xyz 则是将第 4 个数组重新定义为 xyz ...
+
+ vim:ft=help:
