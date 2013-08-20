@@ -2952,7 +2952,6 @@ elitism              [ei'litizm]                     n.精英论,优秀人士统
 elixir               [i'liksә]                       n.长生不老药，仙丹妙药
 ellipse              [i'lips]                        n.椭圆(形)
 ellipsis             [i'lipsis]                      n.省略
-ellipsis             [i'lipsis]                      n省略
 elliptical           [i'liptikәl]                    a.椭圆的；晦涩的；省略的
 elm                  [elm]                           n.榆树
 elocution            [,elә'kju:ʃәn]                  n.演说术
