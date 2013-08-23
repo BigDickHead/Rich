@@ -1,0 +1,7 @@
+
+mysqmail-pure-ftpd-logger - real-time logging system in MySQL - Pure-FTPd traffic-logger
+pure-ftpd - Secure and efficient FTP server
+pure-ftpd-common - Pure-FTPd FTP server (Common Files)
+pure-ftpd-ldap - Secure and efficient FTP server with LDAP user authentication
+pure-ftpd-mysql - Secure and efficient FTP server with MySQL user authentication
+pure-ftpd-postgresql - Secure and efficient FTP server with PostgreSQL user authentication
