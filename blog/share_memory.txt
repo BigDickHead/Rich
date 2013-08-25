@@ -1,0 +1,992 @@
+
+Linux 内存共享
+共享内存是系统出于多个进程之间通讯的考虑，而预留的的一块内存区。在/proc/sys/kernel/目录下，记录着共享内存的一些限制，如一个共享内存区的最大字节数shmmax，系统范围内最大共享内存区标识符数shmmni等，可以手工对其调整，但不推荐这样做。
+
+一、应用
+
+共享内存的使用，主要有以下几个API：ftok()、shmget()、shmat()、shmdt()及shmctl()。
+
+1)用ftok()函数获得一个ID号.
+
+应用说明:
+在IPC中，我们经常用用key_t的值来创建或者打开信号量，共享内存和消息队列。
+
+函数原型:
+key_t ftok(const char *pathname, int proj_id);
+
+Keys：
+1）pathname一定要在系统中存在并且进程能够访问的
+3）proj_id是一个1－255之间的一个整数值，典型的值是一个ASCII值。
+当成功执行的时候，一个key_t值将会被返回，否则－1被返回。我们可以使用strerror(errno)来确定具体的错误信息。
+
+考虑到应用系统可能在不同的主机上应用，可以直接定义一个key，而不用ftok获得：
+#define IPCKEY 0x344378
+
+2)shmget()用来开辟/指向一块共享内存的函数
+
+应用说明:
+shmget（）用来获得共享内存区域的ID，如果不存在指定的共享区域就创建相应的区域。
+
+函数原型:
+int shmget(key_t key, size_t size, int shmflg);
+
+key_t key 是这块共享内存的标识符。如果是父子关系的进程间通信的话，这个标识符用IPC_PRIVATE来代替。如果两个进程没有任何关系，所以就用ftok()算出来一个标识符（或者自己定义一个）使用了。
+
+int size 是这块内存的大小．
+int flag 是这块内存的模式(mode)以及权限标识。
+模式可取如下值：        
+IPC_CREAT 新建（如果已创建则返回目前共享内存的id）
+IPC_EXCL   与IPC_CREAT结合使用，如果已创建则则返回错误
+然后将“模式” 和“权限标识”进行“或”运算，做为第三个参数。
+如：    IPC_CREAT | IPC_EXCL | 0640   
+例子中的0666为权限标识,4/2/1 分别表示读/写/执行3种权限，第一个0是UID,第一个6（4+2）表示拥有者的权限，第二个4表示同组权限，第3个0表示他人的权限。
+这个函数成功时返回共享内存的ID，失败时返回-1。
+
+关于这个函数，要多说两句。
+创建共享内存时，shmflg参数至少需要 IPC_CREAT | 权限标识，如果只有IPC_CREAT 则申请的地址都是k=0xffffffff，不能使用；
+获取已创建的共享内存时，shmflg不要用IPC_CREAT（只能用创建共享内存时的权限标识，如0640），否则在某些情况下，比如用ipcrm删除共享内存后，用该函数并用IPC_CREAT参数获取一次共享内存（当然，获取失败），则即使再次创建共享内存也不能成功，此时必须更改key来重建共享内存。
+
+3) shmat()将这个内存区映射到本进程的虚拟地址空间。
+
+函数原型:
+void    *shmat( int shmid , char *shmaddr , int shmflag );
+
+shmat()是用来允许本进程访问一块共享内存的函数。
+int shmid是那块共享内存的ID。
+char *shmaddr是共享内存的起始地址，如果shmaddr为0，内核会把共享内存映像到调用进程的地址空间中选定位置；如果shmaddr不为0，内核会把共享内存映像到shmaddr指定的位置。所以一般把shmaddr设为0。
+int shmflag是本进程对该内存的操作模式。如果是SHM_RDONLY的话，就是只读模式。其它的是读写模式
+成功时，这个函数返回共享内存的起始地址。失败时返回-1。
+
+4) shmdt()函数删除本进程对这块内存的使用，shmdt()与shmat()相反，是用来禁止本进程访问一块共享内存的函数。
+
+函数原型:
+int shmdt( char *shmaddr );
+参数char *shmaddr是那块共享内存的起始地址。
+成功时返回0。失败时返回-1。
+
+5) shmctl() 控制对这块共享内存的使用
+
+函数原型：
+int     shmctl( int shmid , int cmd , struct shmid_ds *buf );
+int shmid是共享内存的ID。
+int cmd是控制命令，可取值如下：
+        IPC_STAT        得到共享内存的状态
+        IPC_SET         改变共享内存的状态
+        IPC_RMID        删除共享内存
+struct shmid_ds *buf是一个结构体指针。IPC_STAT的时候，取得的状态放在这个结构体中。如果要改变共享内存的状态，用这个结构体指定。
+返回值：        成功：0
+                失败：-1
+
+示例程序:
+
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define IPCKEY 0x366378
+
+typedef struct{
+char agen[10];
+unsigned char file_no;
+} st_setting;
+
+int main(int argc, char** argv)
+{ 
+    int shm_id;
+    key_t key;
+    st_setting *p_setting;
+    
+    //首先检查共享内存是否存在，存在则先删除
+    shm_id = shmget(IPCKEY ,1028,0640);     
+    if(shm_id != -1)
+    {
+        p_setting = (st_setting*)shmat(shm_id,NULL,0);
+      if ( p_setting != (void *)-1)
+      {
+      shmdt(p_setting);
+          shmctl(shm_id,IPC_RMID,0) ;
+      }
+    }
+        
+    shm_id=shmget(IPCKEY,1028,0640|IPC_CREAT|IPC_EXCL); 
+    if(shm_id==-1)
+    {
+        printf("shmget error\n");
+        return -1;
+    }
+    //将这块共享内存区附加到自己的内存段
+    p_setting=(st_setting*)shmat(shm_id,NULL,0);
+    
+    strncpy(p_setting->agen,"jinyh",10); 
+    printf( "agen:%s\n",p_setting->agen );
+    
+    p_setting->file_no = 1;
+    printf( "file_no:%d\n",p_setting->file_no );
+    
+    system("ipcs -m");//此时可看到有进程关联到共享内存的信息，nattch为1
+    
+    //将这块共享内存区从自己的内存段删除出去
+    if(shmdt(p_setting) == -1)
+       perror(" detach error ");
+    
+    system("ipcs -m");//此时可看到有进程关联到共享内存的信息，nattch为0
+    
+    //删除共享内存
+    if (shmctl( shm_id , IPC_RMID , NULL ) == -1)
+      perror(" delete error ");
+      
+     //exit(0);
+      
+}
+
+注意：在使用共享内存，结束程序退出后。如果你没在程序中用shmctl()删除共享内存的话，一定要在命令行下用ipcrm命令删除这块共享内存。你要是不管的话，它就一直在那儿放着了。
+简单解释一下ipcs命令和ipcrm命令。
+
+取得ipc信息：
+ipcs [-m|-q|-s]
+-m      输出有关共享内存(shared memory)的信息
+-q      输出有关信息队列(message queue)的信息
+-s      输出有关“遮断器”(semaphore)的信息
+%ipcs -m
+
+删除ipc
+ipcrm -m|-q|-s shm_id
+%ipcrm -m 105
+
+
+二、陷阱（参考http://www.ibm.com/developerworks/cn/aix/library/au-cn-sharemem/）
+
+1）ftok陷阱
+
+采用ftok来生成key的情况下，如果ftok的参数pathname指定文件被删除后重建，则文件系统会赋予这个同名文件（或目录）新的i节点信息，于是这些进程所调用的ftok虽然都能正常返回，但得到的键值却并不能保证相同。
+
+2）3. AIX中shmat的问题
+
+AIX系统中，System V各类进程间通信机制在使用中均存在限制。区别于其它UNIX操作系统对IPC机制的资源配置方式，AIX使用了不同的方法；在AIX中定义了 IPC 机制的上限, 且是不可配置的。就共享内存机制而言，在4.2.1及以上版本的AIX系统上，存在下列限制：
+
+对于64位进程，同一进程可连接最多268435456个共享内存段； 
+对于32位进程，同一进程可连接最多11个共享内存段，除非使用扩展的shmat； 
+上述限制对于64位应用不会带来麻烦，因为可供连接的数量已经足够大了；但对于32位应用，却很容易带来意外的问题，因为最大的连接数量只有11个。
+
+下面的例程test02.c演示了这个问题，为了精简代码，它反复连接的是同一个共享内存对象；实际上，无论所连接的共享内存对象是否相同，该限制制约的是连接次数：
+
+#include <stdio.h>
+#include <errno.h> 
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#define MAX_ATTACH_NUM 15
+
+void main(int argc, char* argv[])
+{
+    key_t       mem_key;
+    long        mem_id;
+    void*       mem_addr[MAX_ATTACH_NUM];
+    int          i;
+    if ( ( mem_key = ftok("/tmp/mykeyfile", 1) ) == (key_t)(-1) ) {
+            printf("Failed to generate shared memory access key, ERRNO=%d\n",
+    errno);
+            goto MOD_EXIT;
+    }
+    if ( ( mem_id = shmget(mem_key, 256, IPC_CREAT) ) == (-1) ) {
+            printf("Failed to obtain shared memory ID, ERRNO=%d\n", errno);
+            goto MOD_EXIT;
+    }
+    for ( i=1; i<=MAX_ATTACH_NUM; i++ ) {
+   if ( ( mem_addr[i] = (void *)shmat(mem_id, 0, 0) ) == (void *)(-1) )
+    printf("Failed to attach shared memory, times [%02d], errno:%d\n", i,
+    errno);
+   else
+    printf("Successfully attached shared memory, times [%02d]\n", i);
+    }
+MOD_EXIT:
+    shmctl(mem_id, IPC_RMID, NULL);
+}
+
+在AIX系统上，我们将其编译为test02，并运行，可以看到如下输出：
+
+Successfully attached shared memory, times [01] 
+Successfully attached shared memory, times [02] 
+Successfully attached shared memory, times [03] 
+Successfully attached shared memory, times [04] 
+Successfully attached shared memory, times [05] 
+Successfully attached shared memory, times [06] 
+Successfully attached shared memory, times [07] 
+Successfully attached shared memory, times [08] 
+Successfully attached shared memory, times [09] 
+Successfully attached shared memory, times [10] 
+Successfully attached shared memory, times [11] 
+Failed to attach shared memory, times [12], errno:24
+Failed to attach shared memory, times [13], errno:24
+Failed to attach shared memory, times [14], errno:24
+Failed to attach shared memory, times [15], errno:24
+
+
+说明超出11个连接之后，所有后续的共享内存连接都将无法建立。错误码24的定义是EMFILE，AIX给予的解释是：
+
+The number of shared memory segments attached to the calling process exceeds the system-imposed limit。
+
+解决这个问题的方法是，使用扩展的shmat；具体而言就是，在运行相关应用之前（确切地说，是在共享内存被创建之前），首先在shell中设置EXTSHM环境变量，通过它扩展shmat，对于源代码本身无需作任何修改：
+
+   export EXTSHM=ON
+
+值得注意的是，虽然设置环境变量，在程序中也可通过setenv函数来做到，比如在程序的开始，加入下列代码：
+
+   setenv("EXTSHM", "ON", 1);
+
+但实践证明这样的方法在解决这个问题上是无效的；也就是说唯一可行的办法，就是在shell中设置EXTSHM环境变量，而非在程序中。
+
+在AIX上配置32位DB2实例时，也要求确保将环境变量 EXTSHM 设为 ON，这是运行 Warehouse Manager 和 Query Patroller 之前必需的操作：
+export EXTSHM=ON
+db2set DB2ENVLIST=EXTSHM
+db2start
+其原因即来自我们刚刚介绍的AIX中32位应用连接共享内存时，存在最大连接数限制。这个问题同样普遍存在于AIX平台上Oracle等软件产品中。
+
+3）HP-UX中shmget和shmat的问题
+
+3.1 32位和64位应用兼容问题
+
+在HP-UX平台上，如果同时运行32位应用和64位应用，而且它们访问的是一个相同的共享内存区，则会遇到兼容性问题。
+
+在HP-UX中，应用程序设置IPC_CREAT标志调用shmget，所创建的共享内存区，只可被同类型的应用所访问；即32位应用程序所创建的共享内存区只可被其它的32位应用程序访问，同样地，64位应用程序所创建的共享内存区只可被其它的64位应用程序访问。
+
+如果，32位应用企图访问一个由64位应用创建的共享内存区，则会在调用shmget时失败，得到EINVAL错误码，其解释是：
+
+A shared memory identifier exists for key but is in 64-bit address space and the process performing the request has been compiled as a 32-bit executable.
+
+解决这一问题的方法是，当64位应用创建共享内存时，合并IPC_CREAT标志，同时给定IPC_SHARE32标志：
+
+shmget(mem_key, size, 0666 | IPC_CREAT | IPC_SHARE32)
+
+
+对于32位应用，没有设定IPC_SHARE32标志的要求，但设置该标志并不会带来任何问题，也就是说无论应用程序将被编译为32位还是64位模式，都可采用如上相同的代码；并且由此解决32位应用和64位应用在共享内存访问上的兼容性问题。
+
+3.2 对同一共享内存的连接数限制
+
+在HP-UX上，应用进程对同一个共享内存区的连接次数被限制为最多1次；区别于上面第3节所介绍的AIX上的连接数限制，HP-UX并未对指向不同共享内存区的连接数设置上限，也就是说，运行在HP-UX上的应用进程可以同时连接很多个不同的共享内存区，但对于同一个共享内存区，最多只允许连接1次；否则，shmat调用将失败，返回错误码EINVAL，在shmat的man帮助中，对该错误码有下列解释：
+
+shmid is not a valid shared memory identifier, (possibly because the shared memory segment was already removed using shmctl(2) with IPC_RMID), or the calling process is already attached to shmid.
+
+这个限制会对多线程应用带来无法避免的问题，只要一个应用进程中有超过1个以上的线程企图连接同一个共享内存区，则都将以失败而告终。
+
+解决这个问题，需要修改应用程序设计，使应用进程具备对同一共享内存的多线程访问能力。相对于前述问题的解决方法，解决这个问题的方法要复杂一些。
+
+作为可供参考的方法之一，以下介绍的逻辑可以很好地解决这个问题：
+
+基本思路是，对于每一个共享内存区，应用进程首次连接上之后，将其键值（ftok的返回值）、系统标识符（shmid，shmget调用的返回值）和访问地址（即shmat调用的返回值）保存下来，以这个进程的全局数组或者链表的形式留下记录。在任何对共享内存的连接操作之前，程序都将先行检索这个记录列表，根据键值和标志符去匹配希望访问的共享内存，如果找到匹配记录，则从记录中直接读取访问地址，而无需再次调用shmat函数，从而解决这一问题；如果没有找到匹配目标，则调用shmat建立连接，并且为新连接上来的共享内存添加一个新记录。
+
+记录条目的数据结构，可定义为如下形式：
+
+
+typedef struct _Shared_Memory_Record
+{
+key_t   mem_key;   // key generated by ftok()   
+int    mem_id;    // id returned by shmget()   
+void*   mem_addr;   // access address returned by shmat() 
+int    nattach;    // times of attachment    
+} Shared_
+
+4）Solaris中的shmdt函数原型问题
+
+Solaris系统中的shmdt调用，在原型上与System V标准有所不同，
+
+    Default
+     int shmdt(char *shmaddr);
+
+即形参shmaddr的数据类型在Solaris上是char *，而System V定义的是void * 类型；实际上Solaris上shmdt调用遵循的函数原型规范是SVID-v4之前的标准；以Linux系统为例，libc4和libc5 采用的是char * 类型的形参，而遵循SVID-v4及后续标准的glibc2及其更新版本，均改为采用void * 类型的形参。
+
+如果仍在代码中采用System V的标准原型，就会在Solaris上编译代码时造成编译错误；比如：
+
+Error: Formal argument 1 of type char* in call to shmdt(char*) 
+is being passed void*.
+
+解决方法是，引入一个条件编译宏，在编译平台是Solaris时，采用char * 类型的形参，而对其它平台，均仍采用System V标准的void * 类型形参，比如：
+
+#ifdef _SOLARIS_SHARED_MEMORY         
+shmdt((char *)mem_addr); 
+#else                 
+shmdt((void *)mem_addr); 
+#endif
+
+5）通过shmctl删除共享内存的风险
+
+如果共享内存已经与所有访问它的进程断开了连接，则调用IPC_RMID子命令后，系统将立即删除共享内存的标识符，并删除该共享内存区，以及所有相关的数据结构； 
+如果仍有别的进程与该共享内存保持连接，则调用IPC_RMID子命令后，该共享内存并不会被立即从系统中删除，而是被设置为IPC_PRIVATE状态，并被标记为"已被删除"；直到已有连接全部断开，该共享内存才会最终从系统中消失。
+
+需要说明的是：一旦通过shmctl对共享内存进行了删除操作，则该共享内存将不能再接受任何新的连接，即使它依然存在于系统中！所以，可以确知，在对共享内存删除之后不可能再有新的连接，则执行删除操作是安全的；否则，在删除操作之后如仍有新的连接发生，则这些连接都将失败！
+ 
+ http://www.cnblogs.com/skyme/archive/2011/01/04/1925404.html
+ 
+ 
+ 
+补充:http://linux.chinaitlab.com/administer/805071.html
+
+共享内存（Shared Memory）
+
+　　共享内存区域是被多个进程共享的一部分物理内存。如果多个进程都把该内存区域映射到自己的虚拟地址空间，则这些进程就都可以直接访问该共享内存区域，从而 可以通过该区域进行通信。共享内存是进程间共享数据的一种最快的方法，一个进程向共享内存区域写入了数据，共享这个内存区域的所有进程就可以立刻看到其中 的内容。这块共享虚拟内存的页面，出现在每一个共享该页面的进程的页表中。但是它不需要在所有进程的虚拟内存中都有相同的虚拟地址。
+
+　　
+　　象所有的 System V IPC对象一样，对于共享内存对象的访问由key控制，并要进行访问权限检查。内存共享之后，对进程如何使用这块内存就不再做检查。它们必须依赖于其它机 制，比如System V的信号灯来同步对于共享内存区域的访问。
+
+　　每一个新创建的共享内存对象都用一个shmid_kernel数据结构来表达。系统中所有的shmid_kernel数据结构都保存在shm_segs向 量表中，该向量表的每一个元素都是一个指向shmid_kernel数据结构的指针。shm_segs向量表的定义如下：
+
+　　struct shmid_kernel *shm_segs[SHMMNI];
+
+　　SHMMNI为128，表示系统中最多可以有128个共享内存对象。
+
+　　数据结构shmid_kernel的定义如下：
+
+　　struct shmid_kernel
+
+　　{
+
+　　struct shmid_ds u;         /* the following are private */
+
+　　unsigned long shm_npages;  /* size of segment (pages) */
+
+　　unsigned long *shm_pages;  /* array of ptrs to frames -> SHMMAX */
+
+　　struct vm_area_struct *attaches;  /* descriptors for attaches */
+
+　　};
+
+　　其中：shm_pages是该共享内存对象的页表，每个共享内存对象一个，它描述了如何把该共享内存区域映射到进程的地址空间的信息。
+
+　　shm_npages是该共享内存区域的大小，以页为单位。
+
+　　shmid_ds是一个数据结构，它描述了这个共享内存区的认证信息，字节大小，最后一次粘附时间、分离时间、改变时间，创建该共享区域的进程，最后一次 对它操作的进程，当前有多少个进程在使用它等信息。其定义如下：
+
+　　struct shmid_ds {
+
+　　struct ipc_perm shm_perm;   /* operation perms */
+
+　　int shm_segsz;              /* size of segment (bytes) */
+
+　　__kernel_time_t shm_atime;  /* last attach time */
+
+　　__kernel_time_t shm_dtime;  /* last detach time */
+
+　　__kernel_time_t shm_ctime;  /* last change time */
+
+　　__kernel_ipc_pid_t shm_cpid; /* pid of creator */
+
+　　__kernel_ipc_pid_t shm_lpid; /* pid of last operator */
+
+　　unsigned short shm_nattch;   /* no. of current attaches */
+
+　　unsigned short shm_unused;   /* compatibility */
+
+　　void *shm_unused2;           /* ditto - used by DIPC */
+
+　　void *shm_unused3;           /* unused */
+
+　　};
+
+　　attaches描述被共享的物理内存对象所映射的各进程的虚拟内存区域。每一个希望共享这块内存的进程都必须通过系统调用将其粘附（attach）到它 的虚拟内存中。这一过程将为该进程创建了一个新的描述这块共享内存的vm_area_struct数据结构。进程可以选择共享内存在它的虚拟地址空间的位 置，也可以让Linux为它选择一块足够的空闲区域。
+
+　　这个新的vm_area_struct结构除了要连接到进程的内存结构mm中以外，还被连接到共享内存数据结构shmid_kernel的一个链表中，该 结构中的attaches指针指向该链表。vm_area_struct数据结构中专门提供了两个指针：vm_next_shared和 vm_prev_shared，用于连接该共享区域在使用它的各进程中所对应的vm_area_struct数据结构。其实，虚拟内存并没有在粘附的时候 创建，而要等到第一个进程试图访问它的时候才创建。
+
+　　
+Linux为共享内存提供了四种操作。
+
+　　1. 共享内存对象的创建或获得。与其它两种IPC机制一样，进程在使用共享内存区域以前，必须通过系统调用sys_ipc （call值为SHMGET）创建一个键值为key的共享内存对象，或获得已经存在的键值为key的某共享内存对象的引用标识符。以后对共享内存对象的访 问都通过该引用标识符进行。对共享内存对象的创建或获得由函数sys_shmget完成，其定义如下：
+
+　　int sys_shmget (key_t key, int size, int shmflg)
+
+　　这里key是表示该共享内存对象的键值，size是该共享内存区域的大小（以字节为单位），shmflg是标志（对该共享内存对象的特殊要求）。
+
+　　它所做的工作如下：
+
+　　1) 如果key == IPC_PRIVATE，则创建一个新的共享内存对象。
+
+　　* 算出size对应的页数，检查其合法性。
+
+　　* 搜索向量表shm_segs，为新创建的共享内存对象找一个空位置。
+
+　　* 申请一块内存用于建立shmid_kernel数据结构，注意这里申请的内存区域大小不包括真正的共享内存区，实际上，要等到第一个进程试图访问它的时候 才真正创建共享内存区。
+
+　　* 根据该共享内存区所占用的页数，为其申请一块空间用于建立页表（每页4个字节），将页表清0。
+
+　　* 填写shmid_kernel数据结构，将其加入到向量表shm_segs中为其找到的空位置。
+
+　　* 返回该共享内存对象的引用标识符。
+
+　　2) 在向量表shm_segs中查找键值为key的共享内存对象，结果有三：
+
+　　* 如果没有找到，而且在操作标志shmflg中没有指明要创建新共享内存，则错误返回，否则创建一个新的共享内存对象。
+
+　　* 如果找到了，但该次操作要求必须创建一个键值为key的新对象，那么错误返回。
+
+　　* 否则，合法性、认证检查，如有错，则错误返回；否则，返回该内存对象的引用标识符。
+
+　　共享内存对象的创建者可以控制对于这块内存的访问权限和它的key是公开还是私有。如果有足够的权限，它也可以把共享内存锁定在物理内存中。
+
+　　参见include/linux/shm.h
+
+　　2. 粘附。在创建或获得某个共享内存区域的引用标识符后，还必须将共享内存区域映射（粘附）到进程的虚拟地址空间，然后才能使用该共享内存区域。系统调用 sys_ipc（call值为SHMAT）用于共享内存区到进程虚拟地址空间的映射，而真正完成粘附动作的是函数sys_shmat，其定义如下：
+
+　　int sys_shmat (int shmid, char *shmaddr, int shmflg, ulong *raddr)
+
+　　其中：shmid是共享内存对象的引用标识符；
+
+　　shmaddr该共享内存区域在进程的虚拟地址空间对应的虚拟地址；
+
+　　shmflg是映射标志；
+
+　　raddr是实际映射的虚拟空间地址。
+
+　　该函数所做的工作如下：
+
+　　1) 根据shmid找到共享内存对象。
+
+　　2) 如果shmaddr为0，即用户没有指定该共享内存区域在它的虚拟空间中的位置，则由系统在进程的虚拟地址空间中为其找一块区域（从1G开始）；否则，就 用shmaddr作为映射的虚拟地址。
+
+　　3) 检查虚拟地址的合法性（不能超过进程的最大虚拟空间大小—3G，不能太接近堆栈栈顶）。
+
+　　4) 认证检查。
+
+　　5) 申请一块内存用于建立数据结构vm_area_struct，填写该结构。
+
+　　6) 检查该内存区域，将其加入到进程的mm结构和该共享内存对象的vm_area_struct队列中。
+
+　　共享内存的粘附只是创建一个vm_area_struct数据结构，并将其加入到相应的队列中，此时并没有创建真正的共享内存页。
+
+　　当进程第一次访问共享虚拟内存的某页时，因为所有的共享内存页还都没有分配，所以会发生一个page fault异常。当Linux处理这个page fault的时候，它找到发生异常的虚拟地址所在的vm_area_struct数据结构。在该数据结构中包含有这类共享虚拟内存的一组处理例程，其中的 nopage操作用来处理虚拟页对应的物理页不存在的情况。对共享内存，该操作是shm_nopage（定义在ipc/shm.c中）。该操作在描述这个 共享内存的shmid_kernel数据结构的页表shm_pages中查找发生page fault异常的虚拟地址所对应的页表条目，看共享页是否存在（页表条目为0，表示共享页是第一次使用）。如果不存在，它就分配一个物理页，并为它创建一 个页表条目。这个条目不但进入当前进程的页表，同时也存到shmid_kernel数据结构的页表shm_pages中。
+
+　　当下一个进程试图访问这块内存并得到一个page fault的时候，经过同样的路径，也会走到函数shm_nopage。此时，该函数查看shmid_kernel数据结构的页表shm_pages时， 发现共享页已经存在，它只需把这里的页表项填到进程页表的相应位置即可，而不需要重新创建物理页。所以，是第一个访问共享内存页的进程使得这一页被创建， 而随后访问它的其它进程仅把此页加到它们的虚拟地址空间。
+
+　　3. 分离。当进程不再需要共享虚拟内存的时候，它们与之分离（detach）。只要仍旧有其它进程在使用这块内存，这种分离就只会影响当前的进程，而不会影响 其它进程。当前进程的vm_area_struct数据结构被从shmid_ds中删除，并被释放。当前进程的页表也被更新，共享内存对应的虚拟内存页被 标记为无效。当共享这块内存的最后一个进程与之分离时，共享内存页被释放，同时，这块共享内存的shmid_kernel数据结构也被释放。
+
+　　系统调用sys_ipc（call值为SHMDT）用于共享内存区与进程虚拟地址空间的分离，而真正完成分离动作的是函数sys_shmdt，其定义如 下：
+
+　　int sys_shmdt (char *shmaddr)
+
+　　其中shmaddr是进程要分离的共享页的开始虚拟地址。
+
+　　该函数搜索进程的内存结构中的所有vm_area_struct数据结构，找到地址shmaddr对应的一个，调用函数do_munmap将其释放。
+
+　　在函数do_munmap中，将要释放的vm_area_struct数据结构从进程的虚拟内存中摘下，清除它在进程页表中对应的页表项（可能占多个页表 项），调用该共享内存数据结构vm_area_struct的操作例程中的close操作（此处为shm_close）做进一步的处理。
+
+　　在函数shm_close（定义在ipc/shm.c中）中，找到该共享内存对象在向量表shm_segs中的索引，从而找到该共享内存对象，将该共享内 存在当前进程中对应的vm_area_struct数据结构从对象的共享内存区域链表（由vm_next_share和vm_pprev_share指针 连接）中摘下。如果目前与该共享内存对象粘附的进程数变成了0，则释放共享内存页，释放共享内存页表，释放该对象的shmid_kernel数据结构，将 向量表shm_segs中该共享内存对象所占用的项改为IPC_UNUSED。
+ 
+
+ 
+
+如果共享的虚拟内存没有被锁定在物理内存中，分离会更加复杂。因为在这种情况下，共享内存的页可能在系统大量使用内存的时候被交换到系统的交换磁盘。为了 避免这种情况，可以通过下面的控制操作，将某共享内存页锁定在物理内存不允许向外交换。共享内存的换出和换入，已在第3章中讨论。
+
+　　4. 控制。Linux在共享内存上实现的第四种操作是共享内存的控制（call值为SHMCTL的sys_ipc调用），它由函数sys_shmctl实现。 控制操作包括获得共享内存对象的状态，设置共享内存对象的参数（如uid、gid、mode、ctime等），将共享内存对象在内存中锁定和释放（在对象 的mode上增加或去除SHM_LOCKED标志），释放共享内存对象资源等。
+
+　　共享内存提供了一种快速灵活的机制，它允许进程之间直接共享大量的数据，而无须使用拷贝或系统调用。共享内存的主要局限性是它不能提供同步，如果两个进程 企图修改相同的共享内存区域，由于内核不能串行化这些动作，因此写的数据可能任意地互相混合。所以使用共享内存的进程必须设计它们自己的同步协议，如用信 号灯等。
+
+　　以下是使用共享内存机制进行进程间通信的基本操作：
+
+　　需要包含的头文件：
+
+　　#include <sys/types.h>
+
+　　#include <sys/ipc.h>
+
+　　#include <sys/shm.h>
+
+　　1.创建共享内存：
+
+　　int shmget(key_t key,int size,int shmflg);
+
+　　参数说明：
+
+　　key:用来表示新建或者已经存在的共享内存去的关键字。
+
+　　size：创建共享内存的大小。
+
+　　shmflg：可以指定的特殊标志。IPC_CREATE,IPC_EXCL以及低九位的权限。
+
+　　eg：
+
+　　int shmid;
+
+　　shmid=shmget(IPC_PRIVATE,4096,IPC_CREATE|IPC_EXCL|0660);
+
+　　if(shmid==-1)
+
+　　perror("shmget()");
+
+　　2.连接共享内存
+
+　　char *shmat(int shmid,char *shmaddr,int shmflg);
+
+　　参数说明：
+
+　　shmid：共享内存的关键字
+
+　　shmaddr：指定共享内存出现在进程内存地址的什么位置，通常我们让内核自己决定一个合适的地址位置，用的时候设为0。
+
+　　shmflg：制定特殊的标志位。
+
+　　eg：
+
+　　int shmid;
+
+　　char *shmp;
+
+　　shmp=shmat(shmid,0,0);
+
+　　if(shmp==(char *)(-1))
+
+　　perror("shmat()\n");
+
+　　3.使用共享内存
+
+　　在使用共享内存是需要注意的是，为防止内存访问冲突，我们一般与信号量结合使用。
+
+　　4.分离共享内存：当程序不再需要共享内后，我们需要将共享内存分离以便对其进行释放，分离共享内存的函数原形如下：
+
+　　int shmdt(char *shmaddr);
+
+　　5.
+
+　　释放共享内存
+
+　　int shmctl(int shmid,int cmd,struct shmid_ds *buf);
+
+
+
+UNIX 共享内存应用中的问题及解决方法
+
+简介
+
+共享内存是一种非常重要且常用的进程间通信方式，相对于其它IPC机制，因其速度最快、效率最高，被广泛应用于各类软件产品及应用开发中。System V IPC 为UNIX平台上的共享内存应用制定了统一的API标准，从而为在UNIX/Linux平台上进行跨平台开发提供了极大的便利；开发人员基于一套基本相同的源代码，便可开发出同时支持AIX、Solaris、HP-UX、Linux等平台的产品。
+
+1. System V共享内存概述
+
+System V 进程间通信（IPC）包括3种机制：消息队列、信号量、共享内存。消息队列和信号量均是内核空间的系统对象，经由它们的数据需要在内核和用户空间进行额外的数据拷贝；而共享内存和访问它的所有应用程序均同处于用户空间，应用进程可以通过地址映射的方式直接读写内存，从而获得非常高的通信效率。
+
+System V 为共享内存定义了下列API接口函数：
+
+# include <sys/types.h>
+# include <sys/ipc.h>
+# include <sys/shm.h>
+
+key_t    ftok(const char *pathname, int proj_id);
+int  shmget(key_t key, int size, int shmflg);
+void*    shmat(int shmid, const void *shmaddr, int shmflg);
+int  shmdt(void *shmaddr);
+int  shmctl(int shmid, int cmd, struct shmid_ds *buf);
+
+
+ftok    函数用于生成一个键值：key_t key，该键值将作为共享内存对象的唯一性标识符，并提供给为shmget函数作为其输入参数；ftok 函数的输入参数包括一个文件（或目录）路径名：pathname，以及一个额外的数字：proj_id，其中pathname所指定的文件（或目录）要求必须已经存在，且proj_id不可为0；
+shmget  函数用于创建（或者获取）一个由key键值指定的共享内存对象，返回该对象的系统标识符：shmid；
+shmat   函数用于建立调用进程与由标识符shmid指定的共享内存对象之间的连接；
+shmdt   函数用于断开调用进程与共享内存对象之间的连接；
+shmctl  函数用于对已创建的共享内存对象进行查询、设值、删除等操作；
+
+2. ftok的陷阱
+
+根据pathname指定的文件（或目录）名称，以及proj_id参数指定的数字，ftok函数为IPC对象生成一个唯一性的键值。在实际应用中，很容易产生的一个理解是，在proj_id相同的情况下，只要文件（或目录）名称不变，就可以确保ftok返回始终一致的键值。 然而，这个理解并非完全正确，有可能给应用开发埋下很隐晦的陷阱。因为ftok的实现存在这样的风险，即在访问同一共享内存的多个进程先后调用ftok函数的时间段中，如果pathname指定的文件（或目录）被删除且重新创建，则文件系统会赋予这个同名文件（或目录）新的i节点信息，于是这些进程所调用的ftok虽然都能正常返回，但得到的键值却并不能保证相同。由此可能造成的后果是，原本这些进程意图访问一个相同的共享内存对象，然而由于它们各自得到的键值不同，实际上进程指向的共享内存不再一致；如果这些共享内存都得到创建，则在整个应用运行的过程中表面上不会报出任何错误，然而通过一个共享内存对象进行数据传输的目的将无法实现。
+
+AIX、Solaris、HP-UX均明确指出，key文件被删除并重建后，不保证通过ftok得到的键值不变，比如AIX上ftok的man帮助信息即声明：
+
+Attention: If the Path parameter of the ftok subroutine names a file that has been removed while keys still refer to it, the ftok subroutine returns an error. If that file is then re-created, the ftok subroutine will probably return a key different from the original one.
+
+Linux没有提供类似的明确声明，但我们可以通过下面的简单例程test01.c，得到相同的印证：
+
+#include <stdio.h>
+#include <sys/ipc.h>
+void main(int argc, char* argv[])
+{
+if (argc !=2 ) {
+        printf("Usage: %s KeyFile\n e.g. %s /tmp/mykeyfile\n", argv[0], argv[0]);
+        return;
+    }
+    printf("Key generated by ftok:  0x%x\n", ftok(argv[1], 1));
+}
+
+
+将上述例程在Red Hat Enterprise Linux AS release 4平台上编程成可执行程序test01，并且通过touch命令在 /tmp目录下创建一个新文件mykeyfile，然后为该文件生成键值：
+
+# touch  /tmp/mykeyfile
+# ./test01 /tmp/mykeyfile
+Key generated by ftok:  0x101000b
+
+
+然后，将/tmp/mykeyfile删除，并且通过vi命令重新创建该文件，再次生成键值：
+
+# ./test01 /tmp/mykeyfile
+Key generated by ftok:  0x1010017
+
+
+我们可以看到，虽然文件名称都是 /tmp/mykeyfile，并未改变，但由于中间发生了文件删除并重新创建的操作，前后两次所得到的键值已经不再相同。
+
+避免此类问题最根本的方法，就是采取措施保证pathname所指定的文件（或目录）在共享内存的使用期间不被删除，不要使用有可能被删除的文件；或者干脆直接指定键值，而不借助ftok来获取键值。
+
+3. AIX中shmat的问题
+
+AIX系统中，System V各类进程间通信机制在使用中均存在限制。区别于其它UNIX操作系统对IPC机制的资源配置方式，AIX使用了不同的方法；在AIX中定义了 IPC 机制的上限, 且是不可配置的。就共享内存机制而言，在4.2.1及以上版本的AIX系统上，存在下列限制：
+
+    对于64位进程，同一进程可连接最多268435456个共享内存段；
+    对于32位进程，同一进程可连接最多11个共享内存段，除非使用扩展的shmat；
+
+上述限制对于64位应用不会带来麻烦，因为可供连接的数量已经足够大了；但对于32位应用，却很容易带来意外的问题，因为最大的连接数量只有11个。在某些事件触发的多线程应用中，新的线程不断地为进行事件处理而被创建，这些线程如果都需要去连接特定的共享内存，则极有可能造成该进程连接的共享内存数量超过11个，事实上同时拥有几十个甚至上百个处理线程的应用并不少见。一旦超个这个限制值，则所有后续的处理线程都将无法正常工作，从而导致应用运行失败。
+
+下面的例程test02.c演示了这个问题，为了精简代码，它反复连接的是同一个共享内存对象；实际上，无论所连接的共享内存对象是否相同，该限制制约的是连接次数：
+
+
+#include    <stdio.h>
+#include    <errno.h>   
+#include    <sys/types.h>
+#include    <sys/ipc.h>
+#include    <sys/shm.h>
+#define     MAX_ATTACH_NUM  15
+
+void main(int argc, char* argv[])
+{
+    key_t       mem_key;
+    long        mem_id;
+    void*       mem_addr[MAX_ATTACH_NUM];
+    int          i;
+    if ( ( mem_key = ftok("/tmp/mykeyfile", 1) ) == (key_t)(-1) )  {
+            printf("Failed to generate shared memory access key, ERRNO=%d\n",
+            errno);
+            goto MOD_EXIT;
+    }
+    if ( ( mem_id = shmget(mem_key, 256, IPC_CREAT) ) == (-1) )  {
+            printf("Failed to obtain shared memory ID, ERRNO=%d\n", errno);
+            goto MOD_EXIT;
+    }
+    for ( i=1; i<=MAX_ATTACH_NUM; i++ )  {
+        if ( ( mem_addr[i] = (void *)shmat(mem_id, 0, 0) ) == (void *)(-1) )
+      printf("Failed to attach shared memory, times [%02d], errno:%d\n", i,
+            errno);
+        else
+            printf("Successfully attached shared memory, times [%02d]\n", i);
+    }
+MOD_EXIT:
+    shmctl(mem_id, IPC_RMID, NULL);
+}
+
+
+在AIX系统上，我们将其编译为test02，并运行，可以看到如下输出：
+
+
+Successfully attached shared memory, times [01] 
+Successfully attached shared memory, times [02] 
+Successfully attached shared memory, times [03] 
+Successfully attached shared memory, times [04] 
+Successfully attached shared memory, times [05] 
+Successfully attached shared memory, times [06] 
+Successfully attached shared memory, times [07] 
+Successfully attached shared memory, times [08] 
+Successfully attached shared memory, times [09] 
+Successfully attached shared memory, times [10] 
+Successfully attached shared memory, times [11] 
+Failed to attach shared memory, times [12], errno:24
+Failed to attach shared memory, times [13], errno:24
+Failed to attach shared memory, times [14], errno:24
+Failed to attach shared memory, times [15], errno:24
+
+
+说明超出11个连接之后，所有后续的共享内存连接都将无法建立。错误码24的定义是EMFILE，AIX给予的解释是：
+
+The number of shared memory segments attached to the calling process exceeds the system-imposed limit。
+
+解决这个问题的方法是，使用扩展的shmat；具体而言就是，在运行相关应用之前（确切地说，是在共享内存被创建之前），首先在shell中设置EXTSHM环境变量，通过它扩展shmat，对于源代码本身无需作任何修改：
+
+        export EXTSHM=ON
+    
+值得注意的是，虽然设置环境变量，在程序中也可通过setenv函数来做到，比如在程序的开始，加入下列代码：
+
+        setenv("EXTSHM", "ON", 1);
+    
+但实践证明这样的方法在解决这个问题上是无效的；也就是说唯一可行的办法，就是在shell中设置EXTSHM环境变量，而非在程序中。
+
+在AIX上配置32位DB2实例时，也要求确保将环境变量 EXTSHM 设为 ON，这是运行 Warehouse Manager 和 Query Patroller 之前必需的操作：
+
+export EXTSHM=ON
+db2set DB2ENVLIST=EXTSHM
+db2start
+
+其原因即来自我们刚刚介绍的AIX中32位应用连接共享内存时，存在最大连接数限制。这个问题同样普遍存在于AIX平台上Oracle等软件产品中。
+
+4. HP-UX中shmget和shmat的问题
+
+4.1 32位和64位应用兼容问题
+
+在HP-UX平台上，如果同时运行32位应用和64位应用，而且它们访问的是一个相同的共享内存区，则会遇到兼容性问题。
+
+在HP-UX中，应用程序设置IPC_CREAT标志调用shmget，所创建的共享内存区，只可被同类型的应用所访问；即32位应用程序所创建的共享内存区只可被其它的32位应用程序访问，同样地，64位应用程序所创建的共享内存区只可被其它的64位应用程序访问。
+
+如果，32位应用企图访问一个由64位应用创建的共享内存区，则会在调用shmget时失败，得到EINVAL错误码，其解释是：
+
+A shared memory identifier exists for key but is in 64-bit address space and the process performing the request has been compiled as a 32-bit executable.
+
+解决这一问题的方法是，当64位应用创建共享内存时，合并IPC_CREAT标志，同时给定IPC_SHARE32标志：
+
+shmget(mem_key, size, 0666 | IPC_CREAT | IPC_SHARE32)
+
+
+对于32位应用，没有设定IPC_SHARE32标志的要求，但设置该标志并不会带来任何问题，也就是说无论应用程序将被编译为32位还是64位模式，都可采用如上相同的代码； 并且由此解决32位应用和64位应用在共享内存访问上的兼容性问题。
+
+4.2 对同一共享内存的连接数限制
+
+在HP-UX上，应用进程对同一个共享内存区的连接次数被限制为最多1次；区别于上面第3节所介绍的AIX上的连接数限制，HP-UX并未对指向不同共享内存区的连接数设置上限，也就是说，运行在HP-UX上的应用进程可以同时连接很多个不同的共享内存区，但对于同一个共享内存区，最多只允许连接1次；否则，shmat调用将失败，返回错误码EINVAL，在shmat的man帮助中，对该错误码有下列解释：
+
+shmid is not a valid shared memory identifier, (possibly because the shared memory segment was already removed using shmctl(2) with IPC_RMID), or the calling process is already attached to shmid.
+
+这个限制会对多线程应用带来无法避免的问题，只要一个应用进程中有超过1个以上的线程企图连接同一个共享内存区，则都将以失败而告终。
+
+解决这个问题，需要修改应用程序设计，使应用进程具备对同一共享内存的多线程访问能力。相对于前述问题的解决方法，解决这个问题的方法要复杂一些。
+
+作为可供参考的方法之一，以下介绍的逻辑可以很好地解决这个问题：
+
+基本思路是，对于每一个共享内存区，应用进程首次连接上之后，将其键值（ftok的返回值）、系统标识符（shmid，shmget调用的返回值）和访问地址（即shmat调用的返回值）保存下来，以这个进程的全局数组或者链表的形式留下记录。在任何对共享内存的连接操作之前，程序都将先行检索这个记录列表，根据键值和标志符去匹配希望访问的共享内存，如果找到匹配记录，则从记录中直接读取访问地址，而无需再次调用shmat函数，从而解决这一问题；如果没有找到匹配目标，则调用shmat建立连接，并且为新连接上来的共享内存添加一个新记录。
+
+记录条目的数据结构，可定义为如下形式：
+
+typedef struct  _Shared_Memory_Record
+{
+key_t  mem_key;  // key generated by ftok()         
+int    mem_id;   // id  returned by shmget()            
+void*  mem_addr; // access address returned by shmat()  
+int    nattach;  // times of attachment             
+} Shared_Memory_Record;
+
+
+其中，nattach成员的作用是，记录当前对该共享内存区的连接数目；每一次打开共享内存的操作都将对其进行递增，而每一次关闭共享内存的操作将其递减，直到nattach的数值降到0，则对该共享内存区调用shmdt进行真正的断开连接。
+
+5. Solaris中的shmdt函数原型问题
+
+Solaris系统中的shmdt调用，在原型上与System V标准有所不同，
+
+    Default
+     int shmdt(char *shmaddr);
+  
+
+
+即形参shmaddr的数据类型在Solaris上是char *，而System V定义的是void * 类型； 实际上Solaris上shmdt调用遵循的函数原型规范是SVID-v4之前的标准；以Linux系统为例，libc4和libc5 采用的是char * 类型的形参，而遵循SVID-v4及后续标准的glibc2及其更新版本，均改为采用void * 类型的形参。
+
+如果仍在代码中采用System V的标准原型，就会在Solaris上编译代码时造成编译错误；比如：
+
+Error: Formal argument 1 of type char* in call to shmdt(char*) 
+is being passed void*.
+
+
+解决方法是，引入一个条件编译宏，在编译平台是Solaris时，采用char * 类型的形参， 而对其它平台，均仍采用System V标准的void * 类型形参，比如：
+
+        #ifdef  _SOLARIS_SHARED_MEMORY         
+    shmdt((char *)mem_addr);    
+#else                       
+    shmdt((void *)mem_addr);    
+#endif
+    
+
+
+
+6. 通过shmctl删除共享内存的风险
+
+当进程断开与共享内存区的连接后，一般通过如下代码删除该共享内存：
+
+        shmctl(mem_id, IPC_RMID, NULL); 
+    
+
+
+从HP-UX上shmctl函数的man帮助，我们可以看到对IPC_RMID操作的说明：
+
+IPC_RMID Remove the shared memory identifier specified by shmid from the system and destroy the shared memory segment and data structure associated with it. If the segment is attached to one or more processes, then the segment key is changed to IPC_PRIVATE and the segment is marked removed. The segment disappears when the last attached process detaches it.
+
+其它UNIX平台也有类似的说明。 关于shmctl的IPC_RMID操作，其使用特点可简述如下：
+
+    如果共享内存已经与所有访问它的进程断开了连接，则调用IPC_RMID子命令后，系统将立即删除共享内存的标识符，并删除该共享内存区，以及所有相关的数据结构；
+
+    如果仍有别的进程与该共享内存保持连接，则调用IPC_RMID子命令后，该共享内存并不会被立即从系统中删除，而是被设置为IPC_PRIVATE状态，并被标记为"已被删除"；直到已有连接全部断开，该共享内存才会最终从系统中消失。
+
+    于是，存在这样的一种状态：
+        N个进程（进程1至进程N）已经与某共享内存区连接；
+        进程1已完成对此共享内存的操作，断开连接后，调用shmctl的IPC_RMID子命 令，企图删除该共享内存；
+        由于进程2至进程N仍保持与该共享内存的连接，因此在它们全部断开连接之前， 这个共享内存区毫无疑问地会依然存在。
+
+此时，如果有其它的进程（比如第N+1号进程）想建立对这个共享内存的连接，是否能够成功呢？
+
+类似的状态，在Windows上同样存在，只是程序借助的API有所不同，比如通过CreateFileMapping函数创建共享内存，通过MapViewOfFile函数建立连接，通过UnmapViewOfFile函数断开连接，通过CloseHandle函数删除共享内存等。在Windows上，对此问题的回答是肯定的；也就是说，只要共享内存依然存在，则进程总是可以建立对它的连接，而无论之前是否有进程对其执行过删除操作。
+
+然而，对于包括AIX、Solaris、HP-UX等在内的UNIX平台，答案却是否定的！这也正是本节所讨论的使用shmctl中的风险所在；通过以下test03.P1.c和test03.P2.c两个例程，我们可以很直观地得到答案：
+
+test03.P1.c：   创建共享内存，并建立连接，保持10秒后（在此期间，test03.P2将反复 连接、并删除该共享内存），断开连接，并最后再次尝试连接以验证该共享内存是否已被真正删除；
+
+test03.P2.c：   反复连接由test03.P1创建的共享内存，并在期间通过shmctl的IPC_RMID 子命令删除该共享内存，以观察共享内存被执行删除操作之后，在被彻底销毁之前是否还能接受连接；
+
+
+/******* test03.P1.c ********/
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+int main(int argc, char* argv[])
+{
+    key_t           mem_key;
+    long        mem_id;
+    void*       mem_addr;
+    int         isAttached = 0;
+
+    mem_key = ftok("/tmp/mykeyfile", 1);
+    mem_id  = shmget(mem_key, 256, IPC_CREAT);
+
+    if ( ( mem_addr = (void *)shmat(mem_id, 0, 0) ) == (void *)(-1) )  
+        printf("%s, Failed to attach shared memory, errno:%d\n", argv[0], errno);
+    else { 
+        isAttached = 1;
+        printf("%s, +.Successfully attached shared memory\n", argv[0]);
+    }
+
+    /* sleep 10 seconds, to wait test03.P2 to run */ 
+    sleep(10);
+
+    if (isAttached) { 
+        // Attention: the following line should be "shmdt((char *)mem_addr);" if
+        on Solaris 
+        shmdt((void *)mem_addr); 
+        printf("%s, -.Successfully detached shared memory\n", argv[0]);
+    } 
+
+    /* try to attach the shared memory which has been removed! */ 
+    if ( ( mem_addr = (void *)shmat(mem_id, 0, 0) ) == (void *)(-1) ) 
+        printf("%s, Failed to attach the removed shared memory, errno:%d\n",
+        argv[0], errno); 
+
+    return 0;
+}
+
+
+/******* test03.P2.c ********/
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+int main(int argc, char* argv[]) 
+{
+    key_t       mem_key; 
+    long        mem_id; 
+    void*           mem_addr; 
+    int         i,  isAttached; 
+
+    mem_key = ftok("/tmp/mykeyfile", 1); 
+    mem_id  = shmget(mem_key, 0, 0); 
+
+    // repeated attaching & detaching 
+    for (i=1; i<10; i++) { 
+        isAttached = 0; 
+        if ( ( mem_addr = (void *)shmat(mem_id, 0, 0) ) == (void *)(-1) )
+            printf("%s, Failed to attach shared memory, times [%02d],
+            errno:%d\n",
+                      argv[0], i, errno); 
+        else {
+            isAttached = 1;
+            printf("%s, +.Successfully attached shared memory, times
+            [%02d]\n",argv[0], i); 
+        }
+
+        if (isAttached) {
+            // Attention: the following line should be "shmdt((char
+            *)mem_addr);", if on Solaris
+            shmdt((void *)mem_addr); 
+            printf("%s, -.Successfully detached, times [%02d]\n", argv[0], i);
+        }
+
+        // purposely remove the shared memory at times [5]
+        if (i==5) { 
+            shmctl(mem_id, IPC_RMID, NULL);
+            printf("%s, *.Remove executed, times [%02d], errno=%d\n", 
+            argv[0], i, errno);
+        }
+    } 
+
+    return 0; 
+}
+
+
+上述程序均可在AIX、HP-UX、Linux平台上编译通过；在Solaris平台上只需按注释提示的要求，将shmdt的参数强制为char *类型也可编译通过（第5节中已介绍过）。
+
+将test03.P1.c、test03.P2.c各自编译为可执行程序test03.P1、test03.P2，并通过下面的shell脚本：runtest，运行它们：
+
+
+    #!/bin/sh 
+    ./test03.P1& 
+    sleep 2 
+    ./test03.P2 
+
+
+在Linux平台（Red Hat 8.0）上的运行结果如下：
+
+
+[root@localhost tmp]# ./runtest
+./test03.P1, +.Successfully attached shared memory
+./test03.P2, +.Successfully attached shared memory, times [01]
+./test03.P2, -.Successfully detached, times [01]
+./test03.P2, +.Successfully attached shared memory, times [02]
+./test03.P2, -.Successfully detached, times [02]
+./test03.P2, +.Successfully attached shared memory, times [03]
+./test03.P2, -.Successfully detached, times [03]
+./test03.P2, +.Successfully attached shared memory, times [04]
+./test03.P2, -.Successfully detached, times [04]
+./test03.P2, +.Successfully attached shared memory, times [05]
+./test03.P2, -.Successfully detached, times [05]
+./test03.P2, *.Remove executed, times [05], errno=0
+./test03.P2, +.Successfully attached shared memory, times [06]
+./test03.P2, -.Successfully detached, times [06]
+./test03.P2, +.Successfully attached shared memory, times [07]
+./test03.P2, -.Successfully detached, times [07]
+./test03.P2, +.Successfully attached shared memory, times [08]
+./test03.P2, -.Successfully detached, times [08]
+./test03.P2, +.Successfully attached shared memory, times [09]
+./test03.P2, -.Successfully detached, times [09]
+[root@localhost tmp]# ./test03.P1, -.Successfully detached shared memory
+./test03.P1, Failed to attach the removed shared memory, errno:22
+
+
+根据运行结果，我们可以看到，在Linux平台上，即便对共享内存执行了删除操作（在第5次连接之后，test03.P2进程调用了shmctl的IPC_RMID删除操作），只要该共享内存依然存在（test03.P1进程保持着连接，因此共享内存不会被立即删除），则它仍然是可连接的（test03.P2进程的第6到第9次连接均是成功的）。
+
+然而，在AIX、HP-UX、Solaris平台上的运行结果却不同于Linux：
+
+
+# ./runtest
+./test03.P1, +.Successfully attached shared memory
+./test03.P2, +.Successfully attached shared memory, times [01]
+./test03.P2, -.Successfully detached, times [01]
+./test03.P2, +.Successfully attached shared memory, times [02]
+./test03.P2, -.Successfully detached, times [02]
+./test03.P2, +.Successfully attached shared memory, times [03]
+./test03.P2, -.Successfully detached, times [03]
+./test03.P2, +.Successfully attached shared memory, times [04]
+./test03.P2, -.Successfully detached, times [04]
+./test03.P2, +.Successfully attached shared memory, times [05]
+./test03.P2, -.Successfully detached, times [05]
+./test03.P2, *.Remove executed, times [05], errno=0
+./test03.P2, Failed to attach shared memory, times [06], errno:22
+./test03.P2, Failed to attach shared memory, times [07], errno:22
+./test03.P2, Failed to attach shared memory, times [08], errno:22
+./test03.P2, Failed to attach shared memory, times [09], errno:22
+# ./test03.P1, -.Successfully detached shared memory
+./test03.P1, Failed to attach the removed shared memory, errno:22
+
+
+根据结果，可以发现，test03.P2进程的第6到第9次连接都是失败的，也就说明，在AIX、HP-UX、Solaris平台上一旦通过shmctl对共享内存进行了删除操作，则该共享内存将不能再接受任何新的连接，即使它依然存在于系统中！
+
+而且，上面的运行结果，也证明了，对共享内存进行了删除操作之后，当已有的连接全部断开，该共享内存将被系统自动销毁（运行结果的最后一行，说明该共享内存已经不存在了）。
+
+本节的目的在于说明，在AIX、HP-UX、Solaris平台上调用shmctl的IPC_RMID删除操作，是存在潜在风险的，需要足够的谨慎。
+
+如果，可以确知，在删除之后不可能再有新的连接，则执行删除操作是安全的；
+
+否则，在删除操作之后如仍有新的连接发生，则这些连接都将失败！
+
+
+7. 结论
+
+对共享内存的操作，往往是产品或者应用中数据传输的基础，对其可靠性和性能至关重要；而且作为底层的IPC机制，相关代码具有不易调试的特点，由其造成的问题往往关键却不容易解决。
+
+ vim:nospell:
