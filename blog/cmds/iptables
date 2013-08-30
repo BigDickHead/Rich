@@ -90,3 +90,24 @@ iptables -A INPUT -f -j DROP
 
 
 iptables -A INPUT -m multiport -p tcp --destination-port  22,80 -j ACCEPT
+
+
+
+**************************************************************************************
+iptables是即时生效的，所以无需重启，如果要停止iptables，请使用iptables -F命令，如果要iptables配置重启后仍然有效，请按如下操作步骤：
+　
+1.创建/etc/iptables文件(文件名可以随意取)
+　
+2.创建/etc/network/if-pre-up.d/iptables文件，并给予其执行权限
+root@debian:~# touch /etc/network/if-pre-up.d/iptables
+root@debian:~# chmod +x /etc/network/if-pre-up.d/iptables
+　
+3.编辑/etc/network/if-pre-up.d/iptables文件，使其内容如下：
+#!/bin/sh
+/sbin/iptables-restore < /etc/iptables
+　
+4.配置iptables，过程略，配置好iptables后，将配置保存到/etc/iptables文件中即可
+root@debian:~# iptables-save > /etc/iptables
+　
+iptables -F  //将内存中iptables的所有配置清空，效果等同于停止了iptables
+**************************************************************************************
