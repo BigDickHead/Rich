@@ -139,5 +139,81 @@ sudo brctl addif br0 tap0
 echo "remove tap0 from br0"
 sudo brctl delif br0 tap0
 echo "shut down tap0"
-sudo ip link set tap0 down         //tunctl -d tap0
+sudo ip link set tap0 down         #//tunctl -d tap0
+===========================================================================================
+
+
+
+
+
+
+
+Script
+===========================================================================================
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+    exit
+fi
+
+netstart () {
+    addr=`ifconfig | grep -A 1 eth0|grep "inet addr" | cut -d ":" -f 2 |cut -d " " -f 1`
+    gw="192.168.0.1"
+    echo "remove ip from eth0"
+    sudo ip addr del $addr dev eth0
+    sudo ip link set eth0 up
+
+    echo "create br0"
+    sudo brctl addbr br0
+    echo "add eth0 to br0"
+    sudo brctl addif br0 eth0
+
+    echo "bring up br0"
+    sudo ip addr add $addr dev br0
+    sudo ip link set br0 up
+
+    echo "set default gateway"
+    sudo ip route add default via $gw dev br0
+
+    echo "bring up tap0"
+    tunctl -b -u Richard -t tap0
+    sudo ip link set tap0 up
+    echo "add tap0 to br0"
+    sudo brctl addif br0 tap0
+}
+
+
+netdown() {
+
+    addr=`ifconfig | grep -A 1 br0|grep "inet addr" | cut -d ":" -f 2 |cut -d " " -f 1`
+    gw="192.168.0.1"
+    echo "shut down br0"
+    sudo ip link set br0 down
+
+    echo "remove eth0 from br0"
+    sudo brctl delif br0 eth0
+    echo "remove br0"
+    sudo brctl delbr br0
+
+    echo "bring up eth0"
+    sudo ip addr add $addr dev eth0
+    sudo ip link set eth0 up
+
+    echo "set default gateway"
+    sudo ip route add default via $gw dev eth0
+
+    echo "remove tap0 from br0"
+    sudo brctl delif br0 tap0
+    echo "shut down tap0"
+    sudo ip link set tap0 down
+}
+
+if [ "$1" == up ]
+then
+    netstart
+elif [ "$1" == down ]
+then
+    netdown
+fi
 ===========================================================================================
