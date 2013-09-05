@@ -1,0 +1,16 @@
+
+#lsusb
+Bus 002 Device 006: ID 1483:c007  
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+
+
+sudo kvm -m 512 -usb -usbdevice host:1483:c007 -drive file=winxp.img,cache=writeback,if=virtio -localtime -net nic -net tap,ifname=tap0,script=no -smp 2
+
+
+OR
+
+sudo kvm -m 512 -usb -device usb-host,hostbus=2,hostaddr=6 -drive file=winxp.img,cache=writeback,if=virtio -localtime -net nic -net tap,ifname=tap0,script=no -smp 2
