@@ -12,7 +12,7 @@ done
 
 while true
 do
-wget https://raw.github.com/richardlee8681/Code/master/IP -O ssh_ip
+wget https://raw.github.com/richardlee8681/Code/master/IP -O ssh_ip -o /dev/null
 IP=`cat ssh_ip|openssl enc -aes-256-ecb -d -a -pass pass:PASSWORD`
 nc -vv -w2 -z $IP 39899 2>&1 |grep -q open
 
