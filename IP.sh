@@ -13,6 +13,8 @@ ssh_tunnel.sh
 sudo -k /etc/init.d/ssh start >/dev/null 2>&1 &
 sleep 10
 
+sh detect.sh
+
 while true
 do
     wget https://raw.github.com/richardlee8681/Code/master/IP -O ssh_ip -o /dev/null
