@@ -166,3 +166,5 @@
 [ EXPR1 -a EXPR2 ]      如果 EXPR1 and EXPR2 全真则为真。
 [ EXPR1 -o EXPR2 ]      如果 EXPR1 或者 EXPR2 为真则为真。
 [ (或作 test ) 内建命令对条件表达式使用一系列基于参数数量的规则来求值。更多关于这个主题的信息可以在Bash文档中查找。就像if 使用fi 来结束一样，在条件列完之后必须用">"来结束。
+
+vim:nospell:
