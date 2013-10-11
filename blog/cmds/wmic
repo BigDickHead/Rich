@@ -1,0 +1,24 @@
+wmi-client - DCOM/WMI client implementation
+
+
+apt-get install wmi-client
+
+
+Example of usage is;
+
+wmic -U DOMAIN/administrator%password //10.99.92.9 "Select * from Win32_Service"
+
+Lists all services, the first line it spits back is the fields whihc you can use this SQL like langauge on to filter so to see only the names of the services installed we'd do:
+
+wmic -U DOMAIN/administrator%password //10.99.92.9 "Select Name from Win32_Service"
+
+Or Name and State:
+
+wmic -U DOMAIN/administrator%password //10.99.92.9 "Select Name,State from Win32_Service"
+
+Or for jsut one service in this case the UPS service:
+
+wmic -U DOMAIN/administrator%password //10.99.92.9 "Select Name,State from Win32_Service where name='UPS'"
+
+
+wmic -U Administrator%mysecret //192.168.20.20 "Select WorkingSetSize from Win32_Process Where CommandLine like '%java.exe%'"
