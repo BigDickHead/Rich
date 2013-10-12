@@ -1,0 +1,34 @@
+Winexe remotely executes commands on Windows NT/2000/XP/2003 systems from GNU/Linux (and possibly also from other Unices capable of building the Samba 4 software package).
+
+
+
+Usage: winexe [OPTION]... //HOST COMMAND
+Options:
+  -?, --help                                  Display help message
+  -U, --user=[DOMAIN/]USERNAME[%PASSWORD]     Set the network username
+  -A, --authentication-file=FILE              Get the credentials from a file
+  -k, --kerberos=STRING                       Use Kerberos, -k [yes|no]
+  -d, --debuglevel=DEBUGLEVEL                 Set debug level
+      --uninstall                             Uninstall winexe service after
+                                              remote execution
+      --reinstall                             Reinstall winexe service before
+                                              remote execution
+      --system                                Use SYSTEM account
+      --profile                               Load user profile
+      --convert                               Try to convert characters
+                                              between local and remote
+                                              code-pages
+      --runas=[DOMAIN\]USERNAME%PASSWORD      Run as user (BEWARE: password is
+                                              sent in cleartext over net)
+      --runas-file=FILE                       Run as user options defined in a
+                                              file
+      --interactive=0|1                       Desktop interaction: 0 -
+                                              disallow, 1 - allow. If you
+                                              allow use also --system switch
+                                              (Win requirement). Vista do not
+                                              support this option.
+      --ostype=0|1|2                          OS type: 0 - 32-bit, 1 - 64-bit,
+                                              2 - winexe will decide.
+                                              Determines which version (32-bit
+                                              or 64-bit) of service will be
+                                              installed.
