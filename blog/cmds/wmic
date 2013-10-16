@@ -22,3 +22,10 @@ wmic -U DOMAIN/administrator%password //10.99.92.9 "Select Name,State from Win32
 
 
 wmic -U Administrator%mysecret //192.168.20.20 "Select WorkingSetSize from Win32_Process Where CommandLine like '%java.exe%'"
+
+
+ 通过WMIC命令远程打开远程计算机的远程桌面（Remote Desktop）功能
+
+wmic /node:"[full machine name]" /USER:"[domain]\[username]" 
+
+  PATH win32_terminalservicesetting WHERE (__Class!="") CALL SetAllowTSConnections 1 
