@@ -1,6 +1,6 @@
 openvas-mkcert
 openvas-mkcert-client
-openvasd -c 'add_user' -u root -t Admin
+openvasad -c 'add_user' -u root -t Admin
 
 openvas-nvt-sync
 openvassd
