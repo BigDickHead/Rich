@@ -1,4 +1,8 @@
- rpm包解压
+ //rpm packages list
+ rpm -qa
+
+
+ // rpm包解压
  rpm2cpio oracle-instantclient.rpm | cpio -div
 
  export LD_LIBRARY_PATH=
