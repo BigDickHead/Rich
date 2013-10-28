@@ -1,1 +1,54 @@
 Spider a given URL for generate a wordlist.
+
+CeWL - Custom Word List generator
+
+Usage
+
+cewl [OPTION] ... URL
+
+--help, -h
+    Show help
+--depth x, -d x
+    The depth to spider to, default 2
+--min_word_length, -m
+    The minimum word length, this strips out all words under the specified length, default 3
+--offsite, -o
+    By default, the spider will only visit the site specified. With this option it will also visit external sites
+--write, -w file
+    Write the ouput to the file rather than to stdout
+--ua, -u user-agent
+    Change the user agent
+-v
+    Verbose, show debug and extra output
+--no-words, -n
+    Don't output the wordlist
+--meta, -a file
+    Include meta data, optional output file
+--email, -e file
+    Include email addresses, optional output file
+--meta_file file
+    Filename for metadata output
+--email_file file
+    Filename for email output
+--meta-temp-dir directory
+    The directory used used by exiftool when parsing files, the default is /tmp
+--count, -c:
+    Show the count for each of the words found
+--auth_type
+    Digest or basic
+--auth_user
+    Authentication username
+--auth_pass
+    Authentication password
+--proxy_host
+    Proxy host
+--proxy_port
+    Proxy port, default 8080
+--proxy_username
+    Username for proxy, if required
+--proxy_password
+    Password for proxy, if required
+--verbose, -v
+    Verbose
+URL
+    The site to spider. 

@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=openvas initial setup
+Name=openvas check setup
 Encoding=UTF-8
-Exec=sh -c "openvas-setup;${SHELL:-bash}"
+Exec=sh -c "openvas-check-setup;${SHELL:-bash}"
 Icon=kali-menu.png
 StartupNotify=false
 Terminal=true
