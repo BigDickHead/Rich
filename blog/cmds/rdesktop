@@ -1,0 +1,35 @@
+rdesktop [options] server[:port]
+
+
+-u 用户名
+-p 密码
+-n 客户端主机名（显示windows任务管理器中的连接客户端名）
+-g 桌面大小（高*宽） 如800*600 或800*600+0+0
+
+//+0表示窗口在linux的显示位置
+-f 全屏模式, 从全屏模式切换出来按 Ctrl+Alt+Enter
+-a 连接颜色深度，一般选16才会显示真彩色
+-0 数字0 表示连接上windows 控制台，等效mstsc /console命令
+
+-g workarea 自动检测当前Linux桌面的尺寸并全部填充
+
+-x lan|modem 用来决定网络带宽，如果带宽宽的话，选择lan可以将桌面背景也传过来，默认是没有桌面背景的
+
+-r comport:COM1=/dev/ttyS0    // 将串口 /dev/ttyS0 重定向为 COM1
+-r comport:COM1=/dev/ttyS0,COM2=/dev/ttyS1    // 多个串口重定向
+-r clientname=<client name>    // 为重定向的磁盘设置显示的客户端名称
+-r lptport:LPT1=/dev/lp0    // 将并口 /dev/lp0 重定向为 LPT1
+-r lptport:LPT1=/dev/lp0,LPT2=/dev/lp1    // 多个并口重定向
+-r printer:mydeskjet    // 打印机重定向
+-r printer:mydeskjet=”HP LaserJet IIIP”    // 打印机重定向
+-r sound:[local|off|remote]    // 声音重定向
+
+-r clipboard:PRIMARYCLIPBOARD是允许在远程主机和本机之间共享剪切板，就是可以复制粘贴。
+
+***********************************************************************************
+-r disk:floppy=/mnt/floppy    // 将 /mnt/floppy 重定向为远程共享磁盘 ‘floppy’
+-r disk:floppy=/mnt/floppy,cdrom=/mnt/cdrom,root=/,c=/mnt/c    // 多个磁盘重定向
+-r disk:MyDisk=/share        //把Linux下某个文件夹挂载到远程Windows主机上
+//MyDisk名称自定义，＝后是挂载的linux路径。
+***********************************************************************************
+vim:set nospell:
