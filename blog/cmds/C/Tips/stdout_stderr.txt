@@ -1,0 +1,6 @@
+Note:
+    stdout is buffered.  (Need fflush(stdout))
+    stderr is not buffered.
+
+
+vim:nospell:
