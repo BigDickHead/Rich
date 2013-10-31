@@ -8,7 +8,7 @@ smbclient //192.168.0.1/C$   -U administartor
  
 执行smbclient命令成功后，进入smbclient环境，出现提示符： smb:\>
 smb:\>?             //获得帮助
-这里有许多命令和ftp命令相似，如cd 、lcd、get、megt、put、mput等。通过这些命令，我们可以访问远程主机的共享资源。
+这里有许多命令和ftp命令相似，如cd 、lcd、get、mget、put、mput等。通过这些命令，我们可以访问远程主机的共享资源。
  
 3,直接一次性使用smbclient命令
 smbclient -c "ls"  //192.168.0.1/tmp  -U username%password
@@ -24,3 +24,5 @@ NT_STATUS_ACCESS_DENIED making remote directory \share1
 
 4, 列出资源
 smbclient -L 192.168.0.1 -U username
+
+vim:nospell:
