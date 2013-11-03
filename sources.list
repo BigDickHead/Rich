@@ -1,0 +1,11 @@
+# 
+
+# deb cdrom:[Debian GNU/Linux 7.0 _Kali_ - Official Snapshot i386 LIVE/INSTALL Binary 20130327-18:35]/ kali contrib main non-free
+
+#deb cdrom:[Debian GNU/Linux 7.0 _Kali_ - Official Snapshot i386 LIVE/INSTALL Binary 20130327-18:35]/ kali contrib main non-free
+
+deb http://http.kali.org/kali kali main non-free contrib
+deb-src http://http.kali.org/kali kali main non-free contrib
+
+## Security updates
+deb http://security.kali.org/kali-security kali/updates main contrib non-free
