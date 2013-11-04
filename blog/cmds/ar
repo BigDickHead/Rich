@@ -209,6 +209,7 @@ COPYRIGHT
 binutils-2.21.90                                          2011-11-21                                                    AR(1)
 
 ar -x foo.deb
+ar cr libtest.a test1.o test2.o
 
 
  vim:tw=78:ts=8:ft=man:norl:
