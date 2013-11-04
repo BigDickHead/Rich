@@ -1,0 +1,1 @@
+mpg321 -w output.wav input.mp3
