@@ -1,9 +1,141 @@
-wmic /node:"[full machine name]" /USER:"[domain]\[username]" PATH win32_terminalservicesetting WHERE (__Class!="") CALL SetAllowTSConnections 1 
+wmic /node:"[full machine name]" /USER:"[domain]\[username]" PATH win32_terminalservicesetting WHERE (__Class!="") CALL SetAllowTSConnections 1
 这里的"full machine name“也可以是IP，"domain\username”也可以是本机的帐号。
 
+===============================================================================================================
+开远程桌面连接
+win08，三条命令即可：
+wmic /namespace:\\root\cimv2\terminalservices path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1
+wmic /namespace:\\root\cimv2\terminalservices path win32_tsgeneralsetting where (TerminalName ='RDP-Tcp') call setuserauthenticationrequired 1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
+
+
+win2012通用；win7前两条即可。权限需要run as administrator。
+
+
+win03 winxp 一条命令即可：
+wmic path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1
+===============================================================================================================
+
+
+以上前提条件是确保Windows Management  Instrumentation（Winmgmt）服务已正常启动，权限的话貌似（没有详细测试）需要administrator及以上。
+当然winxp  win7对于多用户登录以上命令是无法解决的。
+结果是wmi很强大。wmi还可以远程执行的...（这个要确保135端口连通）。
 
 wmic process list
 wmic useraccount list
 
 windows  cmd1 && cmd2
 linux cmd1 ; cmd2
+
+
+http://technet.microsoft.com/zh-cn/library/cc779482(WS.10).aspx
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+获得系统版本信息
+wmic datafile where Name='c:\\windows\\explorer.exe' get Manufacturer,Version,Filename
+
+获得系统进程
+wmic process list full        注意：
+这里的full也可以换成brief（简洁）
+
+获得硬件信息（这里以cpu为例）
+wmic cpu get name,caption,maxclockspeed,description
+
+将结果输出到d盘的1.txt里面
+wmic /output:D:\1.txt cpu get name
+
+wmic 获取硬盘固定分区盘符:
+wmic logicaldisk where "drivetype=3" get name
+
+wmic 获取硬盘各分区文件系统以及可用空间：
+wmic logicaldisk where "drivetype=3" get name,filesystem,freespace
+
+wmic 获取进程名称以及可执行路径:
+wmic process get name,executablepath
+
+wmic 删除指定进程(根据进程名称):
+wmic process where name="qq.exe" call terminate
+或者用
+wmic process where name="qq.exe" delete
+
+wmic 删除指定进程(根据进程PID):
+wmic process where pid="123" delete
+
+wmic 创建新进程
+wmic process call create "C:\Program Files\Tencent\QQ\QQ.exe"
+
+在远程机器上创建新进程：
+wmic /node:192.168.1.10 /user:administrator /password:123456 process call create cmd.exe
+
+关闭本地计算机
+wmic process call create shutdown.exe
+
+重启远程计算机
+wmic /node:192.168.1.10/user:administrator /password:123456 process call create "shutdown.exe -r -f -m"
+
+更改计算机名称
+wmic computersystem where "caption='%ComputerName%'" call rename newcomputername
+
+更改帐户名
+wmic USERACCOUNT where "name='%UserName%'" call rename newUserName
+
+wmic 结束可疑进程（根据进程的启动路径）
+wmic process where "name='explorer.exe' and executablepath<>'%SystemDrive%\\windows\\explorer.exe'" delete
+
+wmic 获取物理内存
+wmic memlogical get TotalPhysicalMemory|find /i /v "t"
+
+wmic 获取文件的创建、访问、修改时间
+@echo off
+'wmic datafile where name^="c:\\windows\\system32\\notepad.exe" get CreationDate^,LastAccessed^,LastModified
+
+wmic 全盘搜索某文件并获取该文件所在目录
+wmic datafile where "FileName='qq' and extension='exe'" get drive,path
+for /f "skip=1 tokens=1*" %i in ('wmic datafile where "FileName='qq' and extension='exe'" get drive^,path') do (set "qPath=%i%j"&@echo %qPath:~0,-3%)
+
+获取屏幕分辨率
+wmic DESKTOPMONITOR where Status='ok' get ScreenHeight,ScreenWidth
+
+获取共享资源(包括隐藏共享)
+WMIC share list brief
+
+获取U盘盘符，并运行U盘上的QQ.exe
+@for /f "skip=1 tokens=*" %i in ('wmic logicaldisk where "drivetype=2" get name') do (if not "%i"=="" start d:\qq.exe)
+
+获得进程当前占用的内存和最大占用内存的大小：
+wmic process where caption='filename.exe' get WorkingSetSize,PeakWorkingSetSize
+
+更改现有工作组为指定的工作组
+wmic computersystem Where "name='计算机名称' call UnjoinDomainOrWorkgroup
+
+退出所在域
+wmic computersystem Where "name='计算机名称'" call joindomainorworkgroup "",1,"域名称","域管理员密码","域管理员用户名"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+开2003的3389
+wmic RDTOGGLE WHERE ServerName='%COMPUTERNAME%' call
+SetAllowTSConnections 1
+
+远程打开计算机远程桌面
+wmic /node:%pcname% /USER:%pcaccount% PATH win32_terminalservicesetting WHERE (__Class!="") CALL SetAllowTSConnections 1
+
+添加的计划任务，wmic添加的同样AT命令也是可以看到
+wmic job call create "sol.exe",0,0,true,false,********154800.000000+480
+wmic job call create "sol.exe",0,0,1,0,********154600.000000+480
+这两句是相同的，TRUE可以用1表示，同样的FALSE可以用0值表示，时间前为何用八个星号，这是WMIC的特性，他显示时间的方式是YYYYMMDDHHMMSS.MMMMMM+时区 ,可是，我们并不需要指定年份和月份还有天，所以用*星号来替代
+
+在wmic下查看BIOS信息
+wmic bios list full
+
+wmic还有停止、暂停和运行服务的功能：
+启动服务startservice，停止服务stopservice，暂停服务pauseservice。
+具体的命令使用格式就是：
+wmic Service where caption=”windows time” call stopservice
+●－－停止服务
+wmic Service where caption=”windows time” call startservice
+●－－启动服务
+wmic Service where name=”w32time” call stopservice
+●－－停止服务，注意name和caption的区别。
+
+
+远程创建进程
+wmic /node:109.254.2.102 /user:"rdgad\administrator" /password:"1234" process call create commandline="cmd.exe /k echo xxxxx|clip.exe"
