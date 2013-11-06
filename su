@@ -1,0 +1,8 @@
+1, groupadd wheel
+2, usermod -a -G wheel Richard
+3, newgrp wheel
+4, vim /etc/pam.d/su
+   Uncomment  "auth    required   pam_wheel.so" and append "group=whell" after it.
+   Become to  "auth    required   pam_wheel.so  group=wheel"
+5, vim /etc/login.defs
+   Uncomment  "SULOG_FILE  /var/log/sulog"
