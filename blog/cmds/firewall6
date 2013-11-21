@@ -1,0 +1,7 @@
+firewall6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: firewall6 [-u] interface destination port [test-case-no]
+
+Performs various ACL bypass attempts to check implementations.
+Defaults to TCP ports, option -u switches to UDP.
+For all test cases to work, ICMPv6 ping to thhe destination must be allowed.

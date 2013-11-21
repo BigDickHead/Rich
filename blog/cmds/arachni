@@ -1,0 +1,238 @@
+Arachni - Web Application Security Scanner Framework v0.4.4
+
+   Website:       http://arachni-scanner.com
+   Documentation: http://arachni-scanner.com/wiki
+
+
+  Usage:  arachni  [options] url
+
+  Supported options:
+
+
+    General ----------------------
+
+    -h
+    --help                      Output this.
+
+    --version                   Show version information and exit.
+
+    -v                          Be verbose.
+
+    --debug                     Show what is happening internally.
+                                  (You should give it a shot sometime ;) )
+
+    --only-positives            Echo positive results *only*.
+
+    --http-username=<string>    Username for HTTP authentication.
+
+    --http-password=<string>    Password for HTTP authentication.
+
+    --http-req-limit=<integer>  Concurrent HTTP requests limit.
+                                  (Default: 20)
+                                  (Be careful not to kill your server.)
+                                  (*NOTE*: If your scan seems unresponsive try lowering the limit.)
+
+    --http-timeout=<integer>    HTTP request timeout in milliseconds.
+
+    --cookie-jar=<filepath>     Netscape HTTP cookie file, use curl to create it.
+
+    --cookie-string='<name>=<value>; <name2>=<value2>'
+
+                                Cookies, as a string, to be sent to the web application.
+
+    --user-agent=<string>       Specify user agent.
+
+    --custom-header='<name>=<value>'
+
+                                Specify custom headers to be included in the HTTP requests.
+                                (Can be used multiple times.)
+
+    --authed-by=<string>        E-mail address of the person who authorized the scan.
+                                  (It'll make it easier on the sys-admins during log reviews.)
+                                  (Will be used as a value for the 'From' HTTP header.)
+
+    --login-check-url=<url>     A URL used to verify that the scanner is still logged in to the web application.
+                                  (Requires 'login-check-pattern'.)
+
+    --login-check-pattern=<regexp>
+
+                                A pattern used against the body of the 'login-check-url' to verify that the scanner is still logged in to the web application.
+                                  (Requires 'login-check-url'.)
+
+    Profiles -----------------------
+
+    --save-profile=<filepath>   Save the current run profile/options to <filepath>.
+
+    --load-profile=<filepath>   Load a run profile from <filepath>.
+                                  (Can be used multiple times.)
+                                  (You can complement it with more options, except for:
+                                      * --modules
+                                      * --redundant)
+
+    --show-profile              Will output the running profile as CLI arguments.
+
+
+    Crawler -----------------------
+
+    -e <regexp>
+    --exclude=<regexp>          Exclude urls matching <regexp>.
+                                  (Can be used multiple times.)
+
+    --exclude-page=<regexp>     Exclude pages whose content matches <regexp>.
+                                  (Can be used multiple times.)
+
+    -i <regexp>
+    --include=<regexp>          Include *only* urls matching <regex>.
+                                  (Can be used multiple times.)
+
+    --redundant=<regexp>:<limit>
+
+                                Limit crawl on redundant pages like galleries or catalogs.
+                                  (URLs matching <regexp> will be crawled <limit> amount of times.)
+                                  (Can be used multiple times.)
+
+    --auto-redundant=<limit>    Only follow <limit> amount of URLs with identical query parameter names.
+                                  (Default: inf)
+                                  (Will default to 10 if no value has been specified.)
+
+    -f
+    --follow-subdomains         Follow links to subdomains.
+                                  (Default: off)
+
+    --depth=<integer>           Directory depth limit.
+                                  (Default: inf)
+                                  (How deep Arachni should go into the site structure.)
+
+    --link-count=<integer>      How many links to follow.
+                                  (Default: inf)
+
+    --redirect-limit=<integer>  How many redirects to follow.
+                                  (Default: 20)
+
+    --extend-paths=<filepath>   Add the paths in <file> to the ones discovered by the crawler.
+                                  (Can be used multiple times.)
+
+    --interceptor.callict-paths=<filepath> Use the paths in <file> instead of crawling.
+                                  (Can be used multiple times.)
+
+    --https-only                Forces the system to only follow HTTPS URLs.
+
+
+    Auditor ------------------------
+
+    -g
+    --audit-links               Audit links.
+
+    -p
+    --audit-forms               Audit forms.
+
+    -c
+    --audit-cookies             Audit cookies.
+
+    --exclude-cookie=<name>     Cookie to exclude from the audit by name.
+                                  (Can be used multiple times.)
+
+    --exclude-vector=<name>     Input vector (parameter) not to audit by name.
+                                  (Can be used multiple times.)
+
+    --audit-headers             Audit HTTP headers.
+                                  (*NOTE*: Header audits use brute force.
+                                   Almost all valid HTTP request headers will be audited
+                                   even if there's no indication that the web app uses them.)
+                                  (*WARNING*: Enabling this option will result in increased requests,
+                                   maybe by an order of magnitude.)
+
+    Coverage -----------------------
+
+    --audit-cookies-extensively Submit all links and forms of the page along with the cookie permutations.
+                                  (*WARNING*: This will severely increase the scan-time.)
+
+    --fuzz-methods              Audit links, forms and cookies using both GET and POST requests.
+                                  (*WARNING*: This will severely increase the scan-time.)
+
+    --exclude-binaries          Exclude non text-based pages from the audit.
+                                  (Binary content can confuse recon modules that perform pattern matching.)
+
+    Modules ------------------------
+
+    --lsmod=<regexp>            List available modules based on the provided regular expression.
+                                  (If no regexp is provided all modules will be listed.)
+                                  (Can be used multiple times.)
+
+
+    -m <modname,modname,...>
+    --modules=<modname,modname,...>
+
+                                Comma separated list of modules to load.
+                                  (Modules are referenced by their filename without the '.rb' extension, use '--lsmod' to list all.
+                                   Use '*' as a module name to deploy all modules or as a wildcard, like so:
+                                      xss*   to load all xss modules
+                                      sqli*  to load all sql injection modules
+                                      etc.
+
+                                   You can exclude modules by prefixing their name with a minus sign:
+                                      --modules=*,-backup_files,-xss
+                                   The above will load all modules except for the 'backup_files' and 'xss' modules.
+
+                                   Or mix and match:
+                                      -xss*   to unload all xss modules.)
+
+
+    Reports ------------------------
+
+    --lsrep=<regexp>            List available reports based on the provided regular expression.
+                                  (If no regexp is provided all reports will be listed.)
+                                  (Can be used multiple times.)
+
+    --repload=<filepath>        Load audit results from an '.afr' report file.
+                                    (Allows you to create new reports from finished scans.)
+
+    --report='<report>:<optname>=<val>,<optname2>=<val2>,...'
+
+                                <report>: the name of the report as displayed by '--lsrep'
+                                  (Reports are referenced by their filename without the '.rb' extension, use '--lsrep' to list all.)
+                                  (Default: stdout)
+                                  (Can be used multiple times.)
+
+
+    Plugins ------------------------
+
+    --lsplug=<regexp>           List available plugins based on the provided regular expression.
+                                  (If no regexp is provided all plugins will be listed.)
+                                  (Can be used multiple times.)
+
+    --plugin='<plugin>:<optname>=<val>,<optname2>=<val2>,...'
+
+                                <plugin>: the name of the plugin as displayed by '--lsplug'
+                                  (Plugins are referenced by their filename without the '.rb' extension, use '--lsplug' to list all.)
+                                  (Can be used multiple times.)
+
+    Platforms ----------------------
+
+    --lsplat                    List available platforms.
+
+    --no-fingerprinting         Disable platform fingerprinting.
+                                  (By default, the system will try to identify the deployed server-side platforms automatically
+                                   in order to avoid sending irrelevant payloads.)
+
+    --platforms=<platform,platform,...>
+
+                                Comma separated list of platforms (by shortname) to audit.
+                                  (The given platforms will be used *in addition* to fingerprinting. In order to restrict the audit to
+                                   these platforms enable the '--no-fingerprinting' option.)
+
+    Proxy --------------------------
+
+    --proxy=<server:port>       Proxy address to use.
+
+    --proxy-auth=<user:passwd>  Proxy authentication credentials.
+
+    --proxy-type=<type>         Proxy type; can be http, http_1_0, socks4, socks5, socks4a
+                                  (Default: http)
+
+
+
+arachni                      arachni_rpcd                 arachni_web                  arachni_web_task
+arachni_console              arachni_rpcd_monitor         arachni_web_change_password  
+arachni_multi                arachni_script               arachni_web_create_user      
+arachni_rpc                  arachni_shell                arachni_web_import

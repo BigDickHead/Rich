@@ -1,0 +1,49 @@
+                     _                           ____
+               _ __ (_)_ __  _ __   ___ _ __    / ->/|
+              | '_ \| | '_ \| '_ \ / _ \ '__|  /<-_/ |
+              | | | | | |_) | |_) |  __/ |     |   | /
+              |_| |_|_| .__/| .__/ \___|_|     |___|/
+                      |_|   |_|
+
+                           Version 0.11.10
+                     http://nipper.titania.co.uk
+             Copyright (C) 2006-2008 Ian Ventura-Whiting
+
+Nipper is a  Network Infrastructure  Configuration Parser.  Nipper takes
+a network infrastructure  device configuration,  processes the  file and
+details security-related  issues with detailed  recommendations.  Nipper
+was previous known as CiscoParse.
+
+By default, input is retrieved from stdin and is output (in HTML format)
+to stdout.
+
+Command:
+    nipper [Options]
+
+General Options:
+    --input=<file>
+    Specifies a  device configuration  file to  process.  For CheckPoint
+    Firewall-1 configurations, the input should be the conf directory.
+
+    --output=<file> | --report=<file>
+    Specified an output file for the report.
+
+    --csv=<file>
+    Want to output the network filtering configuration to a CSV file?.
+
+    --version
+    Displays the program version.
+
+Example:
+    The  example   below  will   process  a   Cisco   IOS-based   router
+    configuration file called ios.conf  and output  the report to a file
+    called report.html.
+
+    nipper --ios-router --input=ios.conf --output=report.html
+
+For additional help:
+    --help[=<topic>]
+    Show  the  online help  or show  the  additional  help on  the topic
+    specified.  The help  topics  are;  GENERAL,  DEVICES,  DEVICES-ADV,
+    SNMP,  REPORT, REPORT-ADV,  REPORT-SECT, REPORT-HTML,  REPORT-LATEX,
+    AUDIT-ACL, AUDIT-PASS, AUDIT-ADV or CONFIG-FILE.

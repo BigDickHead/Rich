@@ -1,0 +1,129 @@
+SSLH(8)                                                                                                               SSLH(8)
+
+
+
+NAME
+        sslh - ssl/ssh multiplexer
+
+SYNOPSIS
+       sslh [-F config file] [ -t num ] [-p listening address [-p listening address ...] [--ssl target address for SSL]
+       [--ssh target address for SSH] [--openvpn target address for OpenVPN] [--http target address for HTTP] [-u username]
+       [-P pidfile] [-v] [-i] [-V] [-f] [-n]
+
+DESCRIPTION
+       sslh accepts connections in HTTP, HTTPS, SSH, OpenVPN, tinc, XMPP, or any other protocol that can be tested using a
+       regular expression, on the same port. This makes it possible to connect to any of these servers on port 443 (e.g. from
+       inside a corporate firewall, which almost never block port 443) while still serving HTTPS on that port.
+
+       The idea is to have sslh listen to the external 443 port, accept the incoming connections, work out what type of
+       connection it is, and then fordward to the appropriate server.
+
+   Protocol detection
+       The protocol detection is made based on the first bytes sent by the client: SSH connections start by identifying each
+       other's versions using clear text "SSH-2.0" strings (or equivalent version strings). This is defined in RFC4253, 4.2.
+       Meanwhile, OpenVPN clients start with 0x00 0x0D 0x38, tinc clients start with "0 ", and XMPP client start with a
+       packet containing "jabber".
+
+       Additionally, two kind of SSH clients exist: the client waits for the server to send its version string ("Shy" client,
+       which is the case of OpenSSH and Putty), or the client sends its version first ("Bold" client, which is the case of
+       Bitvise Tunnelier and ConnectBot).
+
+       If the client stays quiet after the timeout period, sslh will connect to the first protocol defined (in the
+       configuration file, or on the command line), so SSH should be defined first in sslh configuration to accommodate for
+       shy SSH clients.
+
+   Libwrap support
+       One drawback of sslh is that the ssh and httpd servers do not see the original IP address of the client anymore, as
+       the connection is forwarded through sslh.  sslh provides enough logging to circumvent that problem.  However it is
+       common to limit access to ssh using libwrap or tcpd. For this reason, sslh can be compiled to check SSH accesses
+       against SSH access lists as defined in /etc/hosts.allow and /etc/hosts.deny.
+
+   Configuration file
+       A configuration file can be supplied to sslh. Command line arguments override file settings. sslh uses libconfig to
+       parse the configuration file, so the general file format is indicated in
+       <http://www.hyperrealm.com/libconfig/libconfig_manual.html>.  Please refer to the example configuration file provided
+       with sslh for the specific format (Options have the same names as on the command line, except for the list of listen
+       ports and the list of protocols).
+
+       The configuration file makes it possible to specify protocols using regular expressions: a list of regular expressions
+       is given as the probe parameter, and if the first packet received from the client matches any of these expressions,
+       sslh connects to that protocol.
+
+       Alternatively, the probe parameter can be set to "builtin", to use the compiled probes which are much faster than
+       regular expressions.
+
+OPTIONS
+       -t num, --timeout num
+           Timeout before forwarding the connection to the first configured protocol (which should usually be SSH). Default
+           is 2s.
+
+       -p listening address, --listen listening address
+           Interface and port on which to listen, e.g. foobar:443, where foobar is the name of an interface (typically the IP
+           address on which the Internet connection ends up).
+
+           This can be specified several times to bind sslh to several addresses.
+
+       --ssl target address
+           Interface and port on which to forward SSL connection, typically localhost:443.
+
+           Note that you can set sslh to listen on ext_ip:443 and httpd to listen on localhost:443: this allows clients
+           inside your network to just connect directly to httpd.
+
+       --ssh target address
+           Interface and port on which to forward SSH connections, typically localhost:22.
+
+       --openvpn target address
+           Interface and port on which to forward OpenVPN connections, typically localhost:1194.
+
+       --xmpp target address
+           Interface and port on which to forward XMPP connections, typically localhost:5222.
+
+       --tinc target address
+           Interface and port on which to forward tinc connections, typically localhost:655.
+
+           This is experimental. If you use this feature, please report the results (even if it works!)
+
+       -v, --verbose
+           Increase verboseness.
+
+       -n, --numeric
+           Do not attempt to resolve hostnames: logs will contain IP addresses. This is mostly useful if the system's DNS is
+           slow and running the sslh-select variant, as DNS requests will hang all connections.
+
+       -V  Prints sslh version.
+
+       -u username, --user username
+           Requires to run under the specified username.
+
+       -P pidfile, --pidfile pidfile
+           Specifies a file in which to write the PID of the main server.
+
+       -i, --inetd
+           Runs as an inetd server. Options -P (PID file), -p (listen address), -u (user) are ignored.
+
+       -f, --foreground
+           Runs in foreground. The server will not fork and will remain connected to the terminal. Messages normally sent to
+           syslog will also be sent to stderr.
+
+       --background
+           Runs in background. This overrides foreground if set in the configuration file (or on the command line, but there
+           is no point setting both on the command line unless you have a personality disorder).
+
+FILES
+       /etc/init.d/sslh
+           Start-up script. The standard actions start, stop and restart are supported.
+
+       /etc/default/sslh
+           Server configuration. These are environment variables loaded by the start-up script and passed to sslh as command-
+           line arguments. Refer to the OPTIONS section for a detailed explanation of the variables used by sslh.
+
+SEE ALSO
+       Last version available from <http://www.rutschle.net/tech/sslh>, and can be tracked from
+       <http://freecode.com/projects/sslh>.
+
+AUTHOR
+       Written by Yves Rutschle
+
+
+
+v1.13b                                                    2012-08-26                                                  SSLH(8)

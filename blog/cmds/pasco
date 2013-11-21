@@ -1,0 +1,24 @@
+PASCO(1)                                 extract informations from MS IE cache files                                 PASCO(1)
+
+
+
+NAME
+       pasco - tool to extract informations from MS IE cache files
+
+
+SYNOPSIS
+       Pasco FILE
+
+
+DESCRIPTION
+       pasco  is a tool to extract valuable informations (from a forensics investigator point of view) from MS IE cache files
+       (index.dat).
+
+OPTIONS
+       FILE
+           Cache file to parse.
+
+
+AUTHOR
+       This manual page was written by Christophe Monniez <christophe.monniez@fccu.be> for the Debian  project  (but  may  be
+       used by others).
