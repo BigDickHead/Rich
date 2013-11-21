@@ -1,0 +1,24 @@
+BAOBAB(1)                                                                                                           BAOBAB(1)
+
+
+
+NAME
+       Baobab - A graphical tool to analyse disk usage
+
+SYNOPSIS
+       baobab  [directory]
+
+DESCRIPTION
+       baobab is able to scan either specific folders or the whole filesystem (local and remote), in order to give the user a
+       graphical tree representation including each directory size or percentage in the branch.  It also auto-detects in
+       real-time any change made to your home directory as far as any mounted/unmounted device. A graphical treemap window is
+       also provided for any selected folder.
+
+       A detailed documentation on the program could be read at: http://www.gnome.org/projects/baobab
+
+AUTHOR
+       Fabio MARZOCCA <thesaltydog@gmail.com>
+
+
+
+                                                                                                                    BAOBAB(1)
