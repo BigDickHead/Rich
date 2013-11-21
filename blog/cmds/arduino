@@ -1,0 +1,25 @@
+ARDUINO(1)                                                          ARDUINO(1)
+
+
+
+NAME
+       arduino - an IDE and uploader for Arduino development boards.
+
+SYNOPSIS
+       arduino
+
+DESCRIPTION
+       This program takes no options and will load the IDE in an X11 window.
+
+SEE ALSO
+       http://www.arduino.cc/
+
+AUTHOR
+       arduino was written by <developers@arduino.cc>.
+
+       This  manual  page  was written by Scott Howard <showard314@gmail.com>,
+       for the Debian project (and may be used by others).
+
+
+
+                                April 10, 2010                      ARDUINO(1)

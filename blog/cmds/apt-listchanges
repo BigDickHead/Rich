@@ -1,0 +1,204 @@
+apt-listchanges(1)                                          apt-listchanges(1)
+
+
+
+NAME
+       apt-listchanges  —  Show  new changelog entries from Debian package ar‐
+       chives
+
+
+SYNOPSIS
+       apt-listchanges [options ... ]  {--apt  | package.deb ... }
+
+DESCRIPTION
+       apt-listchanges is a tool to show what has been changed in a  new  ver‐
+       sion  of  a  Debian  package,  as  compared  to  the  version currently
+       installed on the system.
+
+       It  does  this  by  extracting  the  relevant  entries  from  both  the
+       NEWS.Debian    and   changelog[.Debian]   files,   usually   found   in
+       /usr/share/doc/package, from Debian package archives.
+
+
+       Given a set of filenames as arguments (or  read  from  apt  when  using
+       --apt), apt-listchanges will scan the files (assumed to be Debian pack‐
+       age archives) for the relevant changelog entries, and display them  all
+       in a summary, sorted by urgency.
+
+
+OPTIONS
+       --apt
+                 Read  filenames  from a specially-formatted pipeline (as pro‐
+                 vided by apt), rather than from command line  arguments,  and
+                 honor  certain apt-specific options in the config file.  This
+                 pipeline must be in "version 2" format, specified in the  apt
+                 configuration.
+
+
+       -v, --verbose
+                 Display   additional  (usually  unwanted)  information.   For
+                 instance, print a message when a package of the same or older
+                 version  is to be installed, or when a package is to be newly
+                 installed.
+
+
+       -f, --frontend
+                 Select which frontend to use to display  information  to  the
+                 user.  Current frontends include:
+
+
+                 pager     Uses  your  favorite  pager  to display output.  By
+                           default, the PAGER  environment  variable  will  be
+                           used.   The  "pager" option may be specified in the
+                           configuration file to select a specific  pager  for
+                           use with apt-listchanges.
+
+
+                 browser   Displays  an  HTML-formatted  changelog using a web
+                           browser,  with  hyperlinks  for  bugs   and   email
+                           addresses.   By  default,  the  BROWSER environment
+                           variable will be used.  The "browser" option may be
+                           specified  in  the  configuration  file to select a
+                           specific browser for use with apt-listchanges.
+
+
+                 xterm-pager
+                           Uses your favorite pager  to  display  output,  but
+                           does  so in an xterm (using the x-terminal-emulator
+                           alternative) in the background.  This allows you to
+                           go on with the upgrade if you like, and continue to
+                           browse the changelogs.  You can override the termi‐
+                           nal emulator to be used with the "xterm" configura‐
+                           tion option.
+
+
+                 xterm-browser
+                           The logical combination of xterm-pager and browser.
+                           Only appropriate for text-mode browsers.
+
+
+                 text      Dumps output to stdout, with no pauses.
+
+
+                 mail      Sends  mail  to the address specified with --email-
+                           address, and does not display changelogs.
+
+
+                 gtk       Spawns a gtk  window  to  display  the  changelogs.
+                           Needs python-glade2, python-gtk2 to be installed.
+
+
+                 none      Does   nothing.    Can  be  used  to  prevent  apt-
+                           listchanges from running  when  configured  to  run
+                           automatically from apt.
+
+
+       --email-address=address
+                 In  addition  to  displaying it, mail a copy of the changelog
+                 data to  the  specified  address.   To  only  mail  changelog
+                 entries, use this option with the special frontend 'mail'.
+
+
+       -c, --confirm
+                 Once  changelogs have been displayed, ask the user whether or
+                 not to proceed.  If  the  user  chooses  not  to  proceed,  a
+                 nonzero exit status will be returned, and apt will abort.
+
+
+       -a, --all Rather  than  trying  to  display  changelog entries that are
+                 newer than the currently installed version  of  the  package,
+                 simply  display all changelog entries for all packages.  This
+                 is useful for viewing the entire changelog of a  .deb  before
+                 extracting it.
+
+
+       --save_seen=file
+                 This  option  will cause apt-listchanges to keep track of the
+                 last version of a package for which changelogs have been dis‐
+                 played, to avoid redisplaying the same changelogs in a future
+                 invocation.  The database is stored in the named file.  Spec‐
+                 ify 'none' to disable this feature.
+
+
+       --since=version
+                 This  option  will  cause apt-listchanges to show the entries
+                 later than the specified version. With this option, the  only
+                 other argument you can pass is the path to a .deb file.
+
+
+       --which={news|changelogs|both}
+                 This  option  selects whether news (from NEWS.Debian et al.),
+                 changelogs (from changelog.Debian et al.) or both  should  be
+                 displayed.  The default is to display only news.
+
+
+       --help    Displays syntax information.
+
+
+       -h, --headers
+                 These  options  will cause apt-listchanges to insert a header
+                 before each package's changelog showing the name of the pack‐
+                 age,  and  the  names  of the binary packages which are being
+                 upgraded (if there is more than one, or it differs  from  the
+                 source package name).
+
+
+       --debug   Display some debugging information
+
+
+       --profile=name
+                 Select  an  option profile.  name corresponds to a section in
+                 /etc/apt/listchanges.conf.  The default when invoked from apt
+                 is "apt", and "cmdline" otherwise.
+
+
+       --reverse Show the changelog entries in reverse order.
+
+
+ENVIRONMENT
+       APT_LISTCHANGES_FRONTEND
+                 Frontend to use
+
+       BROWSER   Used  by  the  browser  frontend,  should be set to a command
+                 expecting a file: URL for an HTML file to display.
+
+FILES
+       /etc/apt/listchanges.conf
+                 Configuration file.  Most options have the same names as com‐
+                 mand-line options, with hyphens translated to underscores.
+
+       Example configuration file
+
+       [cmdline]
+       frontend=pager
+
+       [apt]
+       frontend=xterm-pager
+       email_address=root
+       confirm=1
+
+       [custom]
+       frontend=browser
+       browser=mozilla
+
+                 The  above  configuration file specifies that in command-line
+                 mode, the default frontend should be "pager".  In  apt  mode,
+                 the xterm-pager frontend is default, a copy of the changelogs
+                 (if any) should  be  emailed  to  root,  and  apt-listchanges
+                 should  ask  for confirmation.  If apt-listchanges is invoked
+                 with --profile=custom, the browser frontend will be used, and
+                 invoke mozilla.
+
+       /var/lib/apt/listchanges.db
+                 Database used for save-seen
+
+AUTHOR
+       apt-listchanges was written by Matt Zimmerman <mdz@debian.org>
+
+
+SEE ALSO
+       apt.conf(5)
+
+
+
+                                                            apt-listchanges(1)

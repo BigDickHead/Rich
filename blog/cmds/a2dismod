@@ -1,0 +1,45 @@
+A2ENMOD(8)                                                                                                         A2ENMOD(8)
+
+
+
+NAME
+       a2enmod, a2dismod - enable or disable an apache2 module
+
+SYNOPSIS
+       a2enmod [module]
+
+       a2dismod [module]
+
+DESCRIPTION
+       This manual page documents briefly the a2enmod and a2dismod commands.
+
+       a2enmod is a script that enables the specified module within the apache2 configuration.  It does this by creating sym‐
+       links within /etc/apache2/mods-enabled.  Likewise, a2dismod disables a module by removing those symlinks.  It  is  not
+       an error to enable a module which is already enabled, or to disable one which is already disabled.
+
+       Note that many modules have, in addition to a .load file, an associated .conf file.  Enabling the module puts the con‐
+       figuration directives in the .conf file as directives into the main server context of apache2
+
+EXAMPLES
+              a2enmod imagemap
+              a2dismod mime_magic
+
+       Enables the mod_imagemap module, and disables the mod_mime_magic module.
+
+FILES
+       /etc/apache2/mods-available
+              Directory with files giving information on available modules.
+
+       /etc/apache2/mods-enabled
+              Directory with links to the files in mods-available for enabled modules.
+
+SEE ALSO
+       apache2ctl(8).
+
+AUTHOR
+       This manual page was written by Daniel Stone <daniel@sfarc.net> for the Debian GNU/Linux  distribution,  as  it  is  a
+       Debian-specific script with the package.
+
+
+
+                                                       12 October 2006                                             A2ENMOD(8)

@@ -1,0 +1,44 @@
+A2ENSITE(8)                                                                                                       A2ENSITE(8)
+
+
+
+NAME
+       a2ensite, a2dissite - enable or disable an apache2 site / virtual host
+
+SYNOPSIS
+       a2ensite [site]
+
+       a2dissite [site]
+
+DESCRIPTION
+       This manual page documents briefly the a2ensite and a2dissite commands.
+
+       a2ensite is a script that enables the specified site (which contains a <VirtualHost> block) within the apache2 config‐
+       uration.  It does this by creating symlinks within /etc/apache2/sites-enabled.  Likewise, a2dissite disables a site by
+       removing  those  symlinks.   It  is not an error to enable a site which is already enabled, or to disable one which is
+       already disabled.
+
+       The default site is handled specially: The resulting symlink will be called 000-default in order to be loaded first.
+
+EXAMPLES
+              a2dissite default
+
+       Disables the default site.
+
+FILES
+       /etc/apache2/sites-available
+              Directory with files giving information on available sites.
+
+       /etc/apache2/sites-enabled
+              Directory with links to the files in sites-available for enabled sites.
+
+SEE ALSO
+       apache2ctl(8).
+
+AUTHOR
+       This manual page was written by Stefan Fritsch <sf@debian.org> (based on the  a2enmod  manual  page  by  Daniel  Stone
+       <daniel@sfarc.net>) for the Debian GNU/Linux distribution.
+
+
+
+                                                         8 June 2007                                              A2ENSITE(8)

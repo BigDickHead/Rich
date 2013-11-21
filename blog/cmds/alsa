@@ -1,0 +1,1 @@
+Usage: /usr/sbin/alsa {unload|reload|force-unload|force-reload|suspend|resume}

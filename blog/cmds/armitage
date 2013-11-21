@@ -1,0 +1,7 @@
+Armitage is a scriptable red team collaboration tool for Metasploit that visualizes targets, recommends exploits, and exposes the advanced post-exploitation features in the framework.
+
+
+You should let Armitage start msfrpcd for you. If you prefer to start it yourself, then use:
+msfrpcd -U msf -P test -f -S -a 127.0.0.1
+
+This will start msfrpcd without SSL bound to 127.0.0.1 suitable for you to connect to locally with Armitage.

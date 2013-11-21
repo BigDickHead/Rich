@@ -1,0 +1,124 @@
+ashunt(8)                                            netsniff-ng-toolkit                                            ashunt(8)
+
+
+
+NAME
+       ashunt - Autonomous System (AS) trace route utility
+
+SYNOPSIS
+       ashunt    -H|--host <host> -i|-d|--dev <dev> [-6|--ipv6]      [-n|--numeric] [-N|--dns] [-f|--init-ttl <ttl>]
+            [-m|--max-ttl <ttl>] [-q|--num-probes] [-x|--timeout <sec>]      [-S|--syn] [-A|--ack] [-F|--fin] [-P|--psh]
+       [-U|--urg]      [-R|--rst] [-E|--ecn-syn] [-t|--tos <tos>] [-G|--nofrag]      [-X|--payload <string>]
+       [-Z|--show-packet] [-l|--totlen <len>]      [-w|--whois <server>] [-W|--wport <port>] [--city-db <path>]
+            [--country-db <path>] [-v|--version] [-h|--help]
+
+DESCRIPTION
+       This program provides AS information on each hop between the client and the target host.
+
+OPTIONS
+       ashunt -i eth0 -N -E -H netsniff-ng.org
+           IPv4 trace of AS with TCP ECN SYN probe
+
+       ashunt -i eth0 -N -S -H netsniff-ng.org
+           IPv4 trace of AS with TCP SYN probe
+
+       ashunt -i eth0 -N -F -H netsniff-ng.org
+           IPv4 trace of AS with TCP FIN probe
+
+       ashunt -i eth0 -N -FPU -H netsniff-ng.org
+           IPv4 trace of AS with Xmas probe
+
+       ashunt -i eth0 -N -H netsniff-ng.org -X "censor-me" -Z
+           IPv4 trace of AS with Null probe with ASCII payload
+
+       ashunt -6 -S -i eth0 -H netsniff-ng.org
+           IPv6 trace of AS up to netsniff-ng.org
+
+OPTIONS
+       -h|--help
+           Print help text and lists all options.
+
+       -v|--version
+           Print version.
+
+       -H|--host <host>
+           Host/IPv4/IPv6 to lookup AS route to
+
+       i-|-d|--dev <netdev>
+           Networking device, i.e. eth0
+
+       -p|--port <port>
+           Hosts port to lookup AS route to
+
+       -4|--ipv4
+           Use IPv4 requests (default)
+
+       -6|--ipv6
+           Use IPv6 requests
+
+       -n|--numeric
+           Do not do reverse DNS lookup for hops
+
+       -N|--dns
+           Do a reverse DNS lookup for hops
+
+       -f|--init-ttl <ttl>
+           Set initial TTL
+
+       -m|--max-ttl <ttl>
+           Set maximum TTL (default: 30)
+
+       -q|--num-probes <num>
+           Number of max probes for each hop (default: 3)
+
+       -x|--timeout <sec>
+           Probe response timeout in sec (default: 3)
+
+       -S|--syn
+           Set TCP SYN flag in packets
+
+       -A|--ack
+           Set TCP ACK flag in packets
+
+       -F|--fin
+           Set TCP FIN flag in packets
+
+       -P|--psh
+           Set TCP PSH flag in packets
+
+       -U|--urg
+           Set TCP URG flag in packets
+
+       -R|--rst
+           Set TCP RST flag in packets
+
+       -E|--ecn-syn
+           Send ECN SYN packets (RFC3168)
+
+       -t|--tos <tos>
+           Set the IP TOS field
+
+       -w|--whois <server>
+           Use a different AS whois DB server (default: /etc/netsniff-ng/whois.conf)
+
+       -W|--wport <port>
+           Use a different port to AS whois server (default: /etc/netsniff-ng/whois.conf)
+
+       --city-db <path>
+           Specifiy path for geoip city database
+
+       --country-db <path>
+           Specifiy path for geoip country database
+
+AUTHOR
+       Written by Daniel Borkmann <daniel@netsniff-ng.org>
+
+DOCUMENTATION
+       Documentation by Emmanuel Roullit <emmanuel@netsniff-ng.org>
+
+BUGS
+       Please report bugs to <bugs@netsniff-ng.org>
+
+
+
+                                                          2012-06-29                                                ashunt(8)

@@ -1,0 +1,11 @@
+address6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax:
+	address6 mac-address [ipv6-prefix]
+	address6 ipv4-address [ipv6-prefix]
+	address6 ipv6-address
+
+Converts a mac or ipv4 address to an ipv6 address (link local if no prefix is
+given as 2nd option) or, when given an ipv6 address, prints the mac or ipv4
+address. Prints all possible variations. Returns -1 on errors or the number of
+variations found
