@@ -1,0 +1,11 @@
+checkcites.lua -- a reference checker script (v1.0h)
+Copyright (c) 2012 Enrico Gregorio, Paulo Roberto Massa Cereda
+
+Usage: /usr/bin/checkcites [--all | --unused | --undefined] file.aux
+
+--all         Lists all unused and undefined references.
+--unused      Lists only unused references in your 'bib' file.
+--undefined   Lists only undefined references in your 'tex' file.
+
+If no flag is provided, '--all' is set by default.
+Be sure to have all your 'bib' files in the same directory.

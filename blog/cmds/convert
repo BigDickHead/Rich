@@ -1,20 +1,20 @@
-convert(1)                                                                                                         convert(1)
+convert(1)                                                                                                  convert(1)
 
 
 
 NAME
-       convert  -  convert  between  image  formats as well as resize an image, blur, crop, despeckle, dither, draw on, flip,
-       join, re-sample, and much more.
+       convert  -  convert  between  image formats as well as resize an image, blur, crop, despeckle, dither, draw on,
+       flip, join, re-sample, and much more.
 
 SYNOPSIS
        convert [input-option] input-file [output-option] output-file
 
 OVERVIEW
-       The convert program is a member of the ImageMagick(1) suite of tools.  Use it to convert between image formats as well
-       as resize an image, blur, crop, despeckle, dither, draw on, flip, join, re-sample, and much more.
+       The convert program is a member of the ImageMagick(1) suite of tools.  Use it to convert between image  formats
+       as well as resize an image, blur, crop, despeckle, dither, draw on, flip, join, re-sample, and much more.
 
-       For  more  information  about  the  convert  command, point your browser to file:///usr/share/doc/imagemagick/www/con‐
-       vert.html or http://www.imagemagick.org/script/convert.php.
+       For  more  information  about  the  convert  command,  point  your  browser  to file:///usr/share/doc/imagemag‐
+       ick/www/convert.html or http://www.imagemagick.org/script/convert.php.
 
 DESCRIPTION
        Image Settings:
@@ -270,22 +270,22 @@ DESCRIPTION
          -list type           print a list of supported option arguments
          -version             print version information
 
-       Use any setting or operator as an output-option.  Only a limited number of setting are   input-option.  They  include:
-       -antialias,  -caption, -density, -define, -encoding, -font, -pointsize, -size, and -texture as well as any of the mis‐
-       cellaneous options.
+       Use any setting or operator as an output-option.  Only a limited number  of  setting  are   input-option.  They
+       include:  -antialias, -caption, -density, -define, -encoding, -font, -pointsize, -size, and -texture as well as
+       any of the miscellaneous options.
 
-       By default, the image format of `file' is determined by its magic number.  To specify a particular image format,  pre‐
-       cede the filename with an image format name and a colon (i.e. ps:image) or specify the image type as the filename suf‐
-       fix (i.e. image.ps).  Specify 'file' as '-' for standard input or output.
+       By default, the image format of `file' is determined by its magic number.  To specify a particular  image  for‐
+       mat,  precede  the  filename with an image format name and a colon (i.e. ps:image) or specify the image type as
+       the filename suffix (i.e. image.ps).  Specify 'file' as '-' for standard input or output.
 
 SEE ALSO
        ImageMagick(1)
 
 
 COPYRIGHT
-       Copyright (C) 1999-2012 ImageMagick Studio LLC. Additional  copyrights  and  licenses  apply  to  this  software,  see
+       Copyright (C) 1999-2012 ImageMagick Studio LLC. Additional copyrights and licenses apply to this software,  see
        file:///usr/share/doc/imagemagick/www/license.html or http://www.imagemagick.org/script/license.php
 
 
 
-ImageMagick                                       Date: 2009/01/10 01:00:00                                        convert(1)
+ImageMagick                                    Date: 2009/01/10 01:00:00                                    convert(1)

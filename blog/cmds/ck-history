@@ -1,0 +1,17 @@
+Usage:
+  ck-history [OPTION...]
+
+Help Options:
+  -h, --help                  Show help options
+
+Application Options:
+  -V, --version               Version of this application
+  --frequent                  Show listing of frequent users
+  --last                      Show listing of last logged in users
+  --last-compat               Show 'last' compatible listing of last logged in users
+  --log                       Show full event log
+  -s, --seat=SEAT             Show entries for the specified seat
+  -t, --session-type=TYPE     Show entries for the specified session type
+  -u, --user=NAME             Show entries for the specified user
+  --since=DATETIME            Show entries since the specified time (ISO 8601 format)
+

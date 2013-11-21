@@ -1,0 +1,9 @@
+Example: ./closed localhost 80 POST /_vti_bin/ shtml .exe 0 0
+Don't forget the period before the extention.
+Common Extentions are: .asa .asp .cdx .cer .htw .htr .ida .idc .idq .shtm .shtml .stm .printer .jsp .jhtml .bat .exe .com .gif .jpg .mpg .rma .wma .cfm .pl .py .pike, etc
+Common methods are OPTIONS, TRACE, GET, HEAD, DELETE, PUT, POST, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK, SEARCH, BROWSE
+Try with both existing and NON existing files. Also try .dll with .exe and vice versa
+Try ALL the extentions and go into your server settings windows and try all methods and all directories as well. If it crashes, ask for a refund.
+Anything that says, 500 Server Error, also indicates a buggy web server. Might even be exploitable.
+Likewise to anything like Error (not 0x80040e14, which MS uses for 'not an overflow' for some reason) caught while processing query. These are signs of serious problems in the web server.
+Happy bug hunting!

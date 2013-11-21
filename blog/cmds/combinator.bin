@@ -1,1 +1,16 @@
 usage: combinator.bin file1 file2
+
+
+Combinator Attack Within oclhashcat-plus
+
+Using the Combinator Attack within oclhashcat-plus (not standalone version of Combinator Attack).
+
+The command for the Combinator Attack in oclhashcat-plus is -a 1
+
+If you wish to add rules to either the left or right dictionary or both at once then you can use the -j or -k commands.
+
+  -j,  --rule-left=RULE              Single rule applied to each word on the left dictionary
+
+  -k,  --rule-right=RULE             Single rule applied to each word on the right dictionary
+
+

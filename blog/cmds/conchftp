@@ -1,0 +1,134 @@
+CFTP(1)                                       BSD General Commands Manual                                      CFTP(1)
+
+NAME
+     cftp — Conch command-line SFTP client
+
+SYNOPSIS
+     cftp [-B buffer_size] [-b command_file] [-R num_requests] [-s subsystem]
+
+DESCRIPTION
+     is a client for logging into a remote machine and executing commands to send and receive file information. It can
+     wrap a number of file transfer subsystems
+
+     The options are as follows:
+
+     -B      Specifies the default size of the buffer to use for sending and receiving. (Default value: 32768 bytes.)
+
+     -b      File to read commands from, '-' for stdin. (Default value: interactive/stdin.)
+
+     -R      Number of requests to make before waiting for a reply.
+
+     -s      Subsystem/server program to connect to.
+
+     The following commands are recognised by :
+
+     cd path
+             Change the remote directory to 'path'.
+
+     chgrp gid path
+             Change the gid of 'path' to 'gid'.
+
+     chmod mode path
+             Change mode of 'path' to 'mode'.
+
+     chown uid path
+             Change uid of 'path' to 'uid'.
+
+     exit    Disconnect from the server.
+
+     get remote-path [local-path]
+             Get remote file and optionally store it at specified local path.
+
+     help    Get a list of available commands.
+
+     lcd path
+             Change local directory to 'path'.
+
+     lls [ls-options [path]]
+             Display local directory listing.
+
+     lmkdir path
+             Create local directory.
+
+     ln linkpath targetpath
+             Symlink remote file.
+
+     lpwd    Print the local working directory.
+
+     ls [-l [path]]
+             Display remote directory listing.
+
+     mkdir path
+             Create remote directory.
+
+     progress
+             Toggle progress bar.
+
+     put local-path [remote-path]
+             Transfer local file to remote location
+
+     pwd     Print the remote working directory.
+
+     quit    Disconnect from the server.
+
+     rename oldpath newpath
+             Rename remote file.
+
+     rmdir path
+             Remove remote directory.
+
+     rm path
+             Remove remote file.
+
+     version
+             Print the SFTP version.
+
+     ?       Synonym for 'help'.
+
+AUTHOR
+     cftp by Paul Swartz <z3p@twistedmatrix.com>. Man page by Mary Gardiner <mary@twistedmatrix.com>.
+
+REPORTING BUGS
+     Report bugs to http://twistedmatrix.com/bugs/
+
+COPYRIGHT
+     Copyright © 2005-2008 Twisted Matrix Laboratories
+     This is free software; see the source for copying conditions.  There is NO warranty; not even for MERCHANTABILITY
+     or FITNESS FOR A PARTICULAR PURPOSE.
+
+BSD                                                 October 8, 2005                                                BSD
+Usage:   cftp [options] [user@]host
+         cftp [options] [user@]host[:dir[/]]
+         cftp [options] [user@]host[:file [localfile]]
+Options:
+  -V, --version                Display Twisted version and exit.
+  -C, --compress               Enable compression.
+  -v, --log                    Enable logging (defaults to stderr)
+  -x, --nox11                  Disable X11 connection forwarding (default)
+  -A, --agent                  Enable authentication agent forwarding
+  -a, --noagent                Disable authentication agent forwarding (default)
+  -r, --reconnect              Reconnect to the server if the connection is
+                               lost.
+  -l, --user=                  Log in using this user name.
+  -i, --identity=              Identity for public-key authentication
+  -c, --ciphers=               Select encryption algorithms
+  -m, --macs=                  Specify MAC algorithms
+  -p, --port=                  Connect to this port. Server must be on the same
+                               port.
+  -o, --option=                Ignored OpenSSH options
+      --host-key-algorithms=   Select host key algorithms
+      --known-hosts=           File to check for host keys
+      --user-authentications=  Choose how to authenticate to the remote server
+      --logfile=               File to log to, or - for stdout
+  -B, --buffersize=            Size of the buffer to use for sending/receiving.
+                               [default: 32768]
+  -b, --batchfile=             File to read commands from, or '-' for stdin.
+  -R, --requests=              Number of requests to make before waiting for a
+                               reply. [default: 5]
+  -s, --subsystem=             Subsystem/server program to connect to. [default:
+                               sftp]
+      --help                   Display this help and exit.
+
+cftp is a client for logging into a remote machine and executing commands to
+send and receive file information
+

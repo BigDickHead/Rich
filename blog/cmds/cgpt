@@ -1,0 +1,35 @@
+CGPT(1)                                              User Commands                                             CGPT(1)
+
+
+
+NAME
+       cgpt - manual page for cgpt
+
+SYNOPSIS
+       cgpt COMMAND [OPTIONS] DRIVE
+
+DESCRIPTION
+       Supported COMMANDs:
+
+       create Create or reset GPT headers and tables
+
+       add    Add, edit or remove a partition entry
+
+       show   Show partition table and entries
+
+       repair Repair damaged GPT headers and tables
+
+       boot   Edit the PMBR sector for legacy BIOSes
+
+       find   Locate a partition by its GUID
+
+       prioritize
+              Reorder the priority of all kernel partitions
+
+       legacy Switch between GPT and Legacy GPT
+
+       For more detailed usage, use cgpt COMMAND -h
+
+
+
+cgpt                                                 February 2013                                             CGPT(1)

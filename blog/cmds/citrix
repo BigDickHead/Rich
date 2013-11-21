@@ -1,0 +1,2 @@
+Usage: ./citrix target port
+./citrix 192.168.1.101 1494

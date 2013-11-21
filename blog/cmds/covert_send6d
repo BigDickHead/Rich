@@ -1,0 +1,8 @@
+covert_send6d v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: covert_send6d [-k key] interface file
+
+Options:
+  -k key     decrypt the content with Blowfish-160
+
+Writes covertly received content to FILE.
