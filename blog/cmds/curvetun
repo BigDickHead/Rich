@@ -1,0 +1,48 @@
+
+curvetun 0.5.7, lightweight curve25519-based multiuser IP tunnel
+
+curvetun is a lightweight, high-speed ECDH multiuser tunnel for Linux. curvetun uses the Linux TUN/TAP interface and supports {IPv4,IPv6} over {IPv4,IPv6} with UDP or TCP as carrier protocols. Packets are encrypted end-to-end by a symmetric stream cipher (Salsa20) and authenticated by a MAC (Poly1305), where keys have previously been computed with the ECDH key agreement protocol (Curve25519).
+
+
+Usage: curvetun [options]
+Options, general:
+  -k|--keygen             Generate public/private keypair
+  -x|--export             Export your public data for remote servers
+  -C|--dumpc              Dump parsed clients
+  -S|--dumps              Dump parsed servers
+  -D|--nofork             Do not daemonize
+  -d|--dev <tun>          Networking tunnel device, e.g. tun0
+  -v|--version            Print version
+  -h|--help               Print this help
+Options for client:
+  -c|--client[=alias]     Client mode, server alias optional
+Options for servers:
+  -s|--server             Server mode
+  -N|--no-logging         Disable server logging (for better anonymity)
+  -p|--port <num>         Port number (mandatory)
+  -t|--stun <server>      Show public IP/Port mapping via STUN
+  -u|--udp                Use UDP as carrier instead of TCP
+  -4|--ipv4               Tunnel devices are IPv4
+  -6|--ipv6               Tunnel devices are IPv6
+                          (default: same as carrier protocol)
+
+Example:
+  See Documentation/Curvetun for a configuration example.
+  curvetun --keygen
+  curvetun --export
+  curvetun --server -4 -u -N --port 6666 --stun stunserver.org
+  curvetun --client=ethz
+
+Note:
+  There is no default port specified, so that you are forced
+  to select your own! For client/server status messages see syslog!
+  This software is an experimental prototype intended for researchers.
+
+Secret ingredient: 7647-14-5
+
+Please report bugs to <bugs@netsniff-ng.org>
+Copyright (C) 2011-2012 Daniel Borkmann <dborkma@tik.ee.ethz.ch>,
+License: GNU GPL version 2
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+

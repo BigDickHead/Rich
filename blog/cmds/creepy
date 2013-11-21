@@ -1,0 +1,12 @@
+Creepy app uses Twitter and Flickr data to track anyone on a map
+
+locate anyone twitter flickr map
+When you post a photo online -- especially from a phone with a built-in camera -- you're likely sharing more than the picture itself. The same is true for updates you post on Twitter. Location data is commonly included, and crafty types can do all kinds of creepy things with that information.
+
+A good example of what's possible is Creepy, a desktop app which lets you track a Flickr or Twitter user's position on a map. Just pop in a Twitter or Flickr ID, and if the person has posted any geocoded data Creepy will pin the corresponding locations on a map. Satellite, street, and hybrid maps from Google and Virtual Earth are available, as are OpenAerialMap and OpenStreetMap.
+
+Above, you can see where @scobleizer has been puttering around. Pop in anyone you want and then wait patiently -- Creepy analyzes quite a bit of data, so it can take a while for your results to appear. The mapping magic works as long as the user you search for has enabled geolocation features -- and that likely includes the vast majority of Twitter and Flickr users using a mobile app.
+
+Creepy is available for Windows, Mac, and Linux, and the application's source code is also downloadable.
+
+Tags: apps, creepy, cross-platform, flickr, geodata, geolocate, geolocation, locate, location, map, mapping, maps, mobile, stalk, stalking, twitter
