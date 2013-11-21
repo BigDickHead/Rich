@@ -1,0 +1,80 @@
+BLUETOOTHD(8)                                 System management commands                                 BLUETOOTHD(8)
+
+
+
+NAME
+       bluetoothd - Bluetooth daemon
+
+
+SYNOPSIS
+       bluetoothd [ -n ]
+
+
+DESCRIPTION
+       This  manual page documents briefly the bluetoothd daemon, which manages all the Bluetooth devices.  bluetoothd
+       itself does not accept many command-line options, as most of  its  configuration  is  done  in  the  /etc/blue‐
+       tooth/main.conf  file, which has its own man page.  bluetoothd can also provide a number of services via the D-
+       Bus message bus system.
+
+OPTIONS
+       -n     Don't run as daemon in background.
+
+       -d     Enable debug information output.
+
+       -m mtu-size
+              Use specific MTU size for SDP server.
+
+
+FILES
+       /etc/bluetooth/main.conf
+              Default location of the global configuration file.
+
+
+       /var/lib/bluetooth/nn:nn:nn:nn:nn:nn/linkkeys
+              Default location for link keys of paired devices. The directory nn:nn:nn:nn:nn:nn is the address of  the
+              local device. The file is line separated, with the following columns separated by whitespace:
+
+              nn:nn:nn:nn:nn:nn Remote device address.
+
+              nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn Link key.
+
+              n Link type integer.
+
+
+       /var/lib/bluetooth/nn:nn:nn:nn:nn:nn/names
+              Default  location for the device name cache. The directory nn:nn:nn:nn:nn:nn is the address of the local
+              device. The file is line separated, with the following columns separated by whitespace:
+
+              nn:nn:nn:nn:nn:nn Remote device address.
+
+              name Remote device name, terminated with newline.
+
+
+       /var/lib/bluetooth/nn:nn:nn:nn:nn:nn/features
+              Default location for the features cache. The directory nn:nn:nn:nn:nn:nn is the  address  of  the  local
+              device. The file is line separated, with the following columns separated by whitespace:
+
+              nn:nn:nn:nn:nn:nn Remote device address.
+
+              nnnnnnnnnnnnnnnn Remote device LMP features coded as an 8 byte bitfield.
+
+
+       /var/lib/bluetooth/nn:nn:nn:nn:nn:nn/manufacturers
+              Default  location  for  the  manufacturers  cache. The directory nn:nn:nn:nn:nn:nn is the address of the
+              local device. The file is line separated, with the following columns separated by whitespace:
+
+              nn:nn:nn:nn:nn:nn Remote device address.
+
+              n Remote device manufacturer integer.
+
+              n Remote device LMP version integer.
+
+              n Remote device LMP sub-version integer.
+
+
+AUTHOR
+       This manual page was written by Marcel Holtmann, Philipp Matthias Hahn and Fredrik Noring.
+
+
+
+Bluetooth daemon                                      March 2004                                         BLUETOOTHD(8)

@@ -1,0 +1,43 @@
+bpfc(8)                                           netsniff-ng-toolkit                                          bpfc(8)
+
+
+
+NAME
+       bpfc - compile a BPF expression into BPF opcode
+
+SYNOPSIS
+       bpfc -i|--input <program> [-V|--verbose][-v|--version][-h|--help]
+
+DESCRIPTION
+       bpfc is a tool to generate BPF opcode from a literal expression.  The generated BPF opcode then can be used to
+       filter out the corresponding traffic.
+
+EXAMPLES
+       bpfc --input example.bpf
+           Transform the literal expression in example.bpf into BPF opcodes
+
+OPTIONS
+       -i|--input <program>
+           Path to Berkeley Packet Filter file.
+
+       -V|--verbose
+           Increase program verbosity
+
+       -v|--version
+           Print version.
+
+       -h|--help
+           Print help text and lists all options.
+
+AUTHOR
+       Written by Daniel Borkmann <daniel@netsniff-ng.org>
+
+DOCUMENTATION
+       Documentation by Emmanuel Roullit <emmanuel@netsniff-ng.org>
+
+BUGS
+       Please report bugs to <bugs@netsniff-ng.org>
+
+
+
+                                                      2012-06-29                                               bpfc(8)

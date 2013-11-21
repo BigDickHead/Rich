@@ -1,0 +1,15 @@
+
+BlueRanger 1.0 by JP Dunning (.ronin) 
+<www.hackfromacave.com>
+(c) 2009-2012 Shadow Cave LLC.
+
+NAME
+	blueranger
+
+SYNOPSIS
+        blueranger.sh <hciX> <bdaddr>
+
+DESCRIPTION
+	<hciX>         Local interface
+	<bdaddr>       Remote Device Address
+
