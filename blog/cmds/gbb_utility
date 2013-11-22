@@ -1,0 +1,28 @@
+Utility to manage Google Binary Block (GBB)
+Usage: gbb_utility [-g|-s|-c] [OPTIONS] bios_file [output_file]
+
+GET MODE:
+-g, --get   (default)   Get (read) from bios_file, with following options:
+     --hwid             Report hardware id (default).
+     --flags            Report header flags.
+ -k, --rootkey=FILE     File name to export Root Key.
+ -b, --bmpfv=FILE       File name to export Bitmap FV.
+     --recoverykey=FILE File name to export Recovery Key.
+
+SET MODE:
+-s, --set               Set (write) to bios_file, with following options:
+ -o, --output=FILE      New file name for ouptput.
+ -i, --hwid=HWID        The new hardware id to be changed.
+     --flags=FLAGS      The new (numeric) flags value.
+ -k, --rootkey=FILE     File name of new Root Key.
+ -b, --bmpfv=FILE       File name of new Bitmap FV.
+     --recoverykey=FILE File name of new Recovery Key.
+
+CREATE MODE:
+-c, --create=prop1_size,prop2_size...
+                        Create a GBB blob by given size list.
+SAMPLE:
+  gbb_utility -g bios.bin
+  gbb_utility --set --hwid='New Model' -k key.bin bios.bin newbios.bin
+  gbb_utility -c 0x100,0x1000,0x03DE80,0x1000 gbb.blob
+

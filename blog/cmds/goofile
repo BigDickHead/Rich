@@ -1,0 +1,19 @@
+
+-------------------------------------
+|Goofile v1.5	                    |
+|Coded by Thomas (G13) Richards     |
+|www.g13net.com                     |
+|code.google.com/p/goofile          |
+-------------------------------------
+
+
+Goofile 1.5
+
+usage: goofile options 
+
+       -d: domain to search
+
+       -f: filetype (ex. pdf)
+
+example:./goofile.py -d test.com -f txt
+

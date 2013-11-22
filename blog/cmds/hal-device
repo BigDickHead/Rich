@@ -1,0 +1,9 @@
+
+usage: hal-device [--help] [--add udi] [--remove udi] [udi]
+Create, remove, or show HAL device. If no udi is given, shows all devices.
+If udi doesn't start with a '/', '/org/freedesktop/Hal/devices/' is prepended.
+  -a, --add udi     Add new device.
+            Reads property list in 'lshal' syntax from stdin.
+  -r, --remove udi  Remove device.
+  -h, --help        Show this text.
+

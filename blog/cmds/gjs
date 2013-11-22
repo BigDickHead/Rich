@@ -1,0 +1,13 @@
+Gjs is a Javascript binding for GNOME. It's mainly based on Spidermonkey javascript engine and the GObject introspection framework. 
+
+Usage:
+  gjs [OPTION...]
+
+Help Options:
+  -h, --help                 Show help options
+
+Application Options:
+  -c, --command=COMMAND      Program passed in as a string
+  -I, --include-path=DIR     Add the directory DIR to the list of directories to search for js files.
+  --js-version=JSVERSION     JavaScript version (e.g. "default", "1.8"
+

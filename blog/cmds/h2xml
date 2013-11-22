@@ -1,0 +1,137 @@
+ctypeslib(1)                                            User Commands                                            ctypeslib(1)
+
+
+
+NAME
+       h2xml - convert header files to XML intermediates
+       xml2py - convert XML intermediates to Python ctypes interface
+
+
+
+SYNOPSIS
+       h2xml includefile ... [options] -o outputxmlfile
+       xml2py xmlfile ... [options] -o outputpyfile
+
+
+DESCRIPTION
+       ctypeslib is a Python code generator capable of converting C header files into xml files (using gccxml), and then con‐
+       verting the xmlfiles into Python modules which define a ctypes interface to the corresponding C library.
+
+       Ctypeslib is not ctypes.  Ctypes is included in Python 2.5+ and as an add-on for lower versions, while ctypeslib is  a
+       lesser  known  add-on  written  by  the  ctypes author.  If you use ctypes a lot and are tired of setting argtypes and
+       restype of the called functions, you should look into ctypeslib.  Ctypeslib can also set up data types and  structures
+       from C header files automatically.
+
+       h2xml  and  xml2py  are the user interface scripts to ctypeslib.  h2xml converts C header files into xml intermediates
+       (using gccxml) and xml2py converts these intermediates to Python files.  At the minimum, you can  get  automatic  con‐
+       struction  of  the  C  types  (structures,  etc)  in ctypes definitions.  With extra options, macro definitions can be
+       expanded and the output Python file can be automatically linked (using ctypes) to the corresponding C library.
+
+       The briefest example is:
+
+              h2xml header.h -o out_c.xml
+              xml2py out_c.xml -o out_c.py
+
+       To obtain preprocessor symbols, you must use the -c flag to h2xml.  To automatically link to C libraries  via  ctypes,
+       you muss pass the relevant libraries to xml2py with -l library.so.
+
+
+
+
+OPTIONS
+       h2xml options:
+
+
+              -h, --help
+                     show brief help message
+
+              -q, --quiet
+
+
+              -D NAME[=VALUE]
+                     macros to define
+
+              -U NAME
+                     macros to undefine
+
+              -I DIRECTORY
+                     additional include directories
+
+              -o XMLFILE
+                     XML output filename
+
+              -c, --cpp-symbols
+                     try to find #define symbols - this may give compiler errors, so it's off by default.
+
+              -k     don't delete the temporary files created (useful for finding problems)
+
+
+
+       xml2py options:
+
+              -h, --help
+                     show this help message and exit
+
+              -c     include source file location in comments
+
+              -d     include docstrings containing C prototype and source file location
+
+              -k TYPEKIND
+                     kind of type descriptions to include: d = #defines, e = enumerations, f = functions, s = structures, t =
+                     typedefs
+
+              -l DLLS
+                     libraries to search for exported functions
+
+              -o OUTPUT
+                     output filename (if not specified, standard output will be used)
+
+              -r EXPRESSION
+                     regular expression for symbols to include (if neither symbols nor expressions  are  specified,everything
+                     will be included)
+
+              -s SYMBOL
+                     symbol to include (if neither symbols nor expressions are specified,everything will be included)
+
+              -v     verbose output
+
+              -w     add all standard windows dlls to the searched dlls list
+
+              -m module
+                     Python module(s) containing symbols which will be imported instead of generated
+
+              --preload=DLL
+                     dlls to be loaded before all others (to resolve symbols)
+
+
+
+
+
+
+EXAMPLES
+       Please see /usr/share/doc/python-ctypeslib/examples.Debian for examples and explanation.
+
+
+
+
+
+SEE ALSO
+       /usr/share/doc/python-ctypeslib/examples.Debian contains a brief tutorial on some key features
+
+       Python docstrings (pydoc ctypeslib)
+
+       Ctypeslib upstream is http://python.net/crew/theller/ctypes/ (see "Related Projects").
+
+       For ctypes information, see http://docs.python.org/library/ctypes.html
+
+
+
+
+AUTHOR
+       ctypeslib was written by Thomas Heller <theller@ctypes.org>.
+
+       This manual page was written by Richard Darst <rkd@zgib.net>, for the Debian project (and may be used by others).
+
+
+
+ctypeslib                                                 March 2010                                             ctypeslib(1)

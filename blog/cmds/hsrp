@@ -1,0 +1,6 @@
+hsrp -i <interface> -v <virtual IP> -d <router ip> -a <authword>
+	-g <group> [-S <source>]
+EXAMPLE:
+while (true);
+  do (./hsrp -d 224.0.0.2 -v192.168.1.22 -a cisco -g 1 -i eth0 ; sleep 3);
+done

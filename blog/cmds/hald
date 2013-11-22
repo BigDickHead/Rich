@@ -1,0 +1,82 @@
+HALD(8)                                                                                                               HALD(8)
+
+
+
+NAME
+       hald - HAL daemon
+
+SYNOPSIS
+       hald [options]
+
+
+DESCRIPTION
+       hald is a daemon that maintains a database of the devices connected to the system system in real-time. The daemon con‐
+       nects to the D-Bus system message bus to provide an API that applications can use  to  discover,  monitor  and  invoke
+       operations on devices. For more information about both the big picture and specific API details, refer to the HAL spec
+       which can be found in /usr/share/doc/hal-doc/spec/hal-spec.html depending on the distribution.
+
+
+OPTIONS
+       The following options are supported:
+
+       --daemon=yes|no
+              Specify whether to run in the foreground or the background.
+
+       --verbose=yes|no
+              Enable verbose debug output.
+
+       --use-syslog
+              Enable logging of debug output to the syslog instead of stderr. Use this option only together with --verbose.
+
+       --help Print out usage.
+
+       --version
+              Print the version of the daemon and exit.
+
+
+BUGS AND DEBUGGING
+       Please send bug reports to either the distribution or the HAL  mailing  list,  see  http://lists.freedesktop.org/mail‐
+       man/listinfo/hal on how to subscribe.
+
+       First, to obtain useful debug traces you will need to have debuginfo packages installed. On a Fedora system this is in
+       the hal-debuginfo package and can be installed via the yum update program.
+
+       Second, shut down the existing hald daemon instance; on a Fedora system this is achieved by
+
+       /etc/init.d/haldaemon stop
+
+       After having shut down the daemon, you might want to run
+
+       pkill hald
+
+       to ensure that all the helper processe of hald are killed too. To start the HAL daemon, use
+
+       /usr/sbin/hald --daemon=no --verbose=yes
+
+       If the daemon crashes, you can start it under a debugger via
+
+       gdb /usr/sbin/hald
+
+       and then typing
+
+       run --daemon=no --verbose=yes
+
+       at the (gdb) prompt. To capture a back trace, use the bt command and attach this to the bug report.
+
+       Please also attach the output of lshal(1) in the bug report  if  possible  (it's  not  possible  if  the  hald  daemon
+       crashed).  If the nature of the bug has to do with hotplugging, attach two outputs of lshal(1) - one before the device
+       hotplug event and one after.
+
+
+SEE ALSO
+       udev(7), dbus-daemon(1), lshal(1),  hal-set-property(1),  hal-get-property(1),  hal-find-by-property(1),  hal-find-by-
+       capability(1), hal-is-caller-locked-out(1)
+
+
+AUTHOR
+       Written by David Zeuthen <david@fubar.dk> with a lot of help from many others.
+
+
+
+
+                                                                                                                      HALD(8)

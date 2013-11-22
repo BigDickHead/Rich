@@ -1,0 +1,34 @@
+genkeys 2.2 - generates lookup file for asleap. <jwright@hasborg.com>
+genkeys: Must supply -r -f and -n
+Usage: genkeys [options]
+
+	-r 	Input dictionary file, one word per line
+	-f 	Output pass+hash filename
+	-n 	Output index filename
+	-h 	Last 2 hash bytes to filter with (optional)
+
+
+
+
+The first step involved in the use of asleap is to produce the necessary database (.dat) and index files (.idx).  See asleap README for a full description as to why these files are required.
+
+./genkeys  -r  dict  -f  dict.dat  -n  dict.idx
+
+dict = Our wordlist/dictionary file, with one word per line
+
+dict.dat = Our new output pass+hash file (generated as a result of running this command)
+
+dict.idx = Our new output index filename (generated as a result of running this command)
+
+
+
+
+
+The final step in recovering our weak LEAP password is to run the asleap command with our newly created .dat and .idx files:
+./asleap  -r  data/leap.dump  -f  dict.dat  -n  dict.idx
+
+leap.dump = Our libpcap packet capture file (NOTE: Any libpcap (e.g. tcpdump, Wireshark) or AiroPeek capture file (.apc) can be used)
+
+dict.dat = Our output pass+hash file (generated with genkeys, see above)
+
+dict.idx = Our new output index filename (generated with genkeys, see above)

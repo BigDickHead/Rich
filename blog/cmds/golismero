@@ -1,0 +1,64 @@
+
+GoLISMERO - The Web Knife.
+
+Daniel Garcia Garcia - dani@iniqua.com | dani@estotengoqueprobarlo.es
+
+usage: golismero [-h] [-R RECURSIVITY] [-t TARGET] [-o OUTPUT]
+                 [-F {text,html,csv,xml,scripting,wfuzz}]
+                 [-A {all,forms,links}] [-V] [-c] [-x] [-m] [-na] [-nc] [-ns]
+                 [-ni] [-nm] [-nl] [-l] [-us HTTP_AUTH_USER]
+                 [-ps HTTP_AUTH_PASS] [-C COOKIE] [-P PROXY] [-U] [-f FINGER]
+                 [--follow]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -R RECURSIVITY        recursivity level of spider. Default=0
+  -t TARGET             target web site.
+  -o OUTPUT             output file.
+  -F {text,html,csv,xml,scripting,wfuzz}
+                        output format. "scripting" is perfect to combine with
+                        awk,cut,grep.... default=text
+  -A {all,forms,links}  Scan only forms, only links or both. Default=all
+  -V                    Show version.
+  -c                    colorize output. Default=No
+  -x, --search-vulns    looking url potentially dangerous and bugs. As default
+                        not selected
+  -m, --compat-mode     show results as compact format. As default not
+                        selected.
+  -na, --no-all         implies no-css, no-script, no-images and no-mail. As
+                        default not selected.
+  -nc, --no-css         don't get css links. As default not selected.
+  -ns, --no-script      don't get script links. As default not selected.
+  -ni, --no-images      don't get images links. As default not selected.
+  -nm, --no-mail        don't get mails (mailto: tags). As default not
+                        selected.
+  -nl, --no-unparam-links
+                        don't get links that have not parameters. As default
+                        not selected.
+  -l, --long-summary    detailed summary of process. As default not selected.
+  -us HTTP_AUTH_USER, --http-auth-user HTTP_AUTH_USER
+                        set http authenticacion user. As default is empty.
+  -ps HTTP_AUTH_PASS, --http-auth-pass HTTP_AUTH_PASS
+                        set http authenticacion pass. As default not empty.
+  -C COOKIE, --cookie COOKIE
+                        set custom cookie. As default is empty.
+  -P PROXY, --proxy PROXY
+                        set proxy, as format: IP:PORT. As default is empty.
+  -U, --update          update Golismero.
+  -f FINGER, --finger FINGER
+                        fingerprint web aplication. As default not selected.
+                        (not implemented yet)
+  --follow              follow redirect. As default not redirect.
+
+Examples:	 
+- GoLISMERO.py -t site.com -c 
+- GoLISMERO.py -t site.com -c -A links -x 
+- GoLISMERO.py -t site.com -m -c -A links -o results.html -F html -x	 
+- GoLISMERO.py -t site.com -c -A links -o wfuzz_script.sh -F wfuzz 
+- GoLISMERO.py -t site.com -A links --no-css --no-script --no-images --no-mail -c -x
+  or GoLISMERO.py -t site.com -A links -nc -ns -ni -nm  
+  or GoLISMERO.py -t site.com -A links --no-all
+  or GoLISMERO.py -t site.com -A links -na	 
+	 
+  For more examples you can see EXAMPLES.txt 
+	 

@@ -1,1 +1,6 @@
 usage: gate.bin mod offset < infile > outfile
+
+
+Each wordlist going into STDIN is parsed and split into equal sections and then passed to STDOUT based on the amount you specify. The reason for splitting is to distribute the workload that gets generated.
+
+For example if you have an i7 CPU and want to use your dictionary with a program that is unable to handle multiple cores, you can use gate to split your dictionary into multiple smaller pieces and then run that program in multiple instances. 

@@ -1,0 +1,12 @@
+genpmk 1.1 - WPA-PSK precomputation attack. <jwright@hasborg.com>
+genpmk: Must specify a dictionary file with -f
+Usage: genpmk [options]
+
+	-f 	Dictionary file
+	-d 	Output hash file
+	-s 	Network SSID
+	-h 	Print this help information and exit
+	-v 	Print verbose information (more -v for more verbosity)
+	-V 	Print program version and exit
+
+After precomputing the hash file, run cowpatty with the -d argument.

@@ -1,0 +1,2 @@
+usage: htmldiff old new [output.html]
+       htmldiff old new > output.html
