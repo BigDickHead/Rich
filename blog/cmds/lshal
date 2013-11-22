@@ -1,0 +1,55 @@
+LSHAL(1)                                                                                                             LSHAL(1)
+
+
+
+NAME
+       lshal - list HAL devices
+
+SYNOPSIS
+       lshal [options]
+
+
+DESCRIPTION
+       lshal  is  a  utility for displaying items in the HAL device database. For more information about both the big picture
+       and specific HAL properties, refer to the HAL spec which can  be  found  in  /usr/share/doc/hal-doc/spec/hal-spec.html
+       depending on the distribution.
+
+
+OPTIONS
+       The following options are supported:
+
+       -m, --monitor
+              Print changes emitted by the hald daemon.
+
+       -s, --short
+              Short output.
+
+       -t, --tree
+              Display the devices organized in a tree.
+
+       -u, --show
+              Show only the given UDI (Unique Device Identifier).
+
+       -h, --help
+              Print out usage.
+
+       -V, --version
+              Print the version.
+
+
+BUGS
+       Please  send  bug  reports  to either the distribution or the HAL mailing list, see http://lists.freedesktop.org/mail‐
+       man/listinfo/hal on how to subscribe.
+
+
+SEE ALSO
+       hald(8), hal-get-property(1), hal-set-property(1), hal-find-by-property(1), hal-find-by-capability(1)
+
+
+AUTHOR
+       Written by David Zeuthen <david@fubar.dk> with a lot of help from many others.
+
+
+
+
+                                                                                                                     LSHAL(1)

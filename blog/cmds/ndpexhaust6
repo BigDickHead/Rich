@@ -1,0 +1,6 @@
+ndpexhaust6 by mario fleischmann <mario.fleischmann@1und1.de>
+
+Syntax: ndpexhaust6 interface destination-network [sourceip]
+
+Randomly pings IPs in target network
+

@@ -1,0 +1,86 @@
+LSBLK(8)                                            System Administration                                            LSBLK(8)
+
+
+
+NAME
+       lsblk - list block devices
+
+SYNOPSIS
+       lsblk [options]
+
+       lsblk [options] device...
+
+DESCRIPTION
+       lsblk  lists  information  about  all or the specified block devices.  The lsblk command reads the sysfs filesystem to
+       gather information.
+
+       The command prints all block devices (except RAM disks) in a tree-like format by default.  Use lsblk --help to  get  a
+       list of all available columns.
+
+OPTIONS
+       -a, --all
+              List all block devices.
+
+       -b, --bytes
+              Print the SIZE column in bytes rather than in human-readable format.
+
+       -d, --nodeps
+              Don't  print  device holders or slaves.  For example "lsblk --nodeps /dev/sda" prints information about the sda
+              device only.
+
+       -D, --discard
+              Print information about the discard (TRIM, UNMAP) capabilities for each device.
+
+       -e, --exclude list
+              Exclude the devices specified by a comma-separated list of major device numbers.  Note that RAM disks (major=1)
+              are excluded by default.
+
+       -f, --fs
+              Output info about filesystems.  This option is equivalent to "-o NAME,FSTYPE,LABEL,MOUNTPOINT".  The authorita‐
+              tive information about filesystems and raids is provided by the blkid(8) command.
+
+       -h, --help
+              Print a help text and exit.
+
+       -i, --ascii
+              Use ASCII characters for tree formatting.
+
+       -m, --perms
+              Output info about device owner, group and mode.  This option is equivalent to "-o NAME,SIZE,OWNER,GROUP,MODE".
+
+       -l, --list
+              Use the list output format.
+
+       -n, --noheadings
+              Do not print a header line.
+
+       -o, --output list
+              Specify which output columns to print.  Use --help to get a list of all supported columns.
+
+       -P, --pairs
+              Use key="value" output format.
+
+       -r, --raw
+              Use the raw output format.
+
+       -t, --topology
+              Output info about block device topology.  This option is equivalent  to  "-o  NAME,ALIGNMENT,MIN-IO,OPT-IO,PHY-
+              SEC,LOG-SEC,ROTA,SCHED".
+
+NOTES
+       For the partitions are some information (e.g. queue attributes) inherited from parental device.
+
+AUTHORS
+       Milan Broz <mbroz@redhat.com>
+       Karel Zak <kzak@redhat.com>
+
+SEE ALSO
+       findmnt(8), blkid(8), ls(1)
+
+AVAILABILITY
+       The  lsblk  command is part of the util-linux package and is available from ftp://ftp.kernel.org/pub/linux/utils/util-
+       linux/.
+
+
+
+util-linux                                                April 2010                                                 LSBLK(8)

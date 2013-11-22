@@ -1,0 +1,56 @@
+Usage: mitmproxy [options]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -a ADDR               Address to bind proxy to (defaults to all interfaces)
+  --anticache           Strip out request headers that might cause the server
+                        to return 304-not-modified.
+  --confdir=CONFDIR     Configuration directory. (~/.mitmproxy)
+  -e                    Show event log.
+  -n                    Don't start a proxy server.
+  -p PORT               Proxy service port.
+  -P REVERSE_PROXY      Reverse proxy to upstream server:
+                        http[s]://host[:port]
+  -q                    Quiet.
+  -r RFILE              Read flows from file.
+  -s SCRIPT             Run a script.
+  -t                    Set sticky cookie for all requests.
+  -T FILTER             Set sticky cookie filter. Matched against requests.
+  -u                    Set sticky auth for all requests.
+  -U FILTER             Set sticky auth filter. Matched against requests.
+  -v                    Increase verbosity. Can be passed multiple times.
+  -w WFILE              Write flows to file.
+  -z                    Try to convince servers to send us un-compressed data.
+  -Z SIZE               Byte size limit of HTTP request and response bodies.
+                        Understands k/m/g suffixes, i.e. 3m for 3 megabytes.
+  --cert-wait-time=CERT_WAIT_TIME
+                        Wait for specified number of seconds after a new cert
+                        is generated. This can smooth over small discrepancies
+                        between the client and server times.
+  --upstream-cert       Connect to upstream server to look up certificate
+                        details.
+  --debug               
+
+  Client Replay:
+    -c PATH             Replay client requests from a saved file.
+
+  Replacements:
+    Replacements are of the form "/pattern/regex/replacement", where
+    the separator can be any character. Please see the documentation
+    for more information.
+
+    --replace=PATTERN   Replacement pattern.
+    --replace-from-file=PATTERN
+                        Replacement pattern, where the replacement clause is a
+                        path to a file.
+
+  SSL:
+    --cert=CERT         User-created SSL certificate file.
+    --ciphers=CIPHERS   SSL ciphers.
+
+  Filters:
+    See help in mitmproxy for filter expression syntax.
+
+    -i INTERCEPT, --intercept=INTERCEPT
+                        Intercept filter expression.

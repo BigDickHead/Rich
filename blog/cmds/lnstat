@@ -1,0 +1,81 @@
+LNSTAT(8)                                                                                                           LNSTAT(8)
+
+
+
+NAME
+       lnstat - unified linux network statistics
+
+SYNOPSIS
+       lnstat [options]
+
+DESCRIPTION
+       This manual page documents briefly the lnstat command.
+
+       lnstat  is  a  generalized  and  more feature-complete replacement for the old rtstat program.  In addition to routing
+       cache statistics, it supports any kind of statistics the linux kernel exports via a file in /proc/net/stat/.
+
+OPTIONS
+       These programs follow the usual GNU command line syntax, with long options starting with  two  dashes  (`-').   lnstat
+       supports the following options.
+
+       -h, --help
+              Show summary of options.
+
+       -V, --version
+              Show version of program.
+
+       -c, --count <count>
+              Print <count> number of intervals.
+
+       -d, --dump
+              Dump list of available files/keys.
+
+       -f, --file <file>
+              Statistics file to use.
+
+       -i, --interval <intv>
+              Set interval to 'intv' seconds.
+
+       -k, --keys k,k,k,...
+              Display only keys specified.
+
+       -s, --subject [0-2]
+              Specify display of subject/header. '0' means no header at all, '1' prints a header only at start of the program
+              and '2' prints a header every 20 lines.
+
+       -w, --width n,n,n,...
+              Width for each field.
+
+USAGE EXAMPLES
+       # lnstat -d
+              Get a list of supported statistics files.
+
+       # lnstat -k arp_cache:entries,rt_cache:in_hit,arp_cache:destroys
+              Select the specified files and keys.
+
+       # lnstat -i 10
+              Use an interval of 10 seconds.
+
+       # lnstat -f ip_conntrack
+              Use only the specified file for statistics.
+
+       # lnstat -s 0
+              Do not print a header at all.
+
+       # lnstat -s 20
+              Print a header at start and every 20 lines.
+
+       # lnstat -c -1 -i 1 -f rt_cache -k entries,in_hit,in_slow_tot
+              Display statistics for keys entries, in_hit and in_slow_tot of field rt_cache every second.
+
+SEE ALSO
+       ip(8), and /usr/share/doc/iproute-doc/README.lnstat (package iproute-doc on Debian)
+
+AUTHOR
+       lnstat was written by Harald Welte <laforge@gnumonks.org>.
+
+       This manual page was written by Michael Prokop <mika@grml.org> for the Debian project (but may be used by others).
+
+
+
+                                                                                                                    LNSTAT(8)

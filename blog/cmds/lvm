@@ -1,0 +1,256 @@
+LVM(8)                                                                                                                 LVM(8)
+
+
+
+NAME
+       lvm - LVM2 tools
+
+SYNOPSIS
+       lvm [command | file]
+
+DESCRIPTION
+       lvm provides the command-line tools for LVM2.  A separate manual page describes each command in detail.
+
+       If  lvm  is  invoked with no arguments it presents a readline prompt (assuming it was compiled with readline support).
+       LVM commands may be entered interactively at this prompt with readline facilities including history and  command  name
+       and option completion.  Refer to readline(3) for details.
+
+       If lvm is invoked with argv[0] set to the name of a specific LVM command (for example by using a hard or soft link) it
+       acts as that command.
+
+       On invocation, lvm requires that only the standard file descriptors stdin, stdout and stderr are available.  If others
+       are found, they get closed and messages are issued warning about the leak.
+
+       Where  commands take VG or LV names as arguments, the full path name is optional.  An LV called "lvol0" in a VG called
+       "vg0" can be specified as "vg0/lvol0".  Where a list of VGs is required but is left empty, a list of all VGs  will  be
+       substituted.  Where a list of LVs is required but a VG is given, a list of all the LVs in that VG will be substituted.
+       So "lvdisplay vg0" will display all the LVs in "vg0".  Tags can also be used - see addtag below.
+
+       One advantage of using the built-in shell is that configuration information gets cached internally between commands.
+
+       A file containing a simple script with one command per line can also be given on the command  line.   The  script  can
+       also be executed directly if the first line is #! followed by the absolute path of lvm.
+
+BUILT-IN COMMANDS
+       The following commands are built into lvm without links normally being created in the filesystem for them.
+
+       dumpconfig — Display the configuration information after
+              loading lvm.conf (5) and any other configuration files.
+
+       formats — Display recognised metadata formats.
+
+       help — Display the help text.
+
+       pvdata — Not implemented in LVM2.
+
+       segtypes — Display recognised logical volume segment types.
+
+       version — Display version information.
+
+COMMANDS
+       The following commands implement the core LVM functionality.
+
+       pvchange — Change attributes of a physical volume.
+
+       pvck — Check physical volume metadata.
+
+       pvcreate — Initialize a disk or partition for use by LVM.
+
+       pvdisplay — Display attributes of a physical volume.
+
+       pvmove — Move physical extents.
+
+       pvremove — Remove a physical volume.
+
+       pvresize — Resize a disk or partition in use by LVM2.
+
+       pvs — Report information about physical volumes.
+
+       pvscan — Scan all disks for physical volumes.
+
+       vgcfgbackup — Backup volume group descriptor area.
+
+       vgcfgrestore — Restore volume group descriptor area.
+
+       vgchange — Change attributes of a volume group.
+
+       vgck — Check volume group metadata.
+
+       vgconvert — Convert volume group metadata format.
+
+       vgcreate — Create a volume group.
+
+       vgdisplay — Display attributes of volume groups.
+
+       vgexport — Make volume groups unknown to the system.
+
+       vgextend — Add physical volumes to a volume group.
+
+       vgimport — Make exported volume groups known to the system.
+
+       vgimportclone — Import and rename duplicated volume group (e.g. a hardware snapshot).
+
+       vgmerge — Merge two volume groups.
+
+       vgmknodes — Recreate volume group directory and logical volume special files
+
+       vgreduce — Reduce a volume group by removing one or more physical volumes.
+
+       vgremove — Remove a volume group.
+
+       vgrename — Rename a volume group.
+
+       vgs — Report information about volume groups.
+
+       vgscan — Scan all disks for volume groups and rebuild caches.
+
+       vgsplit  — Split a volume group into two, moving any logical volumes from one volume group to another by moving entire
+       physical volumes.
+
+       lvchange — Change attributes of a logical volume.
+
+       lvconvert — Convert a logical volume from linear to mirror or snapshot.
+
+       lvcreate — Create a logical volume in an existing volume group.
+
+       lvdisplay — Display attributes of a logical volume.
+
+       lvextend — Extend the size of a logical volume.
+
+       lvmchange — Change attributes of the logical volume manager.
+
+       lvmdiskscan — Scan for all devices visible to LVM2.
+
+       lvmdump — Create lvm2 information dumps for diagnostic purposes.
+
+       lvreduce — Reduce the size of a logical volume.
+
+       lvremove — Remove a logical volume.
+
+       lvrename — Rename a logical volume.
+
+       lvresize — Resize a logical volume.
+
+       lvs — Report information about logical volumes.
+
+       lvscan — Scan (all disks) for logical volumes.
+
+       The following commands are not implemented in LVM2 but might be in the future: lvmsadc, lvmsar, pvdata.
+
+OPTIONS
+       The following options are available for many of the commands.  They are implemented generically  and  documented  here
+       rather than repeated on individual manual pages.
+
+       -h | --help — Display the help text.
+
+       --version — Display version information.
+
+       -v | --verbose — Set verbose level.
+              Repeat  from  1 to 3 times to increase the detail of messages sent to stdout and stderr.  Overrides config file
+              setting.
+
+       -d | --debug — Set debug level.
+              Repeat from 1 to 6 times to increase the detail of messages sent to the log file and/or syslog (if configured).
+              Overrides config file setting.
+
+       --quiet — Suppress output and log messages.
+              Overrides -d and -v.
+
+       -t | --test — Run in test mode.
+              Commands  will  not  update  metadata.   This is implemented by disabling all metadata writing but nevertheless
+              returning success to the calling function.  This may lead to unusual error messages in  multi-stage  operations
+              if a tool relies on reading back metadata it believes has changed but hasn't.
+
+       --driverloaded { y | n }
+              Whether  or  not  the  device-mapper kernel driver is loaded.  If you set this to n, no attempt will be made to
+              contact the driver.
+
+       -A | --autobackup { y | n }
+              Whether or not to metadata should be backed up automatically after a change.  You are strongly advised  not  to
+              disable this!  See vgcfgbackup (8).
+
+       -P | --partial
+              When  set,  the  tools  will do their best to provide access to volume groups that are only partially available
+              (one or more physical volumes belonging to the volume group are missing from the system).  Where part of a log‐
+              ical  volume  is  missing,  /dev/ioerror  will  be substituted, and you could use dmsetup (8) to set this up to
+              return I/O errors when accessed, or create it as a large block device of nulls.  Metadata may  not  be  changed
+              with  this option. To insert a replacement physical volume of the same or large size use pvcreate -u to set the
+              uuid to match the original followed by vgcfgrestore (8).
+
+       -M | --metadatatype type
+              Specifies which type of on-disk metadata to use, such as lvm1 or lvm2, which can  be  abbreviated  to  1  or  2
+              respectively.  The default (lvm2) can be changed by setting format in the global section of the config file.
+
+       --ignorelockingfailure
+              This  lets  you  proceed  with  read-only metadata operations such as lvchange -ay and vgchange -ay even if the
+              locking module fails.  One use for this is in a system init script if the lock directory is  mounted  read-only
+              when the script runs.
+
+       --addtag tag
+              Add  the  tag  tag to a PV, VG or LV.  Supply this argument multiple times to add more than one tag at once.  A
+              tag is a word that can be used to group LVM2 objects of the same type together.  Tags can be given on the  com‐
+              mand  line in place of PV, VG or LV arguments.  Tags should be prefixed with @ to avoid ambiguity.  Each tag is
+              expanded by replacing it with all objects possessing that tag which are of the type expected by its position on
+              the  command  line.   PVs can only possess tags while they are part of a Volume Group: PV tags are discarded if
+              the PV is removed from the VG.  As an example, you could tag some LVs as database and others  as  userdata  and
+              then activate the database ones with lvchange -ay @database.  Objects can possess multiple tags simultaneously.
+              Only the new LVM2 metadata format supports tagging: objects using the LVM1 metadata  format  cannot  be  tagged
+              because  the  on-disk format does not support it.  Snapshots cannot be tagged.  Characters allowed in tags are:
+              A-Z a-z 0-9 _ + . - and as of version 2.02.78 the following characters are also accepted: / = ! : # &
+
+       --deltag tag
+              Delete the tag tag from a PV, VG or LV, if it's present.  Supply this argument multiple times  to  remove  more
+              than one tag at once.
+
+       --alloc AllocationPolicy
+              The allocation policy to use: contiguous, cling, normal, anywhere or inherit.  When a command needs to allocate
+              physical extents from the volume group, the allocation policy controls how they are chosen.  Each volume  group
+              and  logical  volume  has an allocation policy.  The default for a volume group is normal which applies common-
+              sense rules such as not placing parallel stripes on the same physical volume.  The default for a logical volume
+              is inherit which applies the same policy as for the volume group.  These policies can be changed using lvchange
+              (8) and vgchange (8) or over-ridden on the command line of any command that performs allocation.  The  contigu‐
+              ous  policy  requires  that  new  extents  be placed adjacent to existing extents.  The cling policy places new
+              extents on the same physical volume as existing extents in the same stripe of the Logical Volume.  If there are
+              sufficient  free  extents to satisfy an allocation request but normal doesn't use them, anywhere will - even if
+              that reduces performance by placing two stripes on the same physical volume.
+
+              N.B. The policies described above are not implemented fully yet.  In particular, contiguous free  space  cannot
+              be broken up to satisfy allocation attempts.
+
+ENVIRONMENT VARIABLES
+       LVM_SYSTEM_DIR
+              Directory containing lvm.conf and other LVM system files.  Defaults to "/etc/lvm".
+
+       HOME   Directory containing .lvm_history if the internal readline shell is invoked.
+
+       LVM_VG_NAME
+              The  volume  group name that is assumed for any reference to a logical volume that doesn't specify a path.  Not
+              set by default.
+
+VALID NAMES
+       The following characters are valid for VG and LV names: a-z A-Z 0-9 + _ . -
+
+       VG and LV names cannot begin with a hyphen.  There are also various reserved names that are  used  internally  by  lvm
+       that  can not be used as LV or VG names.  A VG cannot be called anything that exists in /dev/ at the time of creation,
+       nor can it be called '.' or '..'.  A LV cannot be called '.' '..' 'snapshot' or 'pvmove'. The LV  name  may  also  not
+       contain the strings '_mlog', '_mimage', '_rimage', '_tdata', '_tmeta'.
+
+
+
+DIAGNOSTICS
+       All tools return a status code of zero on success or non-zero on failure.
+
+FILES
+       /etc/lvm/lvm.conf
+       $HOME/.lvm_history
+
+SEE ALSO
+       clvmd(8), lvchange(8), lvcreate(8), lvdisplay(8), lvextend(8), lvmchange(8), lvmdiskscan(8), lvreduce(8), lvremove(8),
+       lvrename(8), lvresize(8), lvs(8), lvscan(8), pvchange(8), pvck(8), pvcreate(8), pvdisplay(8), pvmove(8),  pvremove(8),
+       pvs(8),  pvscan(8),  vgcfgbackup(8), vgchange(8), vgck(8), vgconvert(8), vgcreate(8), vgdisplay(8), vgextend(8), vgim‐
+       port(8),  vgimportclone(8),  vgmerge(8),  vgmknodes(8),  vgreduce(8),  vgremove(8),  vgrename(8),  vgs(8),  vgscan(8),
+       vgsplit(8), readline(3), lvm.conf(5)
+
+
+lvchange     lvcreate     lvextend     lvmchange    lvmdiskscan  lvmsadc      lvreduce     lvrename     lvs
+lvconvert    lvdisplay    lvm          lvmconf      lvmdump      lvmsar       lvremove     lvresize     lvscan

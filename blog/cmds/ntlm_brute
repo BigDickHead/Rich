@@ -1,0 +1,2 @@
+Usage: ./ntlm_brute target port username[@domain] password url
+If you get a nice message from the server saying Use Localhost only, then you got the right password. Use a shell script to spam this througha word list or something. 

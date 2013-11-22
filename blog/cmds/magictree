@@ -1,0 +1,17 @@
+MagicTree is a penetration tester productivity tool. It is designed to allow easy and straightforward data consolidation, querying, external command execution and report generation. In case you wonder, "Tree" is because all the data is stored in a tree structure, and "Magic" is because it is designed to magically do the most cumbersome and boring part of penetration testing - data management and reporting.
+
+MagicTree stores data in a tree structure. This is a natural way for representing the information that is gathered during a network test: a host has ports, which have services, applications, vulnerabilities, etc. The tree like structure is also flexible in terms of adding new information without disturbing the existing data structure: if you at some point decide that you need the MAC address of the host, you just add another child node to the host node.
+
+Once you have all the data you want, you can use it to produce a report. Reports are generated from templates. A template is simply an OpenOffice or Microsoft Word file that contains all the static data and formatting you want (your company logos, headers, footers, etc.) and placeholders for the data coming from MagicTree.
+
+MagicTree Installation:
+First, Ubuntu does not contain Java JRE. Unless you have a reason to do otherwise, install openjdk's JRE. The following command can be used: 
+
+    sudo apt-get install openjdk-6-jre
+
+No installation is required for MagicTree. The application is distrubuted as a single JAR file which has to be executed with JRE. Just save the file on your desktop. Double-click on it to execute it or execute it from command line:
+
+    java -jar MagicTree.jar
+
+
+On startup, it will automatically create .magictree directory under users home directory and unpack necessary files there. The files will be overwritten if JAR contains more recently modified files. Thanks to this files changed in the most recent build will replace old ones, assuming your local clock is correct.

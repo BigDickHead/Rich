@@ -1,0 +1,63 @@
+15:17:45,536  INFO bl:54 [] Using mtdir '/home/Richard/.magictree'
+15:17:46,116 DEBUG bl:492 [] Loading settings from '/home/Richard/.magictree/settings.properties'
+15:17:46,122  INFO bl:498 [] Failed to load settings: file '/home/Richard/.magictree/settings.properties' not found
+15:17:51,754 DEBUG bl:512 [] Saving settings to '/home/Richard/.magictree/settings.properties'
+15:17:51,764 DEBUG bl:516 [] Saved settings to file '/home/Richard/.magictree/settings.properties'
+15:17:51,786  INFO com.gremwell.mt.application.MtApplication:160 [] Initializing MagicTree Version 1.2, rev 1802
+15:17:52,523 DEBUG eM:70 [] Acquired lock sun.nio.ch.FileLockImpl[0:9223372036854775807 exclusive valid] on file '/home/Richard/.magictree/tmp/magictree470059176395945523/lock'
+15:17:52,829 DEBUG ba:285 [] Autosave timer set to 600000ms
+15:17:57,366 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,371 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,371 DEBUG com.gremwell.history.History:86 [] Constructor: setting history key to "XPathName"
+15:17:57,372 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,373 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,381 DEBUG com.gremwell.history.History:86 [] Constructor: setting history key to "XPathExpression"
+15:17:57,392 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,398 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,406 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,409 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,418 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,419 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,419 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,427 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,429 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,430 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,431 DEBUG com.gremwell.history.HistoryComboBoxModel:70 [] Setting selected item to ""
+15:17:57,431 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,432 DEBUG com.gremwell.history.HistoryComboBoxEditor:50 [] Setting the selected combobox item to ""
+15:17:57,432 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,432 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,433 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,433 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,433 DEBUG com.gremwell.history.HistoryComboBoxModel:70 [] Setting selected item to ""
+15:17:57,433 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,434 DEBUG com.gremwell.history.HistoryComboBoxEditor:50 [] Setting the selected combobox item to ""
+15:17:57,434 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,434 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,434 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,435 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is ""
+15:17:57,447 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,448 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,449 DEBUG com.gremwell.history.History:86 [] Constructor: setting history key to "XPathName"
+15:17:57,449 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,450 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,450 DEBUG com.gremwell.history.History:86 [] Constructor: setting history key to "XPathExpression"
+15:17:57,461 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,464 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,464 DEBUG com.gremwell.history.History:86 [] Constructor: setting history key to "XPathName"
+15:17:57,467 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,467 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,468 DEBUG com.gremwell.history.History:86 [] Constructor: setting history key to "XPathExpression"
+15:17:57,561 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,561 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,569 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,570 DEBUG com.gremwell.history.History:57 [] Constructor: setting history key to "Default"
+15:17:57,570 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,663 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:57,663 DEBUG com.gremwell.history.HistoryComboBoxModel:65 [] Selected item is "null"
+15:17:58,549 DEBUG au:88 [] Found 0 orphans: []
+15:18:12,862 DEBUG bl:512 [] Saving settings to '/home/Richard/.magictree/settings.properties'
+15:18:12,863 DEBUG bl:516 [] Saved settings to file '/home/Richard/.magictree/settings.properties'
+15:18:12,864 DEBUG bl:512 [] Saving settings to '/home/Richard/.magictree/settings.properties'
+15:18:12,865 DEBUG bl:516 [] Saved settings to file '/home/Richard/.magictree/settings.properties'
+15:18:12,866 DEBUG eM:93 [] Released lock on file 'sun.nio.ch.FileLockImpl[0:9223372036854775807 exclusive invalid]'

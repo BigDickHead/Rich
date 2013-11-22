@@ -1,0 +1,67 @@
+KEEPNOTE(1)                                                                                                       KEEPNOTE(1)
+
+
+
+NAME
+       keepnote - cross-platform note-taking and organization application
+
+SYNOPSIS
+       keepnote [ options ] [ notebook ]
+
+DESCRIPTION
+       This manual page documents briefly the keepnote commands.
+
+       keepnote  is  a  note  taking  application. With KeepNote, you can store your class notes, TODO lists, research notes,
+       journal entries, paper outlines, etc in a simple notebook hierarchy with rich-text formatting, images, and more. Using
+       full-text search, you can retrieve any note for later reference.
+
+       KeepNote  is  designed to be cross-platform (implemented in Python and PyGTK) and stores your notes in simple and easy
+       to manipulate file formats (HTML and XML). Archiving and transferring your notes is as easy as zipping  or  copying  a
+       folder.
+
+OPTIONS
+       These  programs follow the usual GNU command line syntax, with long options starting with two dashes (`-').  A summary
+       of options is included below.  For a complete description, see the Info files.
+
+       -h, --help
+              Show this help message and exit.
+
+       -c, --cmd
+              Treat remaining arguments as a command.
+
+       -l, --list-cmd
+              List available commands.
+
+       -i, --info
+              Show runtime information.
+
+       --no-gui
+              Run in non-gui mode.
+
+       -t, --continue
+              Continue to run after command execution.
+
+       --show-errors
+              Show errors on console.
+
+       --no-show-errors
+              Do not show errors on console.
+
+       --no-default
+              Do not open default notebook.
+
+       --newproc
+              Start KeepNote in a new process.
+
+       -p PORT, --port=PORT
+              Use a specified port for listening to commands.
+
+AUTHOR
+       keepnote was written by Matt Rasmussen <rasmus@alum.mit.edu>.
+
+       This manual page was written by Khalid El Fathi <khalid@elfathi.fr>, for the Debian project (and may be used  by  oth‐
+       ers).
+
+
+
+                                                        March 17, 2012                                            KEEPNOTE(1)

@@ -1,0 +1,20 @@
+kalibrate v0.4.1-rtl, Copyright (c) 2010, Joshua Lackey
+modified for use with rtl-sdr devices, Copyright (c) 2012, Steve Markgraf
+Usage:
+	GSM Base Station Scan:
+		kal <-s band indicator> [options]
+
+	Clock Offset Calculation:
+		kal <-f frequency | -c channel> [options]
+
+Where options are:
+	-s	band to scan (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)
+	-f	frequency of nearby GSM base station
+	-c	channel of nearby GSM base station
+	-b	band indicator (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)
+	-g	gain in dB
+	-d	rtl-sdr device index
+	-e	initial frequency error in ppm
+	-v	verbose
+	-D	enable debug messages
+	-h	help

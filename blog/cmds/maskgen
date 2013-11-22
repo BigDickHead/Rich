@@ -1,0 +1,17 @@
+Usage: maskgen [options] masksfile.csv
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  --minlength=8         Minimum password length
+  --maxlength=8         Maximum password length
+  --mintime=MINTIME     Minimum time to crack
+  --maxtime=MAXTIME     Maximum time to crack
+  --complexity=COMPLEXITY
+                        maximum password complexity
+  --occurence=OCCURENCE
+                        minimum times mask was used
+  --checkmask=?u?l ?l ?l ?l ?l ?d
+                        check mask coverage
+  --showmasks           Show matching masks
+  --pps=1000000000      Passwords per Second

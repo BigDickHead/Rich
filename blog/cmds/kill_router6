@@ -1,0 +1,8 @@
+kill_router6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: kill_router6 [-HFD] interface router-address [srcmac [dstmac]]
+
+Announce that a target a router going down to delete it from the routing tables.
+If you supply a '*' as router-address, this tool will sniff the network for any
+RA packet and immediately send the kill packet.
+Option -H adds hop-by-hop, -F fragmentation header and -D dst header.

@@ -78,8 +78,8 @@ Module options:
 
 [iconv]
     -o from_code=CHARSET   original encoding of file names (default: UTF-8)
-    -o to_code=CHARSET      new encoding of the file names (default: UTF-8)
+    -o to_code=CHARSET	    new encoding of the file names (default: UTF-8)
 
 [subdir]
-    -o subdir=DIR       prepend this directory to all paths (mandatory)
-    -o [no]rellinks     transform absolute symlinks to relative
+    -o subdir=DIR	    prepend this directory to all paths (mandatory)
+    -o [no]rellinks	    transform absolute symlinks to relative

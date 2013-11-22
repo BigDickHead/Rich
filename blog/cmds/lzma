@@ -1,3 +1,6 @@
+XZ(1)                                                      XZ Utils                                                     XZ(1)
+
+
 
 NAME
        xz, unxz, xzcat, lzma, unlzma, lzcat - Compress or decompress .xz and .lzma files
@@ -1049,4 +1052,6 @@ SEE ALSO
        XZ Embedded: <http://tukaani.org/xz/embedded.html>
        LZMA SDK: <http://7-zip.org/sdk.html>
 
- vim:ft=man:
+
+
+Tukaani                                                   2012-07-01                                                    XZ(1)

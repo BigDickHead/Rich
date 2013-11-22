@@ -1,0 +1,17 @@
+ndpexhaust26 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: ndpexhaust26 [-acpPTUrR] [-s sourceip6] interface target-network
+
+Options:
+ -a      add a hop-by-hop header with router alert
+ -c      do not calculate the checksum to save time
+ -p      send ICMPv6 Echo Requests
+ -P      send ICMPv6 Echo Reply
+ -T      send ICMPv6 Time-to-live-exeeded
+ -U      send ICMPv6 Unreachable (no route)
+ -r      randomize the source from your /64 prefix
+ -R      randomize the source fully
+ -s sourceip6  use this as source ipv6 address
+
+Flood the target /64 network with ICMPv6 TooBig error messages.
+This tool version is manyfold more effective than ndpexhaust6.

@@ -1,0 +1,3 @@
+Netenum
+netenum <destination> [timeout] [verbosity]
+if timeout is >0, pings are used to enum

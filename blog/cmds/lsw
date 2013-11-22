@@ -1,0 +1,33 @@
+LSW(1)                                                  suckless-tools                                                 LSW(1)
+
+
+
+NAME
+       lsw - list window titles
+
+
+SYNOPSIS
+       lsw
+
+
+DESCRIPTION
+       lsw prints all window titles of DISPLAY to standard output.
+
+
+OPTIONS
+       lsw has no options.
+
+
+SEE ALSO
+       Homepage <http://www.suckless.org/>
+
+
+AUTHOR
+       lsw was written by Anselm R. Garbe <garbeam@gmail.com> and Sander van Dijk <a.h.vandijk@gmail.com>.
+
+       This  manual  page  was written by Daniel Baumann <daniel@debian.org>, for the Debian project (but may be used by oth‐
+       ers).
+
+
+
+0.1                                                       2008-08-03                                                   LSW(1)
