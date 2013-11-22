@@ -1,4 +1,8 @@
-       
+EJECT(1)                                                User Commands                                                EJECT(1)
+
+
+
+NAME
        eject - eject removable media
 
 SYNOPSIS
@@ -204,4 +208,24 @@ NOTES
 
        To save typing you can create a shell alias for the eject options that work for your particular setup.
 
-vim:ft=man:
+
+AUTHOR
+       Eject was written by Jeff Tranter (tranter@pobox.com) and is released under the conditions of the GNU  General  Public
+       License. See the file COPYING and notes in the source code for details.
+
+       The  -x  option  was  added  by  Nobuyuki  Tsuchimura  (tutimura@nn.iij4u.or.jp), with thanks to Roland Krivanek (kri‐
+       vanek@fmph.uniba.sk) and his cdrom_speed command.
+
+       The -T option was added by Sybren Stuvel (sybren@thirdtower.com), with  big  thanks  to  Benjamin  Schwenk  (benjamin‐
+       schwenk@yahoo.de).
+
+       The -X option was added by Eric Piel (Eric.Piel@tremplin-utc.net).
+
+
+SEE ALSO
+       mount(2), umount(2), mount(8), umount(8)
+       /usr/src/linux/Documentation/cdrom/
+
+
+
+Linux                                                    12 May 2005                                                 EJECT(1)

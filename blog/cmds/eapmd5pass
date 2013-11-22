@@ -1,5 +1,3 @@
-eapmd5pass - Tool for extracting and cracking EAP-MD5
-
 eapmd5pass - Dictionary attack against EAP-MD5
 
 Usage: eapmd5pass [ -i <int> | -r <pcapfile> ] [ -w wordfile ] [options]
