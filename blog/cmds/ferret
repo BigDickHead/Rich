@@ -1,3 +1,15 @@
 ferret- Monitors data and extracts interesting data
 
 hamster
+
+
+
+
+ferret
+
+options:
+ -i <adapter>    Sniffs the wire(less) attached to that network adapter. 
+                 Must have libpcap or winpcap installed to work.
+ -r <files>      Read files in off-line mode. Can use wildcards, such as 
+                 using "ferret -r *.pcap". Doesn't need libpcap to work.
+ -c <file>       Reads in more advanced parameters from a file.

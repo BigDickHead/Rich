@@ -1,0 +1,13 @@
+Usage: fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]
+    -r  use raw socket: forge ip src addr to match <gateway> (disables -u)
+    -d  detach from tty and run as a daemon (implies -q)
+    -q  be quiet, don't write anything to stdout
+    -h  print help and exit
+    -V  print version and exit
+    -g gw   VPN gateway address to impersonate
+    -k i:k  pre-shared key aka. group password, shared secret, prefixed
+        with its group/key id (first -k sets default)
+    -u user drop privileges to unprivileged user account
+    -l file append results to credential log file
+    -L file verbous logging to file instead of stdout
+

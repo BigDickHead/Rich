@@ -1,0 +1,12 @@
+flood_dhcpc6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: flood_dhcpc6 [-n|-N] [-1] [-d] interface [domain-name]
+
+DHCP client flooder. Use to deplete the IP address pool a DHCP6 server is
+offering. Note: if the pool is very large, this is rather senseless. :-)
+
+By default the link-local IP MAC address is random, however this won't work
+in some circumstances. -n will use the real MAC, -N the real MAC and
+link-local address. -1 will only solicate an address but not request it.
+If -N is not used, you should run parasite6 in parallel.
+Use -d to force DNS updates, you can specify a domain name on the commandline.

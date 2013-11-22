@@ -1,0 +1,11 @@
+flood_router26 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: flood_router26 [-HFD] [-s] [-RPA] interface
+
+Flood the local network with router advertisements.
+Each packet contains 17 prefix and route enries
+-F/-D/-H add fragment/destination/hopbyhop header to bypass RA guard security.
+-R does only send routing entries, no prefix information.
+-P does only send prefix information, no routing entries.
+-A is like -P but implements an attack by George Kargiotakis to disable privacy extensions
+The option -s uses small lifetimes, resulting in a more devasting impact

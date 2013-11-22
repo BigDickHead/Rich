@@ -1,0 +1,6 @@
+fake_mipv6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_mipv6 interface home-address home-agent-address care-of-address
+
+If the mobile IPv6 home-agent is mis-configured to accept MIPV6 updates without
+IPSEC, this will redirect all packets for home-address to care-of-address

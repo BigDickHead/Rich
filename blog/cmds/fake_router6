@@ -1,0 +1,7 @@
+fake_router6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_router6 [-HFD] interface network-address/prefix-length [dns-server [router-ip-link-local [mtu [mac-address]]]]
+
+Announce yourself as a router and try to become the default router.
+If a non-existing link-local or mac address is supplied, this results in a DOS.
+Option -H adds hop-by-hop, -F fragmentation header and -D dst header.

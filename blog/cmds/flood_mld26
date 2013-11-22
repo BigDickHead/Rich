@@ -1,0 +1,5 @@
+flood_mld26 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: flood_mld26 interface
+
+Flood the local network with MLDv2 reports.

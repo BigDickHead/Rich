@@ -1,0 +1,11 @@
+fake_pim6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax:
+  fake_pim6 [-t ttl] [-s src6] [-d dst6] interface hello [dr_priority]
+  fake_pim6 [-t ttl] [-s src6] [-d dst6] interface join|prune neighbor6 multicast6 target6
+
+The hello command takes optionally the DR priority (default: 0).
+The join and prune commands need the multicast group to modify, the target
+address that joins or leavs and the neighbor PIM router
+Use -s to spoof the source ip6, -d to send to another address than ff02::d,
+and -t to set a different TTL (default: 1)

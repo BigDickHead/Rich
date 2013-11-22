@@ -1,0 +1,18 @@
+Analyze file descriptors of the process
+Usage:
+filan [options]
+   options:
+      -?|-h          print this help text
+      -d             increase verbosity (use up to 4 times)
+      -i<fdnum>      only analyze this fd
+      -n<fdnum>      analyze all fds from 0 up to fdnum-1 (default: 1024)
+      -s             simple output with just type and socket address or path
+      -f<filename>   analyze file system entry
+      -T<seconds>    wait before analyzing, useful to connect with debugger
+      -r             raw output for time stamps and rdev
+      -L             show symlink properties instead of following it
+      -o<filename>   output goes to filename, that can be:
+                     a regular file name, the output goes to that
+                     +<filedes> , output goes to the file descriptor (which must be open writable)
+                     the 3 special names stdin stdout and stderr
+

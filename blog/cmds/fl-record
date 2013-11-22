@@ -1,0 +1,45 @@
+FL-RECORD(1)                                            Debian manual                                            FL-RECORD(1)
+
+
+
+NAME
+       fl-record - records a live funkload test using TCPWatch
+
+SYNOPSIS
+       fl-record [ options ] test_case
+
+DESCRIPTION
+       fl-record uses TCPWatch to setup a proxy server which is then used by a browser and records activities. It generates a
+       Funkload script or a unit test if a name is passed to the script.
+
+OPTIONS
+       --version
+              Show program's version number and exit
+
+       --help, -h
+              Show a help message and exit
+
+       --verbose, -v
+              Verbose output
+
+       --port=PORT, -p PORT
+              TCP port where the proxy listens (Defaults to 8090)
+
+       --tcp-watch-input=TCPWATCH_PATH, -i TCPWATCH_PATH
+              Path to an existing TCPWatch capture
+
+       --loop=LOOP, -l LOOP
+              Loop mode
+
+SEE ALSO
+       fl-build-report(1), fl-credential-ctl(1), fl-install-demo(1), fl-monitor-ctl(1), fl-run-bench(1), fl-run-test(1).
+
+AUTHOR
+       Funkload was written by Benoit Delbosc.
+
+       This manual page was written by Jose Parrella <bureado@debian.org>, for the Debian project (but may be  used  by  oth‐
+       ers).
+
+
+
+Debian Project                                          26 March 2009                                            FL-RECORD(1)

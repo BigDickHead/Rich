@@ -1,0 +1,19 @@
+fake_advertise6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_advertise6 [-DHF] [-Ors] [-n count] [-w seconds] interface ip-address-advertised [target-address [mac-address-advertised [source-ip-address]]]
+
+Advertise ipv6 address on the network (with own mac if not specified),
+sending it to the all-nodes multicast address if no target address is set.
+Source ip addresss is the address advertised if not set.
+
+Sending options:
+  -n count    send how many packets (default: forever)
+  -w seconds  wait time between the packets sent (default: 5)
+Flag options:
+  -O  do NOT set the override flag (default: on)
+  -r  DO set the router flag (default: off)
+  -s  DO set the solicitate flag (default: off)
+ND Security evasion options (can be combined):
+  -H  add a hop-by-hop header
+  -F  add a one shot fragment header (can be specified multiple times)
+  -D  add a large destination header which fragments the packet.

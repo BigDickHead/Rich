@@ -1,0 +1,6 @@
+fake_mldrouter6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_mldrouter6 [-l] interface advertise|solicitate|terminate [own-ip [own-mac-address]]
+
+Announce, delete or soliciated MLD router - sourself or others.
+Use -l to loop and send (in 5s intervals) until Control-C is pressed.

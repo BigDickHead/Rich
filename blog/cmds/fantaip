@@ -1,0 +1,12 @@
+Fantaip is a "Phantom IP" program that listens on a secondary IP address that we will use to receive response information to without confusing the kernel. To use fantaip, type 'fantaip (interface) (ip)', Ex., 'fantaip eth0 192.168.140.53'. 
+
+
+
+Usage: fantaip (options) IP
+	-d		Detach from terminal and daemonize
+	-H		Hardware address like XX:XX:XX:XX:XX:XX (otherwise use nics hwaddr)
+	-h		help
+	-i		*interface
+	-v		verbose operation
+*: Argument required
+Example: fantaip -i eth0 192.168.1.7

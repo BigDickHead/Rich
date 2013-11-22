@@ -1,0 +1,5 @@
+fake_solicitate6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_solicitate6 [-DHF] interface ip-address-solicitated [target-address [mac-address-solicitated [source-ip-address]]]
+
+Solicate ipv6 address on the network, sending it to the all-nodes multicast address

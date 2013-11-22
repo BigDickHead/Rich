@@ -1,0 +1,5 @@
+fake_dhcps6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_dhcps6 interface network-address/prefix-length dns-server [dhcp-server-ip-address [mac-address]]
+
+Fake DHCPv6 server. Use to configure an address and set a DNS server

@@ -1,0 +1,60 @@
+flowtop(8)                                           netsniff-ng-toolkit                                           flowtop(8)
+
+
+
+NAME
+       flowtop - provide top-like netfilter connection tracking information
+
+SYNOPSIS
+       flowtop [--city-db <path>][--country-db <path>] [-T|--tcp][-U|--udp][-v|--version][-h|--help]
+
+DESCRIPTION
+       flowtop is a tiny tool to print human-readable netfilter connection tracking information.
+
+EXAMPLES
+       flowtop
+           Show only TCP flows
+
+       flowtop --udp
+           Show only UDP flows
+
+       flowtop --city-db /usr/share/GeoIP/GeoIPCity.dat
+           Use the specified GeoIP city database
+
+       flowtop --country-db /usr/share/GeoIP/GeoIP.dat
+           Use the specified GeoIP country database
+
+OPTIONS
+       -T|--tcp
+           Only show TCP flows (default)
+
+       -U|--udp
+           Only show UDP flows
+
+       -s|--show-src
+           Also include flow source in top output
+
+       --city-db
+           Path to GeoIP city database
+
+       --country-db
+           Path to GeoIP country database
+
+       -v|--version
+           Print version.
+
+       -h|--help
+           Print help text and lists all options.
+
+AUTHOR
+       Written by Daniel Borkmann <daniel@netsniff-ng.org>
+
+DOCUMENTATION
+       Documentation by Emmanuel Roullit <emmanuel@netsniff-ng.org>
+
+BUGS
+       Please report bugs to <bugs@netsniff-ng.org>
+
+
+
+                                                          2012-06-29                                               flowtop(8)

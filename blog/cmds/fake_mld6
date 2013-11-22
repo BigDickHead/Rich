@@ -1,0 +1,7 @@
+fake_mld6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_mld6 [-l] interface add|delete|query [multicast-address [target-address [ttl [own-ip [own-mac-address [destination-mac-address]]]]]]
+
+Ad(d)vertise or delete yourself - or anyone you want - in a multicast group of your choice
+Query ask on the network who is listening to multicast addresses
+Use -l to loop and send (in 5s intervals) until Control-C is pressed.

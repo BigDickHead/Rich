@@ -1,0 +1,6 @@
+fake_dns6d v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: fake_dns6d interface ipv6-address [fake-ipv6-address [fake-mac]]
+Fake DNS server that serves the same ipv6 address to any lookup request
+You can use this together with parasite6 if clients have a fixed DNS server
+Note: very simple server. Does not honor multiple queries in a packet, norNS, MX, etc. lookups.

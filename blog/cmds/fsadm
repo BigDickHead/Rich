@@ -1,0 +1,20 @@
+fsadm: Utility to resize or check the filesystem on a device
+
+  fsadm [options] check device
+    - Check the filesystem on device using fsck
+
+  fsadm [options] resize device [new_size[BKMGTPE]]
+    - Change the size of the filesystem on device to new_size
+
+  Options:
+    -h | --help         Show this help message
+    -v | --verbose      Be verbose
+    -e | --ext-offline  unmount filesystem before ext2/ext3/ext4 resize
+    -f | --force        Bypass sanity checks
+    -n | --dry-run      Print commands without running them
+    -l | --lvresize     Resize given device (if it is LVM device)
+    -y | --yes          Answer "yes" at any prompts
+
+  new_size - Absolute number of filesystem blocks to be in the filesystem,
+             or an absolute size using a suffix (in powers of 1024).
+             If new_size is not supplied, the whole device is used.
