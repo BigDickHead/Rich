@@ -1,0 +1,226 @@
+IUCODE_TOOL(8)                                                                                                 IUCODE_TOOL(8)
+
+
+
+NAME
+       iucode_tool - Tool to manipulate Intel® IA32/X86_64 microcode bundles
+
+SYNOPSIS
+       iucode_tool [options] [[-ttype] filename|dirname] ...
+
+DESCRIPTION
+       iucode_tool  is  an utility that can load Intel® processor microcode data from files in both text and binary microcode
+       bundle formats.
+
+       It can output a list of the microcodes in these files, merge them, upload them to the kernel (to upgrade the microcode
+       in the system processor cores) or write some of them out to a file in binary format for later use.
+
+       iucode_tool  will  load  all  microcodes  in  the specified files and directories to memory, in order to process them.
+       Duplicated and outdated microcodes will be discarded.  It can read microcode data  from  standard  input  (stdin),  by
+       specifying a file name of "-" (minus sign).
+
+       Microcode data files are assumed to be in .dat text format if they have a .dat suffix, and to be in binary format oth‐
+       erwise.  Standard input (stdin) is assumed to be in .dat text format.  The -t option can be used to change the type of
+       the files specified after it, including for stdin.
+
+       If  a  directory  is  specified,  all  files whose names do not begin with a dot will be loaded, in unspecified order.
+       Nested directories are skipped.
+
+       You can select which microcodes should be written out, listed or uploaded to the kernel  using  the  -S,  -s,  --date-
+       before and --date-after options.  Should none of those options be specified, all microcodes will be selected.
+
+       You can upload the selected microcodes to the kernel, write them out to a file (in binary format) or to per-processor-
+       signature files in a directory using the -w, -k, and -K options.
+
+       For more information about Intel processor microcodes, please read the included documentation and  the  Intel  manuals
+       listed in the SEE ALSO section.
+
+
+OPTIONS
+       iucode_tool accepts the following options:
+
+
+       -q, --quiet
+              Inhibit usual output.
+
+       -v, --verbose
+              Print more information.  Use more than once for added verbosity.
+
+       -h, -?, --help
+              List all available options and their meanings.
+
+       --usage
+              Show summary of options.
+
+       -V, --version
+              Show version of program.
+
+
+       -t type
+              Sets the file type of the following files. type can be:
+
+              b      binary  format.   This is the same format used by the kernel driver and the BIOS/EFI, which is described
+                     in detail by the Intel 64 and IA-32 Architectures Software Developer's Manual, Volume 3A, section 9.11.
+
+              d      Intel microcode .dat text format.  This is the format normally used by  Intel  to  distribute  microcode
+                     data files.
+
+              a      (default)  iucode_tool  will use the filename suffix to select the file type: .dat text format for files
+                     that have a .dat suffix, and binary type otherwise.  Note that for stdin, .dat text format is assumed.
+
+
+       --downgrade
+              When multiple versions of the microcode for a specific processor are available from different files,  keep  the
+              one  from  the file loaded last, regardless of revision levels.  Files are always loaded in the order they were
+              specified in the command line.  This option has no effect when just one file has been loaded.
+
+
+       --no-downgrade
+              When multiple versions of the microcode for a specific processor are available from different files,  keep  the
+              one with the highest revision level.  This is the default mode of operation.
+
+
+       --strict-checks
+              Perform  strict  checks on the microcode data.  It will refuse to load microcodes and microcode data files with
+              unexpected size and metadata.  This is the default mode of operation.
+
+
+       --no-strict-checks
+              Perform less strict checks on the microcode data.  Use only if you happen to come across a microcode data  file
+              that  has  microcodes  with  weird sizes inside, or to load microcodes from a truncated microcode data file (in
+              which case you will also need the --ignore-broken option).
+
+
+       --ignore-broken
+              Skip broken microcode entries during load, instead of aborting execution.
+
+
+       --no-ignore-broken
+              Abort program execution if a broken microcode is found during load.  This is the default mode of operation.
+
+
+
+       -s [!]signature[,pf_mask]
+              Select microcodes by the specificed signature and processor flags mask (pf_mask).  If pf_mask is specified,  it
+              will select only microcodes that are suitable for at least one of the processor flag combinations in the mask.
+
+              Specify  more  than  once  to select more microcodes.  This option can be combined with the -S option to select
+              more microcodes.  If signature is prefixed with a !, it will unselect microcodes  instead.   Ordering  matters,
+              with later -s options overriding earlier ones.
+
+              The --scan-system option has precedence, therefore the microcodes it selects cannot be unselected.
+
+
+       -S, --scan-system
+              Select microcodes by scanning all online processors on this system for their signatures.
+
+              This option can be combined with the -s option to select more microcodes.
+
+              Should  the  scan  fail,  the program will print a warning to the user and continue as if --scan-system had not
+              been specified.
+
+
+       --date-before=YYYY-MM-DD and --date-after=YYYY-MM-DD
+              Limit the selected microcodes by a date range.  The date must be given in ISO format, with four digits for  the
+              year and two digits for the month and day and - for the separator.  Dates are not range-checked, so you can use
+              --date-after=2000-00-00 to select all microcodes dated since January 1st, 2000.
+
+
+       -l, --list
+              List selected microcode signatures.
+
+       -L, --list-all
+              List all microcode signatures while they're being processed.
+
+
+       -k[device], --kernel[=device]
+              Upload  selected  microcodes  to  the  kernel.   Optionally,  the  device  path  can  be  specified   (default:
+              /dev/cpu/microcode).  This update method is being deprecated.
+
+       -K[directory], --write-firmware[=directory]
+              Write  selected  microcodes  with  the filenames expected by the Linux kernel firmware loader.  Optionally, the
+              destination directory can be specified (default: /lib/firmware/intel-ucode).
+
+
+       -wfile, --write-to=file
+              Write selected microcodes to a file in binary format.
+
+
+       --overwrite
+              Remove the destination file before writing.  Without this option, iucode_tool will abort if  the  file  already
+              exists.  Do note that it will remove symlinks instead of following them.
+
+
+       --no-overwrite
+              Abort if the destination file already exists.  This is the default mode of operation.  Do note that iucode_tool
+              does not follow symlinks when writing files.
+
+
+NOTES
+       iucode_tool reads all data to memory before doing any processing.
+
+
+       The microcode data is sorted by cpu signature.  Older revisions are removed (either based on revision  level  or  load
+       order, depending on the --downgrade option) before the data is written to a file or uploaded to the kernel.
+
+
+       Intel  microcode data files, both in binary and text formats, can be concatenated to generate a bigger and still valid
+       microcode data file.
+
+
+       iucode_tool does not follow symlinks when writing microcode data files (--write-to and --write-firmware options).   It
+       will either refuse to write the file and abort (default mode of operation), or remove the symlink before writing (when
+       the --overwrite option is active).  It does follow directory symlinks to locate the directory to write files into.
+
+
+   Linux Notes
+       The cpuid kernel driver is required for the --scan-system functionality to work.
+
+       Each Intel processor microcode must be uploaded through a single write syscall to /dev/cpu/microcode,  but  more  than
+       one  microcode  can  be uploaded per write syscall.  Writing the microcode to the kernel device will update all system
+       processor cores at once.  This method is being deprecated and does not work on other system processor types.
+
+       The old Linux firmware interface for microcode updates needs to be triggered on a per-core basis, by writing the  num‐
+       ber 1 to /sys/devices/system/cpu/*/microcode/reload.  Depending on kernel version, you must either trigger it on every
+       core to avoid a dangerous situation where some cores are using outdated microcode,  or  the  kernel  will  accept  the
+       request only for the boot processor and use it to trigger an update on all system processor cores.
+
+       Since Linux v3.6, the per-core interface has been replaced with a new interface that explicitly triggers an update for
+       every core at once when the number 1 is written to /sys/devices/system/cpu/microcode/reload.
+
+       The microcode driver should not be unloaded unless you are sure it is not going to be needed.  The driver needs to  be
+       loaded  in order for the kernel to reapply the microcode updates after the system resumes from suspend or hibernation,
+       and also to update any system processor cores that were off-line at the time the update was applied.
+
+
+EXAMPLES
+   Updating files in /lib/firmware/intel-ucode:
+              iucode_tool -K/lib/firmware/intel-ucode /lib/firmware/intel-ucode/* /tmp/file-with-new-microcodes.bin
+
+   Processing several compressed files at once:
+              zcat intel-microcode*.dat.gz | iucode-tool -k -
+
+              zcat intel-microcode*.bin.gz | iucode-tool -k -tb -
+
+
+BUGS
+       iucode_tool will waste space when writing microcodes with extended signatures (one copy per signature).
+
+
+       The extended signature code is completely untested, and likely buggy.  Intel so far has  never  distributed  microcode
+       data files using the extended signatures.
+
+
+       Microcode with negative revision numbers is not special-cased, and will not be preferred over regular microcode.
+
+
+SEE ALSO
+       The  Intel  64 and IA-32 Architectures Software Developer's Manual, Volume 3A: System Programming Guide, Part 1 (order
+       number 253668), section 9.11.
+
+AUTHOR
+       Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+
+
+IUCODE_TOOL 0.8.3                                       July 28, 2012                                          IUCODE_TOOL(8)

@@ -1,0 +1,4 @@
+Usage: ipmaddr [ add | del ] MULTIADDR dev STRING
+       ipmaddr show [ dev STRING ] [ ipv4 | ipv6 | link | all ]
+       ipmaddr -V | -version
+

@@ -1,0 +1,62 @@
+ifpps(8)                                             netsniff-ng-toolkit                                             ifpps(8)
+
+
+
+NAME
+       ifpps - fetch and format kernel network statistics
+
+SYNOPSIS
+       ifpps     -d|--dev <netdev> [-t|--interval <sec>][-p|--promisc][-c|--term]
+            [-C|--csv][-H|--csv-tablehead][-l|--loop][-v|--version][-h|--help]
+
+DESCRIPTION
+       A tiny tool to provide top-like reliable networking statistics.  ifpps reads out the 'real' kernel statistics, so it
+       does not give erroneous statistics on high I/O load.
+
+OPTIONS
+       ifpps --dev eth0
+           Fetch eth0 interface statistics.
+
+       ifpps --dev eth0 --interval 60 --csv
+           Output eth0 interface statistics every minute in CSV format.
+
+OPTIONS
+       -h|--help
+           Print help text and lists all options.
+
+       -v|--version
+           Print version.
+
+       -d|--dev <netdev>
+           Device to fetch statistics for i.e., eth0.
+
+       -p|--promisc
+           Put the device in promiscuous mode
+
+       -t|--interval <time>
+           Refresh time in sec (default 1 sec)
+
+       -c|--term
+           Output to terminal
+
+       -C|--csv
+           Output in CSV format.  E.g. post-processing with Gnuplot et al.
+
+       -H|--csv-tablehead
+           Print CSV table head.
+
+       -l|--loop
+           Loop terminal output.
+
+AUTHOR
+       Written by Daniel Borkmann <daniel@netsniff-ng.org>
+
+DOCUMENTATION
+       Documentation by Emmanuel Roullit <emmanuel@netsniff-ng.org>
+
+BUGS
+       Please report bugs to <bugs@netsniff-ng.org>
+
+
+
+                                                          2012-06-29                                                 ifpps(8)

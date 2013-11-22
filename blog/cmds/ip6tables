@@ -1,154 +1,35 @@
---reject-with type
-
-
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport $srcPortNumber -j REDIRECT --to-port $dstPortNumbe
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport $srcPortNumber -j REDIRECT --to-port $dstPortNumbe
-iptables -t nat -I PREROUTING --src $SRC_IP_MASK --dst $DST_IP -p tcp --dport $portNumber -j REDIRECT --to-ports $rediectPort
-
-
-Exp:
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 25 -j REDIRECT --to-port 2525
-iptables -t nat -I PREROUTING --src 0/0 --dst 192.168.1.5 -p tcp --dport 80 -j REDIRECT --to-ports 8123
-iptables -t nat -I OUTPUT --src 0/0 --dst 192.168.1.5 -p tcp --dport 80 -j REDIRECT --to-ports 8123
-iptables -t nat -L -n -v
-iptables-save
-
-
-iptables -A PREROUTING -t nat -i eth1 -p tcp --dport 80 -j DNAT --to 192.168.1.50:80
-iptables -A INPUT -p tcp -m state --state NEW --dport 80 -i eth1 -j ACCEPT
-
-
-
-iptables -A PREROUTING -t nat -i eth1 -p tcp --source 11.22.33.44 --dport 80 -j DNAT --to 192.168.1.50:80
-
-
-PACKET IN
-    |
-PREROUTING--[routing]-->--FORWARD-->--POSTROUTING-->--OUT
- - nat (dst)   |           - filter      - nat (src)
-               |                            |
-               |                            |
-              INPUT                       OUTPUT
-              - filter                    - nat (dst)
-               |                          - filter
-               |                            |
-               `----->-----[app]----->------'
-
-
-
-1. Enable ip forward
-
-echo "1" > /proc/sys/net/ipv4/ip_forward
-
-2. Append routing rules to the nat table
-
-iptables -t nat -A PREROUTING -p tcp -s 0/0 -d {local_ip} --dport {local_port} -j DNAT --to {destination_ip}:{destination_port}
-iptables -t nat -A POSTROUTING -o eth0 -d {destination_ip} -j SNAT --to-source {local_ip}
-
-    {local_ip}: A ip address mapped on the local system
-    {local_port}: The port you would like to listen on
-    {destination_ip}: Destination ip address
-    {destination_port}: Destination port
-
-3. Now you can access http://{local_ip}:{local_port} and would actually be getting response from http://{destination_ip}:{destination_port}
-
-A working example
-
-If the ip address of your system is 32.64.128.200 and you import the following rules, you would be able to connect to http://32.64.128.200:8080 and actually see the Google search engine because 216.239.59.105:80 is one of Google's web servers.
-
-iptables -t nat -A PREROUTING -p tcp -s 0/0 -d 32.64.128.200 --dport 8080 -j DNAT --to 216.239.59.105:80
-iptables -t nat -A POSTROUTING -o eth0 -d 216.239.59.105 -j SNAT --to-source 32.64.128.200
-
-
-
-
-**************************************************************************************
-
-In victim machine: internal network
-# echo 1 > /proc/sys/net/ipv4/ip_forward
-# iptables -P FORWARD ACCEPT
-# iptables --table nat -A POSTROUTING -o eth1 -j MASQUERADE
-to create the bridge between attacker and internal network.
-
-
-In the attacker machine, add routing table for connect the internal network with
-# route add -net 192.168.59.0/24 gw 192.168.59.1
-# ping 192.168.59.10
-OK
-
-**************************************************************************************
-
-
-Allow or enable ICMP outgoing ping request.
-==> Zero(0) is for echo-reply.
-==> Eight(8) is for echo-request.
-iptables -A OUTPUT -p icmp --icmp-type 8 -s 0/0 -d target_ip -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A INPUT -p icmp --icmp-type 0 -s target_ip -d 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-Force fragments packet check
-iptables -A INPUT -f -j DROP
-
-
-iptables -A INPUT -m multiport -p tcp --destination-port  22,80 -j ACCEPT
-
-
-
-**************************************************************************************
-iptables是即时生效的，所以无需重启，如果要停止iptables，请使用iptables -F命令，如果要iptables配置重启后仍然有效，请按如下操作步骤：
-　
-1.创建/etc/iptables文件(文件名可以随意取)
-　
-2.创建/etc/network/if-pre-up.d/iptables文件，并给予其执行权限
-root@debian:~# touch /etc/network/if-pre-up.d/iptables
-root@debian:~# chmod +x /etc/network/if-pre-up.d/iptables
-　
-3.编辑/etc/network/if-pre-up.d/iptables文件，使其内容如下：
-#!/bin/sh
-/sbin/iptables-restore < /etc/iptables
-　
-4.配置iptables，过程略，配置好iptables后，将配置保存到/etc/iptables文件中即可
-root@debian:~# iptables-save > /etc/iptables
-　
-iptables -F  //将内存中iptables的所有配置清空，效果等同于停止了iptables
-**************************************************************************************
-IPTABLES(8)                                            iptables 1.4.14                                            IPTABLES(8)
+IP6TABLES(8)                                           iptables 1.4.14                                           IP6TABLES(8)
 
 
 
 NAME
-       iptables — administration tool for IPv4 packet filtering and NAT
+       ip6tables — IPv6 packet filter administration
 
 SYNOPSIS
-       iptables [-t table] {-A|-C|-D} chain rule-specification
+       ip6tables [-t table] {-A|-C|-D} chain rule-specification [options...]
 
-       iptables [-t table] -I chain [rulenum] rule-specification
+       ip6tables [-t table] -I chain [rulenum] rule-specification [options...]
 
-       iptables [-t table] -R chain rulenum rule-specification
+       ip6tables [-t table] -R chain rulenum rule-specification [options...]
 
-       iptables [-t table] -D chain rulenum
+       ip6tables [-t table] -D chain rulenum [options...]
 
-       iptables [-t table] -S [chain [rulenum]]
+       ip6tables [-t table] -S [chain [rulenum]]
 
-       iptables [-t table] {-F|-L|-Z} [chain [rulenum]] [options...]
+       ip6tables [-t table] {-F|-L|-Z} [chain [rulenum]] [options...]
 
-       iptables [-t table] -N chain
+       ip6tables [-t table] -N chain
 
-       iptables [-t table] -X [chain]
+       ip6tables [-t table] -X [chain]
 
-       iptables [-t table] -P chain target
+       ip6tables [-t table] -P chain target [options...]
 
-       iptables [-t table] -E old-chain-name new-chain-name
-
-       rule-specification = [matches...] [target]
-
-       match = -m matchname [per-match-options]
-
-       target = -j targetname [per-target-options]
+       ip6tables [-t table] -E old-chain-name new-chain-name
 
 DESCRIPTION
-       Iptables is used to set up, maintain, and inspect the tables of IPv4 packet filter rules in the Linux kernel.  Several
-       different tables may be defined.  Each table contains a number of built-in chains and may  also  contain  user-defined
-       chains.
+       Ip6tables  is  used to set up, maintain, and inspect the tables of IPv6 packet filter rules in the Linux kernel.  Sev‐
+       eral different tables may be defined.  Each table contains a number of built-in chains  and  may  also  contain  user-
+       defined chains.
 
        Each  chain  is  a  list of rules which can match a set of packets.  Each rule specifies what to do with a packet that
        matches.  This is called a `target', which may be a jump to a user-defined chain in the same table.
@@ -182,11 +63,6 @@ TABLES
                   destined to local sockets), FORWARD (for packets being routed through the box), and  OUTPUT  (for  locally-
                   generated packets).
 
-              nat:
-                  This  table  is consulted when a packet that creates a new connection is encountered.  It consists of three
-                  built-ins: PREROUTING (for altering packets as soon as they come in), OUTPUT (for  altering  locally-gener‐
-                  ated packets before routing), and POSTROUTING (for altering packets as they are about to go out).
-
               mangle:
                   This table is used for specialized packet alteration.  Until kernel 2.4.17 it had two built-in chains: PRE‐
                   ROUTING (for altering incoming packets before routing) and OUTPUT (for altering  locally-generated  packets
@@ -209,12 +85,12 @@ TABLES
                   before routing), and FORWARD (for altering packets being routed through the box).
 
 OPTIONS
-       The options that are recognized by iptables can be divided into several different groups.
+       The options that are recognized by ip6tables can be divided into several different groups.
 
    COMMANDS
-       These options specify the desired action to perform. Only one of them can be specified on the command line unless oth‐
-       erwise stated below. For long versions of the command and option names, you need to use only enough letters to  ensure
-       that iptables can differentiate it from all other options.
+       These  options  specify  the specific action to perform.  Only one of them can be specified on the command line unless
+       otherwise specified below.  For all the long versions of the command and option names, you need  to  use  only  enough
+       letters to ensure that ip6tables can differentiate it from all other options.
 
        -A, --append chain rule-specification
               Append one or more rules to the end of the selected chain.  When the source and/or destination names resolve to
@@ -239,17 +115,17 @@ OPTIONS
               the command will fail.  Rules are numbered starting at 1.
 
        -L, --list [chain]
-              List  all  rules in the selected chain.  If no chain is selected, all chains are listed. Like every other ipta‐
-              bles command, it applies to the specified table (filter is the default), so NAT rules get listed by
-               iptables -t nat -n -L
+              List  all  rules  in  the  selected  chain.   If  no chain is selected, all chains are listed. Like every other
+              ip6tables command, it applies to the specified table (filter is the default).
+
               Please note that it is often used with the -n option, in order to avoid long reverse DNS lookups.  It is  legal
               to  specify the -Z (zero) option as well, in which case the chain(s) will be atomically listed and zeroed.  The
               exact output is affected by the other arguments given. The exact rules are suppressed until you use
-               iptables -L -v
+               ip6tables -L -v
 
        -S, --list-rules [chain]
-              Print all rules in the selected chain.  If no chain is selected, all chains  are  printed  like  iptables-save.
-              Like every other iptables command, it applies to the specified table (filter is the default).
+              Print all rules in the selected chain.  If no chain is selected, all chains are  printed  like  ip6tables-save.
+              Like every other ip6tables command, it applies to the specified table (filter is the default).
 
        -F, --flush [chain]
               Flush  the  selected  chain (all the chains in the table if none is given).  This is equivalent to deleting all
@@ -277,61 +153,61 @@ OPTIONS
               Rename the user specified chain to the user supplied name.  This is cosmetic, and has no effect on  the  struc‐
               ture of the table.
 
+       -A, --append chain rule-specification
+              Append one or more rules to the end of the selected chain.  When the source and/or destination names resolve to
+              more than one address, a rule will be added for each possible address combination.
+
        -h     Help.  Give a (currently very brief) description of the command syntax.
 
    PARAMETERS
-       The  following  parameters  make  up a rule specification (as used in the add, delete, insert, replace and append com‐
+       The following parameters make up a rule specification (as used in the add, delete, insert,  replace  and  append  com‐
        mands).
 
        [!] -p, --protocol protocol
-              The protocol of the rule or of the packet to check.  The specified protocol can be one of  tcp,  udp,  udplite,
-              icmp,  esp, ah, sctp or the special keyword "all", or it can be a numeric value, representing one of these pro‐
-              tocols or a different one.  A protocol name from /etc/protocols is also allowed.  A  "!"  argument  before  the
-              protocol  inverts  the  test.  The number zero is equivalent to all. "all" will match with all protocols and is
-              taken as default when this option is omitted.
+              The  protocol  of  the rule or of the packet to check.  The specified protocol can be one of tcp, udp, udplite,
+              icmpv6, esp, mh or the special keyword "all", or it can be a numeric value, representing one of these protocols
+              or a different one. A protocol name from /etc/protocols is also allowed.  But IPv6 extension headers except esp
+              are not allowed.  esp and ipv6-nonext can be used with Kernel version 2.6.11 or later.  A "!"  argument  before
+              the protocol inverts the test.  The number zero is equivalent to all, which means that you cannot test the pro‐
+              tocol field for the value 0 directly. To match on a HBH header, even if it were the last, you cannot use -p  0,
+              but  always need -m hbh.  "all" will match with all protocols and is taken as default when this option is omit‐
+              ted.
 
-       [!] -s, --source address[/mask][,...]
-              Source specification. Address can be either a network name, a hostname, a network IP address (with /mask), or a
-              plain  IP  address.  Hostnames  will be resolved once only, before the rule is submitted to the kernel.  Please
-              note that specifying any name to be resolved with a remote query such as DNS is a really bad  idea.   The  mask
-              can  be  either  a network mask or a plain number, specifying the number of 1's at the left side of the network
-              mask.  Thus, a mask of 24 is equivalent to 255.255.255.0.  A "!"  argument  before  the  address  specification
-              inverts the sense of the address. The flag --src is an alias for this option.  Multiple addresses can be speci‐
-              fied, but this will expand to multiple rules (when adding with -A), or will cause multiple rules to be  deleted
-              (with -D).
+       [!] -s, --source address[/mask]
+              Source specification.  Address can be either be a hostname, a network IP address (with /mask), or  a  plain  IP
+              address.  Names will be resolved once only, before the rule is submitted to the kernel.  Please note that spec‐
+              ifying any name to be resolved with a remote query such as DNS is a really bad idea.  (Resolving network  names
+              is  not  supported at this time.)  The mask is a plain number, specifying the number of 1's at the left side of
+              the network mask.  A "!" argument before the address specification inverts the sense of the address.  The  flag
+              --src is an alias for this option.  Multiple addresses can be specified, but this will expand to multiple rules
+              (when adding with -A), or will cause multiple rules to be deleted (with -D).
 
-       [!] -d, --destination address[/mask][,...]
-              Destination  specification.  See the description of the -s (source) flag for a detailed description of the syn‐
+       [!] -d, --destination address[/mask]
+              Destination specification.  See the description of the -s (source) flag for a detailed description of the  syn‐
               tax.  The flag --dst is an alias for this option.
 
        -j, --jump target
-              This specifies the target of the rule; i.e., what to do if the packet matches it.  The target can  be  a  user-
+              This  specifies  the  target of the rule; i.e., what to do if the packet matches it.  The target can be a user-
               defined chain (other than the one this rule is in), one of the special builtin targets which decide the fate of
               the packet immediately, or an extension (see EXTENSIONS below).  If this option is omitted in a rule (and -g is
-              not  used),  then matching the rule will have no effect on the packet's fate, but the counters on the rule will
+              not used), then matching the rule will have no effect on the packet's fate, but the counters on the  rule  will
               be incremented.
 
        -g, --goto chain
-              This specifies that the processing should continue in a user specified chain. Unlike the --jump  option  return
+              This  specifies  that the processing should continue in a user specified chain. Unlike the --jump option return
               will not continue processing in this chain but instead in the chain that called us via --jump.
 
        [!] -i, --in-interface name
               Name of an interface via which a packet was received (only for packets entering the INPUT, FORWARD and PREROUT‐
               ING chains).  When the "!" argument is used before the interface name, the sense is inverted.  If the interface
-              name  ends in a "+", then any interface which begins with this name will match.  If this option is omitted, any
+              name ends in a "+", then any interface which begins with this name will match.  If this option is omitted,  any
               interface name will match.
 
        [!] -o, --out-interface name
-              Name of an interface via which a packet is going to be sent (for  packets  entering  the  FORWARD,  OUTPUT  and
-              POSTROUTING  chains).   When the "!" argument is used before the interface name, the sense is inverted.  If the
-              interface name ends in a "+", then any interface which begins with this name will match.   If  this  option  is
+              Name  of  an  interface  via  which  a packet is going to be sent (for packets entering the FORWARD, OUTPUT and
+              POSTROUTING chains).  When the "!" argument is used before the interface name, the sense is inverted.   If  the
+              interface  name  ends  in  a "+", then any interface which begins with this name will match.  If this option is
               omitted, any interface name will match.
-
-       [!] -f, --fragment
-              This  means that the rule only refers to second and further fragments of fragmented packets.  Since there is no
-              way to tell the source or destination ports of such a packet (or ICMP type), such a packet will not  match  any
-              rules  which  specify  them.  When the "!" argument precedes the "-f" flag, the rule will only match head frag‐
-              ments, or unfragmented packets.
 
        -c, --set-counters packets bytes
               This enables the administrator to initialize the packet and byte counters of a  rule  (during  INSERT,  APPEND,
@@ -365,12 +241,12 @@ OPTIONS
               sions, etc).
 
 MATCH EXTENSIONS
-       iptables can use extended packet matching modules with the -m or --match options,  followed  by  the  matching  module
+       ip6tables can use extended packet matching modules with the -m or --match options, followed  by  the  matching  module
        name;  after  these,  various  extra command line options become available, depending on the specific module.  You can
        specify multiple extended match modules in one line, and you can use the -h or --help options  after  the  module  has
        been specified to receive help specific to that module.
 
-       If  the  -p  or --protocol was specified and if and only if an unknown option is encountered, iptables will try load a
+       If  the  -p or --protocol was specified and if and only if an unknown option is encountered, ip6tables will try load a
        match module of the same name as the protocol, to try making the option available.
 
    addrtype
@@ -426,9 +302,16 @@ MATCH EXTENSIONS
               the POSTROUTING, OUTPUT and FORWARD chains. It cannot be specified with the --limit-iface-in option.
 
    ah
-       This module matches the SPIs in Authentication header of IPsec packets.
+       This module matches the parameters in Authentication header of IPsec packets.
 
        [!] --ahspi spi[:spi]
+              Matches SPI.
+
+       [!] --ahlen length
+              Total length of this header in octets.
+
+       --ahres
+              Matches if the reserved field is filled with zero.
 
    cluster
        Allows you to deploy gateway and back-end load-sharing clusters without the need of load-balancers.
@@ -677,6 +560,15 @@ MATCH EXTENSIONS
               Match  the DiffServ class. This value may be any of the BE, EF, AFxx or CSx classes.  It will then be converted
               into its according numeric value.
 
+   dst
+       This module matches the parameters in Destination Options header
+
+       [!] --dst-len length
+              Total length of this header in octets.
+
+       --dst-opts type[:length][,type[:length]...]
+              numeric type of option and the length of the option data in octets.
+
    ecn
        This allows you to match the ECN bits of the IPv4/IPv6 and TCP header.  ECN is the  Explicit  Congestion  Notification
        mechanism as specified in RFC3168
@@ -695,6 +587,34 @@ MATCH EXTENSIONS
        This module matches the SPIs in ESP header of IPsec packets.
 
        [!] --espspi spi[:spi]
+
+   eui64
+       This module matches the EUI-64 part of a stateless autoconfigured IPv6 address.  It compares the EUI-64  derived  from
+       the  source MAC address in Ethernet frame with the lower 64 bits of the IPv6 source address. But "Universal/Local" bit
+       is not compared. This module doesn't match other link layer frame, and is only valid in the PREROUTING, INPUT and FOR‐
+       WARD chains.
+
+   frag
+       This module matches the parameters in Fragment header.
+
+       [!] --fragid id[:id]
+              Matches the given Identification or range of it.
+
+       [!] --fraglen length
+              This  option  cannot  be  used with kernel version 2.6.10 or later. The length of Fragment header is static and
+              this option doesn't make sense.
+
+       --fragres
+              Matches if the reserved fields are filled with zero.
+
+       --fragfirst
+              Matches on the first fragment.
+
+       --fragmore
+              Matches if there are more fragments.
+
+       --fraglast
+              Matches if this is the last fragment.
 
    hashlimit
        hashlimit uses hash buckets to express a rate limiting match (like the limit match) for a group of connections using a
@@ -756,6 +676,15 @@ MATCH EXTENSIONS
               "10000 packets per minute for every /28 subnet (groups of 8 addresses) in 10.0.0.0/8" =>  -s  10.0.0.8  --hash‐
               limit-mask 28 --hashlimit-upto 10000/min
 
+   hbh
+       This module matches the parameters in Hop-by-Hop Options header
+
+       [!] --hbh-len length
+              Total length of this header in octets.
+
+       --hbh-opts type[:length][,type[:length]...]
+              numeric type of option and the length of the option data in octets.
+
    helper
        This module matches packets related to a specific conntrack-helper.
 
@@ -767,13 +696,26 @@ MATCH EXTENSIONS
 
               Same rules apply for other conntrack-helpers.
 
-   icmp
-       This extension can be used if `--protocol icmp' is specified. It provides the following option:
+   hl
+       This module matches the Hop Limit field in the IPv6 header.
 
-       [!] --icmp-type {type[/code]|typename}
-              This allows specification of the ICMP type, which can be a numeric ICMP type, type/code pair,  or  one  of  the
-              ICMP type names shown by the command
-               iptables -p icmp -h
+       [!] --hl-eq value
+              Matches if Hop Limit equals value.
+
+       --hl-lt value
+              Matches if Hop Limit is less than value.
+
+       --hl-gt value
+              Matches if Hop Limit is greater than value.
+
+   icmp6
+       This extension can be used if `--protocol ipv6-icmp' or `--protocol icmpv6' is specified. It  provides  the  following
+       option:
+
+       [!] --icmpv6-type type[/code]|typename
+              This  allows specification of the ICMPv6 type, which can be a numeric ICMPv6 type, type and code, or one of the
+              ICMPv6 type names shown by the command
+               ip6tables -p ipv6-icmp -h
 
    iprange
        This matches on a given arbitrary range of IP addresses.
@@ -783,6 +725,33 @@ MATCH EXTENSIONS
 
        [!] --dst-range from[-to]
               Match destination IP in the specified range.
+
+   ipv6header
+       This module matches IPv6 extension headers and/or upper layer header.
+
+       --soft Matches if the packet includes any of the headers specified with --header.
+
+       [!] --header header[,header...]
+              Matches the packet which EXACTLY includes all specified headers. The headers encapsulated with ESP  header  are
+              out of scope.  Possible header types can be:
+
+       hop|hop-by-hop
+              Hop-by-Hop Options header
+
+       dst    Destination Options header
+
+       route  Routing header
+
+       frag   Fragment header
+
+       auth   Authentication header
+
+       esp    Encapsulating Security Payload header
+
+       none   No Next header which matches 59 in the 'Next Header field' of IPv6 header or any IPv6 extension headers
+
+       proto  which  matches  any  upper  layer  protocol  header. A protocol name from /etc/protocols and numeric value also
+              allowed. The number 255 is equivalent to proto.
 
    ipvs
        Match IPVS connection properties.
@@ -811,16 +780,16 @@ MATCH EXTENSIONS
               VIP port of the controlling connection to match, e.g. 21 for FTP
 
    length
-       This  module  matches  the length of the layer-3 payload (e.g. layer-4 packet) of a packet against a specific value or
+       This module matches the length of the layer-3 payload (e.g. layer-4 packet) of a packet against a  specific  value  or
        range of values.
 
        [!] --length length[:length]
 
    limit
-       This module matches at a limited rate using a token bucket filter.  A rule using this extension will match until  this
+       This  module matches at a limited rate using a token bucket filter.  A rule using this extension will match until this
        limit is reached.  It can be used in combination with the LOG target to give limited logging, for example.
 
-       xt_limit  has no negation support - you will have to use -m hashlimit !  --hashlimit rate in this case whilst omitting
+       xt_limit has no negation support - you will have to use -m hashlimit !  --hashlimit rate in this case whilst  omitting
        --hashlimit-mode.
 
        --limit rate[/second|/minute|/hour|/day]
@@ -828,7 +797,7 @@ MATCH EXTENSIONS
               suffix; the default is 3/hour.
 
        --limit-burst number
-              Maximum  initial  number  of packets to match: this number gets recharged by one every time the limit specified
+              Maximum initial number of packets to match: this number gets recharged by one every time  the  limit  specified
               above is not reached, up to this number; the default is 5.
 
    mac
@@ -840,8 +809,16 @@ MATCH EXTENSIONS
        This module matches the netfilter mark field associated with a packet (which can be set using the MARK target below).
 
        [!] --mark value[/mask]
-              Matches  packets  with  the given unsigned mark value (if a mask is specified, this is logically ANDed with the
+              Matches packets with the given unsigned mark value (if a mask is specified, this is logically  ANDed  with  the
               mask before the comparison).
+
+   mh
+       This extension is loaded if `--protocol ipv6-mh' or `--protocol mh' is specified. It provides the following option:
+
+       [!] --mh-type type[:type]
+              This  allows  specification of the Mobility Header(MH) type, which can be a numeric MH type, type or one of the
+              MH type names shown by the command
+               ip6tables -p ipv6-mh -h
 
    multiport
        This module matches a set of source or destination ports.  Up to 15 ports can be specified.  A port range  (port:port)
@@ -886,48 +863,6 @@ MATCH EXTENSIONS
               { pkts = 00000000000000000156, bytes = 00000000000000151786 } = http-traffic;
 
        You can obtain nfacct(8) from http://www.netfilter.org or, alternatively, from the git.netfilter.org repository.
-
-   osf
-       The osf module does passive operating system fingerprinting. This  modules  compares  some  data  (Window  Size,  MSS,
-       options and their order, TTL, DF, and others) from packets with the SYN bit set.
-
-       [!] --genre string
-              Match an operating system genre by using a passive fingerprinting.
-
-       --ttl level
-              Do  additional  TTL  checks on the packet to determine the operating system.  level can be one of the following
-              values:
-
-       ·   0 - True IP address and fingerprint TTL comparison. This generally works for LANs.
-
-       ·   1 - Check if the IP header's TTL is less than the fingerprint one. Works for globally-routable addresses.
-
-       ·   2 - Do not compare the TTL at all.
-
-       --log level
-           Log determined genres into dmesg even if they do not match the desired one.  level can be  one  of  the  following
-           values:
-
-       ·   0 - Log all matched or unknown signatures
-
-       ·   1 - Log only the first one
-
-       ·   2 - Log all known matched signatures
-
-       You may find something like this in syslog:
-
-       Windows  [2000:SP3:Windows  XP  Pro  SP1,  2000  SP3]:  11.22.33.55:4024  -> 11.22.33.44:139 hops=3 Linux [2.5-2.6:] :
-       1.2.3.4:42624 -> 1.2.3.5:22 hops=4
-
-       OS fingerprints are loadable using the nfnl_osf program. To load fingerprints from a file, use:
-
-       nfnl_osf -f /usr/share/xtables/pf.os
-
-       To remove them again,
-
-       nfnl_osf -f /usr/share/xtables/pf.os -d
-
-       The fingerprint database can be downlaoded from http://www.openbsd.org/cgi-bin/cvsweb/src/etc/pf.os .
 
    owner
        This module attempts to match various characteristics of the packet creator, for locally generated packets. This match
@@ -1108,14 +1043,6 @@ MATCH EXTENSIONS
 
        iptables -t mangle -A balance -j CONNMARK --restore-mark
 
-   realm
-       This matches the routing realm.  Routing realms are used in complex routing setups involving dynamic routing protocols
-       like BGP.
-
-       [!] --realm value[/mask]
-              Matches  a  given  realm  number  (and  optionally  mask).  If  not  a  number, value can be a named realm from
-              /etc/iproute2/rt_realms (mask can not be used in that case).
-
    recent
        Allows you to dynamically create a list of IP addresses and then match against that list in a few different ways.
 
@@ -1244,6 +1171,27 @@ MATCH EXTENSIONS
        Example to drop failed packets, without logging:
 
        iptables -t raw -A RPFILTER -m rpfilter --invert -j DROP
+
+   rt
+       Match on IPv6 routing header
+
+       [!] --rt-type type
+              Match the type (numeric).
+
+       [!] --rt-segsleft num[:num]
+              Match the `segments left' field (range).
+
+       [!] --rt-len length
+              Match the length of this header.
+
+       --rt-0-res
+              Match the reserved field, too (type=0)
+
+       --rt-0-addrs addr[,addr...]
+              Match type=0 addresses (list).
+
+       --rt-0-not-strict
+              List of type=0 addresses is not a strict list.
 
    sctp
        [!] --source-port,--sport port[:port]
@@ -1466,18 +1414,6 @@ MATCH EXTENSIONS
               You  can  specify  a  symbolic  name when using the tos match for IPv4. The list of recognized TOS names can be
               obtained by calling iptables with -m tos -h.  Note that this implies a mask of 0x3F, i.e. all but the ECN bits.
 
-   ttl
-       This module matches the time to live field in the IP header.
-
-       [!] --ttl-eq ttl
-              Matches the given TTL value.
-
-       --ttl-gt ttl
-              Matches if TTL is greater than the given TTL value.
-
-       --ttl-lt ttl
-              Matches if TTL is less than the given TTL value.
-
    u32
        U32 tests whether quantities of up to 4 bytes extracted from a packet have specified values. The specification of what
        to extract is general enough to find data at given offsets from tcp headers or payloads.
@@ -1604,15 +1540,11 @@ MATCH EXTENSIONS
               Destination port or port range specification.  See the description of the --destination-port option of the  TCP
               extension for details.
 
-   unclean
-       This  module  takes  no  options,  but attempts to match packets which seem malformed or unusual.  This is regarded as
-       experimental.
-
 TARGET EXTENSIONS
-       iptables can use extended target modules: the following are included in the standard distribution.
+       ip6tables can use extended target modules: the following are included in the standard distribution.
 
    AUDIT
-       This target allows to create audit records for packets hitting the  target.   It  can  be  used  to  record  accepted,
+       This  target  allows  to  create  audit  records  for  packets hitting the target.  It can be used to record accepted,
        dropped, and rejected packets. See auditd(8) for additional details.
 
        --type {accept|drop|reject}
@@ -1630,37 +1562,16 @@ TARGET EXTENSIONS
        This target allows to selectively work around broken/old applications.  It can only be used in the mangle table.
 
        --checksum-fill
-              Compute  and  fill in the checksum in a packet that lacks a checksum.  This is particularly useful, if you need
-              to work around old applications such as dhcp clients, that do not work well with checksum offloads,  but  don't
+              Compute and fill in the checksum in a packet that lacks a checksum.  This is particularly useful, if  you  need
+              to  work  around old applications such as dhcp clients, that do not work well with checksum offloads, but don't
               want to disable checksum offload in your device.
 
    CLASSIFY
        This module allows you to set the skb->priority value (and thus classify the packet into a specific CBQ class).
 
        --set-class major:minor
-              Set  the  major and minor class value. The values are always interpreted as hexadecimal even if no 0x prefix is
+              Set the major and minor class value. The values are always interpreted as hexadecimal even if no 0x  prefix  is
               given.
-
-   CLUSTERIP
-       This module allows you to configure a simple cluster of nodes that share a certain  IP  and  MAC  address  without  an
-       explicit load balancer in front of them.  Connections are statically distributed between the nodes in this cluster.
-
-       --new  Create a new ClusterIP.  You always have to set this on the first rule for a given ClusterIP.
-
-       --hashmode mode
-              Specify the hashing mode.  Has to be one of sourceip, sourceip-sourceport, sourceip-sourceport-destport.
-
-       --clustermac mac
-              Specify the ClusterIP MAC address. Has to be a link-layer multicast address
-
-       --total-nodes num
-              Number of total nodes within this cluster.
-
-       --local-node num
-              Local node number within this cluster.
-
-       --hash-init rnd
-              Specify the random seed used for hash initialization.
 
    CONNMARK
        This module sets the netfilter mark value associated with a connection. The mark is 32 bits wide.
@@ -1749,30 +1660,6 @@ TARGET EXTENSIONS
               Use  the  timeout  policy  identified by name for the connection. This is provides more flexible timeout policy
               definition than global timeout values available at /proc/sys/net/netfilter/nf_conntrack_*_timeout_*.
 
-   DNAT
-       This target is only valid in the nat table, in the PREROUTING and OUTPUT chains, and  user-defined  chains  which  are
-       only  called  from  those chains.  It specifies that the destination address of the packet should be modified (and all
-       future packets in this connection will also be mangled), and rules should cease being examined.  It takes one type  of
-       option:
-
-       --to-destination [ipaddr[-ipaddr]][:port[-port]]
-              which  can  specify  a single new destination IP address, an inclusive range of IP addresses, and optionally, a
-              port range (which is only valid if the rule also specifies -p tcp or -p udp).  If no port range  is  specified,
-              then  the destination port will never be modified. If no IP address is specified then only the destination port
-              will be modified.
-
-              In Kernels up to 2.6.10 you can add several --to-destination options. For those kernels, if  you  specify  more
-              than one destination address, either via an address range or multiple --to-destination options, a simple round-
-              robin (one after another in cycle) load balancing takes place  between  these  addresses.   Later  Kernels  (>=
-              2.6.11-rc1) don't have the ability to NAT to multiple ranges anymore.
-
-       --random
-              If option --random is used then port mapping will be randomized (kernel >= 2.6.22).
-
-       --persistent
-              Gives a client the same source-/destination-address for each connection.  This supersedes the SAME target. Sup‐
-              port for persistent mappings is available from 2.6.29-rc2.
-
    DSCP
        This target allows to alter the value of the DSCP bits within the TOS header of the IPv4 packet.  As this  manipulates
        a packet, it can only be used in the mangle table.
@@ -1783,11 +1670,21 @@ TARGET EXTENSIONS
        --set-dscp-class class
               Set the DSCP field to a DiffServ class.
 
-   ECN
-       This target allows to selectively work around known ECN blackholes.  It can only be used in the mangle table.
+   HL
+       This  is  used  to  modify  the Hop Limit field in IPv6 header. The Hop Limit field is similar to what is known as TTL
+       value in IPv4.  Setting or incrementing the Hop Limit field can potentially be very dangerous, so it should be avoided
+       at any cost. This target is only valid in mangle table.
 
-       --ecn-tcp-remove
-              Remove all ECN bits from the TCP header.  Of course, it can only be used in conjunction with -p tcp.
+       Don't ever set or increment the value on packets that leave your local network!
+
+       --hl-set value
+              Set the Hop Limit to `value'.
+
+       --hl-dec value
+              Decrement the Hop Limit `value' times.
+
+       --hl-inc value
+              Increment the Hop Limit `value' times.
 
    IDLETIMER
        This  target  can be used to identify when interfaces have been idle for a certain period of time.  Timers are identi‐
@@ -1809,10 +1706,10 @@ TARGET EXTENSIONS
 
    LOG
        Turn on kernel logging of matching packets.  When this option is set for a rule, the  Linux  kernel  will  print  some
-       information  on  all matching packets (like most IP header fields) via the kernel log (where it can be read with dmesg
-       or syslogd(8)).  This is a "non-terminating target", i.e. rule traversal continues at the next rule.  So if  you  want
-       to  LOG  the  packets  you refuse, use two separate rules with the same matching criteria, first using target LOG then
-       DROP (or REJECT).
+       information  on all matching packets (like most IPv6 IPv6-header fields) via the kernel log (where it can be read with
+       dmesg or syslogd(8)).  This is a "non-terminating target", i.e. rule traversal continues at the next rule.  So if  you
+       want  to  LOG  the  packets you refuse, use two separate rules with the same matching criteria, first using target LOG
+       then DROP (or REJECT).
 
        --log-level level
               Level of logging (numeric or see syslog.conf(5)).
@@ -1828,7 +1725,7 @@ TARGET EXTENSIONS
               Log options from the TCP packet header.
 
        --log-ip-options
-              Log options from the IP packet header.
+              Log options from the IPv6 packet header.
 
        --log-uid
               Log the userid of the process which generated the packet.
@@ -1857,36 +1754,6 @@ TARGET EXTENSIONS
 
        --xor-mark bits
               Binary XOR the nfmark with bits. (Mnemonic for --set-xmark bits/0.)
-
-   MASQUERADE
-       This target is only valid in the nat table, in the POSTROUTING  chain.   It  should  only  be  used  with  dynamically
-       assigned  IP  (dialup)  connections: if you have a static IP address, you should use the SNAT target.  Masquerading is
-       equivalent to specifying a mapping to the IP address of the interface the packet is going out, but also has the effect
-       that  connections  are  forgotten  when the interface goes down.  This is the correct behavior when the next dialup is
-       unlikely to have the same interface address (and hence any established connections are lost anyway).
-
-       --to-ports port[-port]
-              This specifies a range of source ports to use, overriding the default  SNAT  source  port-selection  heuristics
-              (see above).  This is only valid if the rule also specifies -p tcp or -p udp.
-
-       --random
-              Randomize  source  port  mapping  If  option  --random  is used then port mapping will be randomized (kernel >=
-              2.6.21).
-
-   MIRROR
-       This is an experimental demonstration target which inverts the source and destination fields  in  the  IP  header  and
-       retransmits  the  packet.  It is only valid in the INPUT, FORWARD and PREROUTING chains, and user-defined chains which
-       are only called from those chains.  Note that the outgoing packets are NOT seen by any packet filtering  chains,  con‐
-       nection tracking or NAT, to avoid loops and other problems.
-
-   NETMAP
-       This  target allows you to statically map a whole network of addresses onto another network of addresses.  It can only
-       be used from rules in the nat table.
-
-       --to address[/mask]
-              Network address to map to.  The resulting address will be constructed in the following way: All 'one'  bits  in
-              the mask are filled in from the new `address'.  All bits that are zero in the mask are filled in from the orig‐
-              inal address.
 
    NFLOG
        This target provides logging of matching packets. When this target is set for a rule, the Linux kernel will  pass  the
@@ -1949,48 +1816,19 @@ TARGET EXTENSIONS
        --rateest-ewmalog value
               Rate measurement averaging time constant.
 
-   REDIRECT
-       This  target  is  only  valid in the nat table, in the PREROUTING and OUTPUT chains, and user-defined chains which are
-       only called from those chains.  It redirects the packet to the machine itself by changing the destination  IP  to  the
-       primary address of the incoming interface (locally-generated packets are mapped to the 127.0.0.1 address).
-
-       --to-ports port[-port]
-              This  specifies  a  destination  port  or  range  of  ports to use: without this, the destination port is never
-              altered.  This is only valid if the rule also specifies -p tcp or -p udp.
-
-       --random
-              If option --random is used then port mapping will be randomized (kernel >= 2.6.22).
-
    REJECT
-       This is used to send back an error packet in response to the matched packet: otherwise it is equivalent to DROP so  it
-       is  a  terminating  TARGET, ending rule traversal.  This target is only valid in the INPUT, FORWARD and OUTPUT chains,
-       and user-defined chains which are only called from those chains.  The following option  controls  the  nature  of  the
+       This  is used to send back an error packet in response to the matched packet: otherwise it is equivalent to DROP so it
+       is a terminating TARGET, ending rule traversal.  This target is only valid in the INPUT, FORWARD  and  OUTPUT  chains,
+       and  user-defined  chains  which  are  only called from those chains.  The following option controls the nature of the
        error packet returned:
 
        --reject-with type
-              The  type  given can be icmp-net-unreachable, icmp-host-unreachable, icmp-port-unreachable, icmp-proto-unreach‐
-              able, icmp-net-prohibited, icmp-host-prohibited or icmp-admin-prohibited (*) which return the appropriate  ICMP
-              error  message  (port-unreachable  is the default).  The option tcp-reset can be used on rules which only match
-              the TCP protocol: this causes a TCP RST packet to be sent back.  This  is  mainly  useful  for  blocking  ident
-              (113/tcp)  probes  which  frequently occur when sending mail to broken mail hosts (which won't accept your mail
-              otherwise).
-
-       (*) Using icmp-admin-prohibited with kernels that do not support it will result in a plain DROP instead of REJECT
-
-   SAME
-       Similar to SNAT/DNAT depending on chain: it takes a range of addresses (`--to 1.2.3.4-1.2.3.7') and gives a client the
-       same source-/destination-address for each connection.
-
-       N.B.: The DNAT target's --persistent option replaced the SAME target.
-
-       --to ipaddr[-ipaddr]
-              Addresses to map source to. May be specified more than once for multiple ranges.
-
-       --nodst
-              Don't use the destination-ip in the calculations when selecting the new source-ip
-
-       --random
-              Port mapping will be forcibly randomized to avoid attacks based on port prediction (kernel >= 2.6.21).
+              The type given can be icmp6-no-route, no-route, icmp6-adm-prohibited,  adm-prohibited,  icmp6-addr-unreachable,
+              addr-unreach,  icmp6-port-unreachable  or  port-unreach  which  return  the  appropriate  ICMPv6  error message
+              (port-unreach is the default). Finally, the option tcp-reset can be used on rules which only match the TCP pro‐
+              tocol: this causes a TCP RST packet to be sent back.  This is mainly useful for blocking ident (113/tcp) probes
+              which frequently occur when sending mail to broken  mail  hosts  (which  won't  accept  your  mail  otherwise).
+              tcp-reset can only be used with kernel versions 2.6.14 or later.
 
    SECMARK
        This is used to set the security mark value associated with the packet for use by security subsystems such as SELinux.
@@ -2019,30 +1857,6 @@ TARGET EXTENSIONS
 
        Use of -j SET requires that ipset kernel support is provided, which, for standard kernels, is  the  case  since  Linux
        2.6.39.
-
-   SNAT
-       This  target  is  only  valid in the nat table, in the POSTROUTING chain.  It specifies that the source address of the
-       packet should be modified (and all future packets in this connection will also be mangled),  and  rules  should  cease
-       being examined.  It takes one type of option:
-
-       --to-source [ipaddr[-ipaddr]][:port[-port]]
-              which  can  specify  a single new source IP address, an inclusive range of IP addresses, and optionally, a port
-              range (which is only valid if the rule also specifies -p tcp or -p udp).  If no port range is  specified,  then
-              source  ports  below  512 will be mapped to other ports below 512: those between 512 and 1023 inclusive will be
-              mapped to ports below 1024, and other ports will be mapped to 1024 or above. Where possible, no port alteration
-              will occur.
-
-              In  Kernels  up to 2.6.10, you can add several --to-source options. For those kernels, if you specify more than
-              one source address, either via an address range or multiple --to-source  options,  a  simple  round-robin  (one
-              after  another  in  cycle)  takes  place between these addresses.  Later Kernels (>= 2.6.11-rc1) don't have the
-              ability to NAT to multiple ranges anymore.
-
-       --random
-              If option --random is used then port mapping will be randomized (kernel >= 2.6.21).
-
-       --persistent
-              Gives a client the same source-/destination-address for each connection.  This supersedes the SAME target. Sup‐
-              port for persistent mappings is available from 2.6.29-rc2.
 
    TCPMSS
        This target allows to alter the MSS value of TCP SYN packets, to control the maximum size for that connection (usually
@@ -2155,81 +1969,32 @@ TARGET EXTENSIONS
        for implicit rule at the end of a user defined chain and "policy" for the policy of the built in chains.
        It can only be used in the raw table.
 
-   TTL
-       This is used to modify the IPv4 TTL header field.  The TTL field determines how many hops (routers) a packet can  tra‐
-       verse until it's time to live is exceeded.
-
-       Setting  or  incrementing  the  TTL field can potentially be very dangerous, so it should be avoided at any cost. This
-       target is only valid in mangle table.
-
-       Don't ever set or increment the value on packets that leave your local network!
-
-       --ttl-set value
-              Set the TTL value to `value'.
-
-       --ttl-dec value
-              Decrement the TTL value `value' times.
-
-       --ttl-inc value
-              Increment the TTL value `value' times.
-
-   ULOG
-       This target provides userspace logging of matching packets.  When this target is set for a rule, the Linux kernel will
-       multicast  this  packet through a netlink socket. One or more userspace processes may then subscribe to various multi‐
-       cast groups and receive the packets.  Like LOG, this is a "non-terminating target", i.e. rule traversal  continues  at
-       the next rule.
-
-       --ulog-nlgroup nlgroup
-              This specifies the netlink group (1-32) to which the packet is sent.  Default value is 1.
-
-       --ulog-prefix prefix
-              Prefix log messages with the specified prefix; up to 32 characters long, and useful for distinguishing messages
-              in the logs.
-
-       --ulog-cprange size
-              Number of bytes to be copied to userspace.  A value of 0 always copies the entire  packet,  regardless  of  its
-              size.  Default is 0.
-
-       --ulog-qthreshold size
-              Number  of  packet  to  queue inside kernel.  Setting this value to, e.g. 10 accumulates ten packets inside the
-              kernel and transmits them as one netlink multipart message to userspace.  Default is 1 (for backwards  compati‐
-              bility).
-
 DIAGNOSTICS
-       Various  error  messages  are  printed  to  standard error.  The exit code is 0 for correct functioning.  Errors which
-       appear to be caused by invalid or abused command line parameters cause an exit code of 2, and other  errors  cause  an
+       Various error messages are printed to standard error.  The exit code is  0  for  correct  functioning.   Errors  which
+       appear  to  be  caused by invalid or abused command line parameters cause an exit code of 2, and other errors cause an
        exit code of 1.
 
 BUGS
-       Bugs?  What's this? ;-) Well, you might want to have a look at http://bugzilla.netfilter.org/
+       Bugs?  What's this? ;-) Well... the counters are not reliable on sparc64.
 
 COMPATIBILITY WITH IPCHAINS
-       This  iptables  is very similar to ipchains by Rusty Russell.  The main difference is that the chains INPUT and OUTPUT
-       are only traversed for packets coming into the local host and originating from the  local  host  respectively.   Hence
-       every  packet only passes through one of the three chains (except loopback traffic, which involves both INPUT and OUT‐
+       This ip6tables is very similar to ipchains by Rusty Russell.  The main difference is that the chains INPUT and  OUTPUT
+       are  only  traversed  for  packets coming into the local host and originating from the local host respectively.  Hence
+       every packet only passes through one of the three chains (except loopback traffic, which involves both INPUT and  OUT‐
        PUT chains); previously a forwarded packet would pass through all three.
 
-       The other main difference is that -i refers to the input interface; -o refers to the output interface,  and  both  are
-       available for packets entering the FORWARD chain.
-
-       The various forms of NAT have been separated out; iptables is a pure packet filter when using the default `filter' ta‐
-       ble, with optional extension modules.  This should simplify much of the previous confusion over the combination of  IP
-       masquerading and packet filtering seen previously.  So the following options are handled differently:
-        -j MASQ
-        -M -S
-        -M -L
-       There are several other changes in iptables.
+       The  other  main  difference is that -i refers to the input interface; -o refers to the output interface, and both are
+       available for packets entering the FORWARD chain.  There are several other changes in ip6tables.
 
 SEE ALSO
-       iptables-save(8), iptables-restore(8), ip6tables(8), ip6tables-save(8), ip6tables-restore(8), libipq(3).
+       ip6tables-save(8), ip6tables-restore(8), iptables(8), iptables-save(8), iptables-restore(8), libipq(3).
 
-       The  packet-filtering-HOWTO  details  iptables  usage  for packet filtering, the NAT-HOWTO details NAT, the netfilter-
-       extensions-HOWTO details the extensions that are not in the standard  distribution,  and  the  netfilter-hacking-HOWTO
-       details the netfilter internals.
+       The packet-filtering-HOWTO details iptables usage for packet filtering,  the  netfilter-extensions-HOWTO  details  the
+       extensions that are not in the standard distribution, and the netfilter-hacking-HOWTO details the netfilter internals.
        See http://www.netfilter.org/.
 
 AUTHORS
-       Rusty Russell originally wrote iptables, in early consultation with Michael Neuling.
+       Rusty Russell wrote iptables, in early consultation with Michael Neuling.
 
        Marc  Boucher made Rusty abandon ipnatctl by lobbying for a generic packet selection framework in iptables, then wrote
        the mangle table, the owner match, the mark stuff, and ran around doing cool stuff everywhere.
@@ -2238,14 +2003,16 @@ AUTHORS
 
        Jozsef Kadlecsik wrote the REJECT target.
 
-       Harald Welte wrote the ULOG and NFQUEUE target, the new libiptc, as well as the TTL, DSCP, ECN matches and targets.
+       Harald Welte wrote the ULOG and NFQUEUE target, the new libiptc, as well as TTL match+target and libipulog.
 
        The Netfilter Core Team is: Marc Boucher, Martin Josefsson, Yasuyuki Kozakai, Jozsef Kadlecsik, Patrick McHardy, James
        Morris, Pablo Neira Ayuso, Harald Welte and Rusty Russell.
 
-       Man page originally written by Herve Eychenne <rv@wallfire.org>.
+       ip6tables  man  page  created  by  Andras  Kis-Szabo,  based  on iptables man page written by Herve Eychenne <rv@wall‐
+       fire.org>.
 
 VERSION
-       This manual page applies to iptables @PACKAGE_VERSION@.
+       This manual page applies to ip6tables @PACKAGE_VERSION@.
 
-iptables          iptables-apply    iptables-restore  iptables-save     iptables-xml 
+
+ip6tables          ip6tables-apply    ip6tables-restore  ip6tables-save

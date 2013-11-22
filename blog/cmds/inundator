@@ -1,0 +1,123 @@
+inundator(1)                                       because you're worth it.                                      inundator(1)
+
+
+
+NAME
+       inundator - fills IDS/IPS/WAF logs with false positives to obfuscate an attack.
+
+SYNOPSIS
+       inundator  [-nu]  [-a  user:pass]  [-d  delay]  [-p  server:port]  [-r /path/to/rules] [-s socks version] [-t threads]
+       target(s)
+
+
+DESCRIPTION
+       inundator is a tool used to anonymously inundate intrusion detection logs with false positives  to  obfuscate  a  real
+       attack, leaving the IDS analyst feeling completely inundated.
+
+       The  general  idea  is  one would launch inundator prior to starting an attack, allow it to run during the attack, and
+       continue to run it a while longer after you've accomplished the attack.  The  goal,  of  course,  is  to  generate  an
+       overwhelming  number  of  false  positives  so  that  your  real attack is essentially buried within the other alerts,
+       minimizing the chance of your attack being detected.
+
+       At a high level, inundator achieves this by parsing enough data from  Snort's  rules  files  to  generate  packets  or
+       requests  that  match  each rule. Because Snort rules are typically poorly written and of low quality, we cannot glean
+       enough data from the rules files to construct a real attack; instead, we generate  a  completely  innocent  packet  or
+       request that contains just enough keywords to trigger a false positive. Since we parse rules in a generic way, not all
+       generated attacks will actually trigger an alert. The measured success rate is around 90%, which we  deem  acceptable.
+       Of  course,  the IDS configuration on the target will play a very large part in whether our false attacks are detected
+       or not as well.
+
+       inundator is multithreaded, queue-driven, and supports multiple targets in a variety of standard formats. As the Snort
+       rules  are  parsed,  attacks  are  queued  up  and  organized by dport. Open ports on each target are then detected by
+       performing an nmap scan, and each target as well as a list of its open ports are queued up. A random  target  is  then
+       selected  from  the queue by each worker thread, along with a random open port on that target. A random attack is then
+       selected for the selected port, and the attack is sent via a SOCKS proxy. inundator attempts to use Tor's SOCKS  proxy
+       by default, but you may specify any SOCKS proxy, including those requiring authentication.
+
+
+OPTIONS
+       inundator  follows  the usual GNU command line syntax, with long options starting with two dashes (`-').  A summary of
+       options is included below.
+
+       -a, --auth
+              Authentication credentials for SOCKS proxy in  user:pass  format.  This  is  undefined  by  default,  and  will
+              typically only be used with --proxy.
+
+       -d, --delay
+              Delay  in  microseconds (millionths of a second) after sending an attack. This value is applied per thread, not
+              globally. Because we use Tor by default and Tor is a bit slow, the default delay is set to 0mus. When  using  a
+              much  faster  SOCKS proxy, you may want to set the delay a tad higher and set the number of threads a tad lower
+              to prevent a local denial of service.
+
+       -n, --no-threads
+              Disable thread support. Perl's ithread library will not be loaded, and the script will continue to attack  with
+              only a singular loop. Threads are enabled by default and their use is recommended.
+
+       -p, --proxy
+              Define  the  SOCKS  proxy we use to send attacks in host:port format. The use of a SOCKS proxy is mandatory for
+              rather obvious reasons, and the use of Tor is strongly recommended. We use localhost:9050 by default.
+
+       -r, --rules
+              Location of our Snort rules files. This can be an absolute or  relative  path  to  the  parent  directory.  The
+              default location is /etc/snort/rules/.
+
+       -s, --socks-version
+              Specify which SOCKS version to use (4|5). We default to version 5.
+
+       -t, --threads
+              Number of concurrent threads to spawn. Be careful setting this too high! We default to 25 threads.
+
+       -u, --use-comments
+              By  default,  we ignore commented lines in the Snort rules files. This maximizes the chance our attacks will be
+              detected by the target's intrusion detection mechanisms. However, if you wish to use all rules, including those
+              that are commented out, this switch will enable you to do so.
+
+       --verbose
+              Enable verbose output, becoming extremely chatty. If you're afraid inundator isn't working, enable this switch.
+              Some connection errors are normal; a lot of connection errors means something is wrong. This switch  will  show
+              you how many connections are succeeding and how many are failing.
+
+       --Version
+              Print version information and exit. Please include the output of this command when filing a bug report.
+
+
+TARGETS
+       Single Host
+              You may target a single host, either by ip address or by fully-qualified domain name.
+
+       IP Range
+              You may target a range of ip addresses, e.g. 192.168.0.10-192.168.0.25.
+
+       Subnet You may target an entire subnet in CIDR format, e.g. 192.168.0.0/16.
+
+
+BUGS
+       None  ;)  But if you DO happen to discover a bug, please file a bug report at https://sf.net/tracker/?group_id=332158.
+       Please include the output of --Version with your bug report. This URL may also be used to submit feature requests  and
+       patches.
+
+
+SEE ALSO
+       snort(8), oinkmaster(1).
+
+HISTORY
+       We  thought  this was an original idea. Not the idea of filling logs, but rather the idea of parsing Snort rules files
+       to generate false positives. But apparently tools like Snot, fwsnort's  snortspoof,  and  others  do  similar  things.
+       However,  most  of  these tools are quite dated and inferior, so consider inundator a new and improved twist on an old
+       idea.
+
+
+SECURITY
+       You have none.
+
+
+AVAILABILITY
+       inundator is available in both source tarball and package form from http://inundator.bindshell.nl/.
+
+
+AUTHORS
+       inundator was written by epixoip <epixoip@bindshell.nl> and L10n <lion@bindshell.nl>.
+
+
+
+inundator-0.5                                            29 June 2010                                            inundator(1)

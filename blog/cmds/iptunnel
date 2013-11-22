@@ -1,0 +1,11 @@
+Usage: iptunnel { add | change | del | show } [ NAME ]
+          [ mode { ipip | gre | sit } ] [ remote ADDR ] [ local ADDR ]
+          [ [i|o]seq ] [ [i|o]key KEY ] [ [i|o]csum ]
+          [ ttl TTL ] [ tos TOS ] [ nopmtudisc ] [ dev PHYS_DEV ]
+       iptunnel -V | --version
+
+Where: NAME := STRING
+       ADDR := { IP_ADDRESS | any }
+       TOS  := { NUMBER | inherit }
+       TTL  := { 1..255 | inherit }
+       KEY  := { DOTTED_QUAD | NUMBER }

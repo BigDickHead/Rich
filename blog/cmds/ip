@@ -1,3 +1,7 @@
+IP(8)                                                       Linux                                                       IP(8)
+
+
+
 NAME
        ip - show / manipulate routing, devices, policy routing and tunnels
 
@@ -6,7 +10,7 @@ SYNOPSIS
 
 
        OBJECT := { link | addr | addrlabel | route | rule | neigh | ntable | tunnel | tuntap | maddr | mroute | mrule | moni‐
-	       tor | xfrm | netns | l2tp }
+               tor | xfrm | netns | l2tp }
 
 
        OPTIONS := { -V[ersion] | -s[tatistics] | -r[esolve] | -f[amily] { inet | inet6 | ipx | dnet | link } | -o[neline] }
@@ -14,24 +18,24 @@ SYNOPSIS
 
 OPTIONS
        -V, -Version
-	      print the version of the ip utility and exit.
+              print the version of the ip utility and exit.
 
 
        -s, -stats, -statistics
-	      output more information.	If the option appears twice or more, the amount of information increases.  As a rule,
-	      the information is statistics or some time values.
+              output more information.  If the option appears twice or more, the amount of information increases.  As a rule,
+              the information is statistics or some time values.
 
 
        -l, -loops
-	      Specify maximum number of loops the 'ip addr flush' logic will attempt before giving up.	The default is 10.
-	      Zero (0) means loop until all addresses are removed.
+              Specify maximum number of loops the 'ip addr flush' logic will attempt before giving up.  The default is 10.
+              Zero (0) means loop until all addresses are removed.
 
 
        -f, -family
-	      followed by protocol family identifier: inet, inet6 or link ,enforce the protocol family to use.	If the option
-	      is not present, the protocol family is guessed from other arguments.  If the rest of the command line does not
-	      give enough information to guess the family, ip falls back to the default one, usually inet or any.  link is a
-	      special family identifier meaning that no networking protocol is involved.
+              followed by protocol family identifier: inet, inet6 or link ,enforce the protocol family to use.  If the option
+              is not present, the protocol family is guessed from other arguments.  If the rest of the command line does not
+              give enough information to guess the family, ip falls back to the default one, usually inet or any.  link is a
+              special family identifier meaning that no networking protocol is involved.
 
 
        -4     shortcut for -family inet.
@@ -44,23 +48,23 @@ OPTIONS
 
 
        -o, -oneline
-	      output each record on a single line, replacing line feeds with the '\´ character. This is convenient when you
-	      want to count records with wc(1)
-	       or to grep(1) the output.
+              output each record on a single line, replacing line feeds with the '\´ character. This is convenient when you
+              want to count records with wc(1)
+               or to grep(1) the output.
 
 
        -r, -resolve
-	      use the system's name resolver to print DNS names instead of host addresses.
+              use the system's name resolver to print DNS names instead of host addresses.
 
 
 IP - COMMAND SYNTAX
    OBJECT
        address
-	      - protocol (IP or IPv6) address on a device.
+              - protocol (IP or IPv6) address on a device.
 
 
        addrlabel
-	      - label configuration for protocol address selection.
+              - label configuration for protocol address selection.
 
 
        l2tp   - tunnel ethernet over IP (L2TPv3).
@@ -70,11 +74,11 @@ IP - COMMAND SYNTAX
 
 
        maddress
-	      - multicast address.
+              - multicast address.
 
 
        monitor
-	      - watch for netlink messages.
+              - watch for netlink messages.
 
 
        mroute - multicast routing cache entry.
@@ -84,7 +88,7 @@ IP - COMMAND SYNTAX
 
 
        neighbour
-	      - manage ARP or NDISC cache entries.
+              - manage ARP or NDISC cache entries.
 
 
        netns  - manage network namespaces.
@@ -112,7 +116,7 @@ IP - COMMAND SYNTAX
 
 
    COMMAND
-       Specifies the action to perform on the object.  The set of possible actions depends on the object type.	As a rule, it
+       Specifies the action to perform on the object.  The set of possible actions depends on the object type.  As a rule, it
        is possible to add, delete and show (or list ) objects, but some objects do not allow all of these operations or have
        some additional commands.  The help command is available for all objects.  It prints out a list of available commands
        and argument syntax conventions.
@@ -129,89 +133,14 @@ SEE ALSO
        ip-netns(8), ip-ntable(8), ip-route(8), ip-rule(8), ip-tunnel(8), ip-xfrm(8)
        IP Command reference ip-cref.ps
 
+REPORTING BUGS
+       Report bug to the Network Developers mailing list <netdev@vger.kernel.org> where the development and maintenance is
+       primarily done.  You do not have to be subscribed to the list to send a message there.
 
 
-*****************************************************************************************************************
-Question:
+AUTHOR
+       Original Manpage by Michail Litvak <mci@owl.openwall.com>
 
-Linux Networking routing to virtual ip addresses from a different subnet
-    
 
-New to linux networking, had a question about routing to virtual ip addresses from a different subnet.
 
-I have three servers (they can all ping each other):
-
-    A 10.10.51.182 (connected to router Y)
-    B 10.10.51.183 (connected to router Y)
-    C 10.10.60.10 (connected to router Z)
-
-On server A, I created 1000 virtual interfaces:
-
-# ifconfig eth0:0 192.168.1.1 netmask 255.255.0.0  
-# ifconfig eth0:1 192.168.1.2 netmask 255.255.0.0  
-....  
-# ifconfig eth0:999 192.168.5.200 netmask 255.255.0.0  
-
-Each virtual interface is simulating a camera device, with camera simulation software.
-
-On server B, I added the following route:
-
-# route add -net 192.168.0.0 netmask 255.255.0.0 eth0
-
-And voila, B can access/ping the virtual interfaces of machine A.
-
-Server C that is on a different subnet (10.10.60.0), added this route, but even I had super low hope for it to work:
-
-# route add -net 192.168.0.0 netmask 255.255.0.0 eth0
-
-As expected, I wasn't able to reach the virtual interfaces of server A, so I removed the route and added the following route using gateway ip of router Y:
-
-# route add -net 192.168.0.0 netmask 255.255.0.0 gw 10.10.51.1 eth0
-SIOCADDRT: Network is unreachable
-
-The gateway 10.10.51.1 is pingable by server C, however I think the error message implies that the gw is not directly on the same subnet (10.10.60).
-
-What configuration/route can be configured on server A and/or C for C to ping/access the virtual interfaces of server A. I don't have access to change the configuration of the routers.
-
-Though, if it's absolutely not possible using changing just the configuration of the servers, could someone please explain in networking terms why B can access virtual interfaces of A, but C cannot access them. Does the router Y see packets bound to '192.168.0.0' from C and automatically drop them, whereas when packets originating from the same subnet (B) get allowed?
-linux tcp routing router
-shareimprove this question
-
-*****************************************************************************************************************
-Solution:
-
-Simple solution create a tunnel between the two servers, e.g:
-
-On server A:
-
-ip tunnel add tunnel mode ipip remote 10.10.60.10
-ip addr add 10.1.1.1/24 dev tunnel
-sysctl -w net.ipv4.ip_forward=1
-
-The last command is to forward packets from your newly created tunnel device to your virtual ethernet devices.
-
-On Server C
-
-ip tunnel add tunnel mode ipip remote 10.10.51.182
-ip addr add 10.1.1.2/24 dev tunnel
-ip route add 192.168.0.0/16 via 10.1.1.1
-
-Depending on your firewalls between the servers you may have to adjust some rules.
-
-Explenation: Server A and Server B are on a shared network segment, e.g. they can send packets to each other without the need to send the packets to their gateway. This means Server B just tries directly to resolve the address 192.168.1.1 via ARP and Server A replies to them.
-
-Server A and Server C are on different network segments, e.g. if Server C just asks for 192.168.1.1 (this would be your route command for Server C) it will receive no answer. To solve this problem you generally can specify how you can reach a specific system via routing tables but you can only specify the next hop. As router Z seems to not know about 192.168.0.0/24 you have to create a tunnel between the two systems.
-
-One small additional hint, you don't need to create virtual ethernet devices, you can add an arbitrary number of ip addresses to one network device, e.g:
-
-for first in {1..4} ; do
-   for second in {1..255} ; do
-     ip addr add 192.168.$first.$second/16 dev eth0
-    done
-done
-
-*****************************************************************************************************************
-    
-The only addition to make it all work: ip link set dev tunnel up
-    
-*****************************************************************************************************************
+iproute2                                                 20 Dec 2011                                                    IP(8)

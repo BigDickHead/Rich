@@ -1,0 +1,64 @@
+jconsole(1)                                                                                                       jconsole(1)
+
+
+
+NAME
+       jconsole - Java Monitoring and Management Console
+
+SYNOPSIS
+       jconsole [ options ] [ connection ... ]
+
+
+
+PARAMETERS
+          options
+             Options, if used, should follow immediately after the command name.
+
+          connection = pid | host:port | jmxUrl
+             pid     Process  ID of a local Java VM. The Java VM must be running with the same user ID as the user ID running
+             jconsole. See JMX Monitoring and Management for details.
+             host:port   Name of the host system on which the Java VM is running and the port number specified by the  system
+             property  com.sun.management.jmxremote.port  when the Java VM was started. See JMX Monitoring and Management for
+             details.
+             jmxUrl   Address of the JMX agent to be connected to as described in JMXServiceURL.
+
+
+DESCRIPTION
+       The jconsole command launches a graphical console tool that enables you to monitor and manage  Java  applications  and
+       virtual machines on a local or remote machine.
+
+       On  Windows,  jconsole  does  not  associate  with a console window. It will, however, display a dialog box with error
+       information if the jconsole command fails for some reason.
+
+OPTIONS
+          -interval=n
+             Set the update interval to n seconds (default is 4 seconds).
+
+          -notile
+             Do not tile windows initially (for two or more connections).
+
+          -pluginpath  plugins
+             Specify a list of directories or JAR files which are searched for JConsole plugins. The plugins path should con‐
+             tain a provider-configuration file named:
+                META-INF/services/com.sun.tools.jconsole.JConsolePlugin
+
+          containing  one  line  for  each  plugin  specifying  the  fully qualified class name of the class implementing the
+          com.sun.tools.jconsole.JConsolePlugin class.
+
+          -version
+             Output version information and exit.
+
+          -help
+             Output help message and exit.
+
+          -J<flag>
+             Pass <flag> to the Java virtual machine on which jconsole is run.
+
+
+SEE ALSO
+          o Using JConsole
+
+          o Monitoring and Management for Java Platform
+
+
+                                                         07 Aug 2006                                              jconsole(1)

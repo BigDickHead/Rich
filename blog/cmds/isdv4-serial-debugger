@@ -1,0 +1,7 @@
+Usage: wacom-serial-debugger [options] device
+Options:
+ -h, --help                 - usage
+ -v, --verbose              - verbose output
+ -V, --version              - version info
+ -b, --baudrate baudrate    - set baudrate
+ --reset                    - send reset command before doing anything

@@ -1,3 +1,6 @@
+IPCMK(1)                                                User Commands                                                IPCMK(1)
+
+
 
 NAME
        ipcmk - create various ipc resources
@@ -7,8 +10,7 @@ SYNOPSIS
        ipcmk [-M size] [-S nsems] [-Q] [-p mode]
 
 DESCRIPTION
-       ipcmk  allows  you  to create shared memory segments, message queues or semaphore
-       arrays.
+       ipcmk allows you to create shared memory segments, message queues or semaphore arrays.
 
 OPTIONS
        Resources may be specified as follows:
@@ -30,4 +32,14 @@ OPTIONS
 
 SEE ALSO
        ipcrm(1), ipcs(1)
-vim:ft=man:
+
+AUTHOR
+       Hayden A. James (hayden.james@gmail.com)
+
+AVAILABILITY
+       The  ipcmk  command is part of the util-linux package and is available from ftp://ftp.kernel.org/pub/linux/utils/util-
+       linux/.
+
+
+
+util-linux                                                March 2008                                                 IPCMK(1)

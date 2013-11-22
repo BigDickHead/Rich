@@ -1,0 +1,4 @@
+Trying to directly write 0xa0800000...Segv - GOOD
+Trying to write 0xa0800000 via read...Returned EFAULT - GOOD
+Trying to open /dev/mem...Didn't fail with EPERM (fd = -1, errno = 13) - BAD!
+Trying to open /dev/kmem...Didn't fail with EPERM (fd = -1, errno = 2) - BAD!

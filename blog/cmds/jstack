@@ -1,0 +1,78 @@
+jstack(1)                                                                                                           jstack(1)
+
+
+
+NAME
+       jstack - Stack Trace
+
+
+SYNOPSIS
+       jstack [ option ] pid
+       jstack [ option ] executable core
+       jstack [ option ] [server-id@]remote-hostname-or-IP
+
+
+PARAMETERS
+       Options are mutually exclusive. Option, if used, should follow immediately after the command name. See OPTIONS.
+
+          pid
+             process id for which the stack trace is to be printed. The process must be a Java process. To get a list of Java
+             processes running on a machine, jps may be used.
+
+
+          executable
+             Java executable from which the core dump was produced.
+
+          core
+             core file for which the stack trace is to be printed.
+
+          remote-hostname-or-IP
+             remote debug server's (see jsadebugd) hostname or IP address.
+
+          server-id
+             optional unique id, if multiple debug servers are running on the same remote host.
+
+
+DESCRIPTION
+       jstack prints Java stack traces of Java threads for a given Java process or core file or a remote  debug  server.  For
+       each Java frame, the full class name, method name, 'bci' (byte code index) and line number, if available, are printed.
+       With the -m option, jstack prints both Java and native frames of all threads along with the  'pc'  (program  counter).
+       For  each  native frame, the closest native symbol to 'pc', if available, is printed. C++ mangled names are not deman‐
+       gled. To demangle C++ names, the output of this command may be piped to c++filt. If the given process is running on  a
+       64-bit VM, you may need to specify the -J-d64 option, e.g.:
+
+
+          jstack -J-d64 -m pid
+
+
+       NOTE  -  This  utility  is unsupported and may or may not be available in future versions of the JDK. The only form of
+       jstack that is available on Windows platforms is
+
+           jstack pid
+
+
+OPTIONS
+          -F Forces a stack dump when 'jstack pid' does not respond.
+
+          -m prints mixed mode (both Java and native C/C++ frames) stack trace.
+
+          -h prints a help message.
+
+          -help
+             prints a help message
+
+
+SEE ALSO
+          o pstack(1)
+
+          o c++filt(1)
+
+          o jps
+
+          o jsadebugd
+
+
+KNOWN BUGS
+       Mixed mode stack trace, the -m option, does not work with the remote debug server.
+
+                                                         07 Aug 2006                                                jstack(1)
