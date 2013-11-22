@@ -1,0 +1,12 @@
+DFKAA - Devices Formerly Known As Ascend
+FX <fx@phenoelit.de> - http://www.phenoelit.de/
+$Revision: 1.22 $ - IRPAS Build XXXIX
+(c) 2001++
+
+
+dfkaa [-p <enum ping timeout>] [-v] [-c] [-f]
+    [-P <password>] [-N <new name>] [-I <new ip>] [-M <new netmask>]
+    <destination>
+
+    If timeout is >0, pings are used to enum
+    If timeout is 0, every host is probed

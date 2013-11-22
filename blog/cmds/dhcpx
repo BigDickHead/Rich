@@ -1,0 +1,10 @@
+DHCP IP 耗尽工具
+
+dhcpx [-v[v[v]]] -i <interface> [-A] 
+	[-D <dhcp server ip>]
+	[-t <discovery time in secs>]
+	[-u <ARP time in secs>]
+
+
+
+dhcpx向DHCP服务器发送了大量DISCOVER消息来激活服务器的大量的OFFER消息。dhcpx工具在每个DISCOVER消息中应用随机的源MAC地址，DHCP服务器会对那些MAC地址做出响应。

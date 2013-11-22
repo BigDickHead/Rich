@@ -1,0 +1,97 @@
+dns2tcpc(1)                                                                                                       dns2tcpc(1)
+
+
+
+NAME
+       dns2tcpc - A tunneling tool that encapsulate TCP traffic over DNS.
+
+
+SYNOPSIS
+       dns2tcpc  [  -h ] [ -c ] [ -z domain zone ] [ -d debug_level ] [ -r resource ] [ -k key ] [ -f config_file ] [ -e com‐
+       mand ] [ -T request type ] [ -l local_port ] [ server ]
+
+
+DESCRIPTION
+       dns2tcpc is a network tool used to encapsulate TCP communications in DNS. When connections are received on a  specific
+       port all TCP traffic is sent to the remote dns2tcpd server and forwarded to a specific host and port. Multiple connec‐
+       tions are supported.
+
+       dns2tcpc was written for demonstration purposes.
+
+OPTIONS
+       -h     Help Menu
+
+       -c     Enable DNS compression. When used, be sure that all relay and DNS server support compression and really use it.
+
+       -z domain zone
+              Use this domain as endpoint.
+
+       -d debug level
+              Change debug level. Levels available are 1, 2 or 3.
+
+       -r resource
+              Remote resource to access.
+
+       -k key Pre shared key used for authentication (identification).
+
+       -f config file
+              Configuration file to use.
+
+       -T request type
+              Request type to use. Actually only KEY and TXT requests are supported.
+
+       -e command
+              Command to execute, I/O are redirected in the tunnel.
+
+       -l local_port
+              Local port accepting incomming connections (or - for stdin on UNIX systems).
+
+       -t connection timeout
+              Maximum DNS server's answer delay in seconds. A valid delay is between 1 and 240 seconds. Default is 3.
+
+       server DNS server to use. The first entry in resolv.conf file will be choosen if the server is not specified.
+
+
+CONFIGURATION FILES
+       By default ${HOME}/.dns2tcprc is used if no configuration file is specified. Here is an example :
+
+              domain = dns2tcp.hsc.fr
+              resource = ssltunnel
+              local_port = 4430
+              enable_compression = 0
+              debug_level = 1
+              key = mykey
+              # DNS to use
+              server = ns.hsc.fr
+
+
+EXAMPLES
+       dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns
+
+              Ask the dns2tcp server to list available resources.
+
+       ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey mydns' myserver
+
+              Use dns2tcp as a proxy command with ssh. We try to connect to the ssh resource with the key 'mykey' and the DNS
+              mydns.
+
+       dns2tcpc -r socat-resource -e '/bin/bash -i' -k mykey -z dns2tcp.hsc.fr mydns
+
+              Use dns2tcp as a reverse shell, the remote shell will appear on the socat-resource.
+
+       dns2tcpc -d 1 -f /dev/null -r ssl-tunnel -l 2000 -k mykey  -T KEY -z dns2tcp.hsc.fr mydns
+
+              Do  not use the default configuration file, bind local port 2000 and forward all the traffic on the remote ssl-
+              tunnel resource, use the first debug level. Use KEY type DNS requests.
+
+AUTHORS
+       Olivier Dembour <olivier.dembour@hsc.fr>
+
+
+SEE ALSO
+       ssltunnel
+
+
+
+
+                                                                                                                  dns2tcpc(1)

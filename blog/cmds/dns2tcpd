@@ -1,0 +1,67 @@
+dns2tcpd(1)                                                                                                       dns2tcpd(1)
+
+
+
+NAME
+       dns2tcpd - A tunneling tool that encapsulate TCP traffic over DNS.
+
+
+SYNOPSIS
+       dns2tcpd [ -h ] [ -F ] [ -i address ] [ -f config_file ] [ -p pidfile ] [ -d debug_level ]
+
+
+DESCRIPTION
+       dns2tcp  is  a network tool used to encapsulate TCP communications in DNS. When connections are received on a specific
+       port all TCP traffic is sent to the remote dns2tcpd server and forwarded to a specific host and port. Multiple connec‐
+       tions are supported.
+
+
+       It was written for demonstration purposes
+
+
+OPTIONS
+       -h     Help Menu
+
+       -F     Run in foreground
+
+       -i IP address
+              IP address to bind (default 0.0.0.0)
+
+       -f config file
+              Configuration file to use
+
+       -p pidfile
+              File where our pid will be written
+
+       -d debug level
+              Change debug level. Levels available are 1, 2 or 3.
+
+
+CONFIGURATION FILES
+       By  default  ${HOME}/.dns2tcprcd  is  used  if  no  configuration file is specified. The resource syntax is <resource-
+       name>:<server>:<port>. Multiple resources can be defined in multilines, but must be comma separated.
+
+       Here is an example :
+
+              listen = 127.0.0.1
+              port = 53
+              user = nobody
+              chroot = /tmp
+              pid_file = /var/run/dns2tcp.pid
+              domain = dns2tcp.hsc.fr
+              debug_level = 0
+              resources = ssh:127.0.0.1:22 , smtp:127.0.0.1:25,
+                           pop3:10.0.0.1:110
+
+
+AUTHORS
+       Olivier Dembour <olivier.dembour@hsc.fr>
+
+
+SEE ALSO
+       ssltunnel
+
+
+
+
+                                                                                                                  dns2tcpd(1)

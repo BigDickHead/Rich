@@ -1,0 +1,24 @@
+DIAL_TONE(1)                                            User Commands                                            DIAL_TONE(1)
+
+
+
+NAME
+       dial_tone - dial tone example
+
+DESCRIPTION
+       GnuRadio Dial Tone example
+
+OPTIONS
+       None
+
+       Play a Dial Tone on the sound card output device.
+
+SEE ALSO
+       The  c++  gnuradio  example  programs  are  in /usr/bin. There are also many Python and GnuRadio Companion examples in
+       /usr/share/gnuradio/examples/...
+
+       tags_demo(1) fcd_nfm_rx(1) uhd_rx_cfile(1) uhd_rx_nogui(1) uhd_siggen(1) uhd_siggen_gui(1)
+
+
+
+DIAL_TONE 3.6.0                                            May 2012                                              DIAL_TONE(1)

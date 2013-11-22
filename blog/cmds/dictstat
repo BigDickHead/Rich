@@ -1,0 +1,12 @@
+Usage: dictstat [options] passwords.txt
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -l 8, --length=8      Password length filter.
+  -c loweralpha, --charset=loweralpha
+                        Password charset filter.
+  -m stringdigit, --mask=stringdigit
+                        Password mask filter
+  -o masks.csv, --maskoutput=masks.csv
+                        Save masks to a file

@@ -1,0 +1,52 @@
+Usage: dnschef.py [options]:
+          _                _          __  
+         | | version 0.1  | |        / _| 
+       __| |_ __  ___  ___| |__   ___| |_ 
+      / _` | '_ \/ __|/ __| '_ \ / _ \  _|
+     | (_| | | | \__ \ (__| | | |  __/ |  
+      \__,_|_| |_|___/\___|_| |_|\___|_|  
+                   iphelix@thesprawl.org  
+
+
+DNSChef is a highly configurable DNS Proxy for Penetration Testers and Malware
+Analysts. It is capable of fine configuration of which DNS replies to modify
+or to simply proxy with real responses. In order to take advantage of the tool
+you must either manually configure or poison DNS server entry to point to
+DNSChef. The tool requires root privileges to run.
+
+Options:
+  -h, --help            show this help message and exit
+  --fakeip=192.168.1.100
+                        IP address to use for matching DNS queries. If you use
+                        this parameter without specifying domain names, then
+                        all queries will be spoofed. Consider using --file
+                        argument if you need to define more than one IP
+                        address.
+  --fakedomains=thesprawl.org,google.com
+                        A comma separated list of domain names which will be
+                        resolved to a FAKE value specified in the --ip
+                        parameter. All other domain names will be resolved to
+                        their true values.
+  --truedomains=thesprawl.org,google.com
+                        A comma separated list of domain names which will be
+                        resolved to their TRUE values. All other domain names
+                        will be resolved to a fake value specified in the --ip
+                        parameter.
+  --nameservers=4.2.2.1,4.2.2.2
+                        A comma separated list of alternative DNS servers to
+                        use with proxied requests. A randomly selected server
+                        from the list will be used for proxy requests. By
+                        default, the tool uses Google's public DNS server
+                        8.8.8.8.
+  --file=FILE           Specify a file containing a list of DOMAIN=IP pairs
+                        (one pair per line) used for DNS responses. For
+                        example: google.com=1.1.1.1 will force all queries to
+                        'google.com' to be resolved to '1.1.1.1'. You can be
+                        even more specific by combining --file with other
+                        arguments. However, data obtained from the file will
+                        take precedence over others.
+  --interface=0.0.0.0   Define an interface to use for the DNS listener. For
+                        example, use 127.0.0.1 to listen for only requests
+                        coming from a loopback device.
+  --tcp                 Use TCP DNS proxy instead of the default UDP.
+  -q, --quiet           Don't show headers.

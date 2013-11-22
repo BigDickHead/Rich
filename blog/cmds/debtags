@@ -1,0 +1,47 @@
+Usage: debtags [options] <command> [options and arguments]
+
+Description: Command line interface to access and manipulate Debian Package Tags
+
+Commands are:
+
+ help       print help information.
+ cat        output the full package tag database.
+ check      check that all the tags in the given tagged collection are present
+            in the tag vocabulary.  Checks the main database if no file is
+            specified.
+ diff       create a tag patch between the current tag database and the tag
+            collection [filename].  Standard input is used if filename is not
+            specified.  May also be invoked as mkpatch.
+ dumpavail  output the full package database.
+ grep       output the lines of the full package tag database that match the
+            given tag expression. A tag expression (given as a single argument)
+            is an arbitrarily complex binary expression of tag names. For
+            example: role::program && ((use::editing || use::viewing) &&
+            !works-with::text).
+ search     output the names and descriptions of the packages that match the
+            given tag expression.
+ show       show informations about a package, like apt-cache show does, but
+            adding the tag informations from the debtags index.
+ submit     upload the given patch file to the central tag repository. If
+            [patch] is omitted, mail the local tag modifications (uses
+            debtags-submit-patch).
+ tag        view and edit the tags for a package.
+ tagcat     output the tag vocabulary.
+ tagshow    show the vocabulary informations about a tag.
+ tagsearch  show a summary of all tags whose data contains the given strings.
+ update     updates the package tag database (requires root).
+ vocfilter  filter out the tags that are not found in the given vocabulary file.
+
+Options are:
+
+Help options:
+
+ -h, -?, --help     print commandline help and exit
+ --version          print the program version and exit
+ --manpage=[hooks]  output the debtags manpage and exit
+
+Other options:
+
+ -v, --verbose      enable verbose output
+ --debug            enable debugging output (including verbose output)
+

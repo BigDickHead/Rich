@@ -1,0 +1,19 @@
+ Dnmap
+
+ 想象下如果你的网络非常庞大，使用单主机nmap进行扫描实在是一件费时费力的事。遇到这种情况，元芳，你怎么看？Dnmap就为解决此问题而生，是一款nmap的分布式实现。
+
+ Dnmap的总体使用过程如下：
+
+ 1.建立一个commands.txt文件，文件内容为你需要执行的命令。
+ 2.执行dnmap server并且把commands.txt作为参数
+ 3.使用client端连接server。确保server与client的连通性。
+
+
+usage: /usr/bin/dnmap_client <options>
+options:
+  -s, --server-ip        IP address of dnmap server.
+  -p, --server-port      Port of dnmap server. Dnmap port defaults to 46001
+  -a, --alias      Your name alias so we can give credit to you for your help. Optional
+  -d, --debug      Debuging.
+  -m, --max-rate      Force nmaps commands to use at most this rate. Useful to slow nmap down. Adds the --max-rate parameter.
+

@@ -1,0 +1,10 @@
+Usage:  dump_fmap [-x] [-p|-f|-h] FLASHIMAGE [NAME...]
+
+Display (and extract with -x) the FMAP components from a BIOS image.
+The -p option makes the output easier to parse by scripts.
+The -f option emits the FMAP in the format used by flashrom.
+
+Specify one or more NAMEs to only print sections that exactly match.
+
+The -h option shows the whole FMAP in human-readable form.
+  Use -H to also display any gaps.

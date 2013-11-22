@@ -1,0 +1,23 @@
+Usage:  dev_make_keypair BASENAME [ALG]
+
+This creates BASENAME.vbpubk and BASENAME.vbprivk pairs for use in signing
+developer files. This also creates a BASENAME.keyblock file containing the
+BASENAME.vbpubk, which can be used to sign a developer kernel.
+
+If specified, ALG is one of:
+
+  0    =  RSA1024 with SHA1
+  1    =  RSA1024 with SHA256
+  2    =  RSA1024 with SHA512
+  3    =  RSA2048 with SHA1
+  4    =  RSA2048 with SHA256
+  5    =  RSA2048 with SHA512
+  6    =  RSA4096 with SHA1
+  7    =  RSA4096 with SHA256
+  8    =  RSA4096 with SHA512
+  9    =  RSA8192 with SHA1
+  10   =  RSA8192 with SHA256
+  11   =  RSA8192 with SHA512
+
+If ALG is not specified, a default value will be used.
+

@@ -1,0 +1,43 @@
+DUMPSEXP(1)                                             User Commands                                             DUMPSEXP(1)
+
+
+
+NAME
+       dumpsexp - Debug tool for S-expressions
+
+SYNOPSIS
+       dumpsexp [OPTIONS] [file]
+
+DESCRIPTION
+       dumpsexp  (Libgcrypt)  1.3.1  Copyright  (C) 2007 Free Software Foundation, Inc.  License GPLv2+: GNU GPL version 2 or
+       later <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html> This is free software: you are free to change and redis‐
+       tribute it.  There is NO WARRANTY, to the extent permitted by law.
+
+       Debug tool for S-expressions
+
+       --decimal
+              Print offsets using decimal notation
+
+       --assume-hex
+              Assume input is a hex dump
+
+       --verbose
+              Show what we are doing
+
+       --version
+              Print version of the program and exit
+
+       --help Display this help and exit
+
+REPORTING BUGS
+       Report bugs to <bug-libgcrypt@gnupg.org>.
+
+COPYRIGHT
+       Copyright   ©   2007   Free   Software   Foundation,   Inc.    License   GPLv2+:   GNU   GPL   version   2   or  later
+       <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent  permitted  by
+       law.
+
+
+
+dumpsexp (Libgcrypt) 1.3.1                               October 2007                                             DUMPSEXP(1)

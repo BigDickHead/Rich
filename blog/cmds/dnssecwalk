@@ -1,0 +1,12 @@
+dnssecwalk v1.2 (c) 2013 by Marc Heuse <mh@mh-sec.de> http://www.mh-sec.de
+
+Syntax: dnssecwalk [-e46] dns-server domain
+
+Options:
+ -e  ensure that the domain is present in found addresses, quit otherwise
+ -4  resolve found entries to IPv4 addresses
+ -6  resolve found entries to IPv6 addresses
+
+Perform DNSSEC NSEC walking.
+
+Example: dnssecwalk dns.test.com test.com

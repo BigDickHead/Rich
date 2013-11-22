@@ -1,0 +1,8 @@
+denial6 v2.3 (c) 2013 by van Hauser / THC <vh@thc.org> www.thc.org
+
+Syntax: denial6 interface destination test-case-number
+
+Performs various denial of service attacks on a target
+If a system is vulnerable, it can crash or be under heavy load, so be careful!
+If not test-case-number is supplied, the list of shown.
+

@@ -1,0 +1,18 @@
+This program is used to sign and verify developer-mode files
+
+Usage:  dev_sign_file --sign <file> [PARAMETERS]
+
+  Required parameters:
+    --keyblock <file>         Key block in .keyblock format
+    --signprivate <file>      Private key to sign file data, in .vbprivk format
+    --vblock <file>           Output signature in .vblock format
+
+OR
+
+Usage:  dev_sign_file --verify <file> [PARAMETERS]
+
+  Required parameters:
+    --vblock <file>           Signature file in .vblock format
+
+  Optional parameters:
+    --keyblock <file>         Extract .keyblock to file if verification succeeds
