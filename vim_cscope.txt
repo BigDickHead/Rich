@@ -8,11 +8,14 @@ libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
 libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev ruby-dev mercurial
 
 # Install lua from binaries (these are out-of-date but at least they worked).
-sudo apt-get install lua50 liblua50-dev liblualib50-dev
+sudo apt-get install lua5.2 liblua5.2-dev
 
 hg clone https://vim.googlecode.com/hg/ vim
 
 ./configure --prefix=/usr --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-perlinterp=yes --enable-rubyinterp=yes --enable-luainterp=yes --with-lua-prefix=/usr/local --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config/ --enable-tclinterp=yes --enable-gpm --enable-gui=gtk2 
+
+# If the process of configuration cannot find out the lua.h
+ln -s /usr/include/lua5.2/ /usr/local/include/
 
 ------------------------------------------------------------------------------------------------------
 gvim最大化
