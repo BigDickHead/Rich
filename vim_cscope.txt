@@ -1,26 +1,28 @@
- vim 编译 cscope
+# Remove old vims
+sudo apt-get remove vim vim-runtime gvim
+sudo apt-get remove vim-tiny vim-common vim-gui-common
 
-apt-get install python-dev
-apt-get install libgtk2.0-dev
+# Download and build a new vim
+sudo apt-get install libncurses5-dev libgnome2-dev libgnomeui-dev \
+libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
+libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev ruby-dev mercurial
 
-./configure --prefix=/usr --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-perlinterp=yes --enable-rubyinterp=yes --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config/ --enable-tclinterp=yes --enable-gpm --enable-gui=gtk2 
+# Install lua from binaries (these are out-of-date but at least they worked).
+sudo apt-get install lua50 liblua50-dev liblualib50-dev
 
-powerline
+hg clone https://vim.googlecode.com/hg/ vim
+
+./configure --prefix=/usr --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-perlinterp=yes --enable-rubyinterp=yes --enable-luainterp=yes --with-lua-prefix=/usr/local --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config/ --enable-tclinterp=yes --enable-gpm --enable-gui=gtk2 
 
 ------------------------------------------------------------------------------------------------------
 gvim最大化
 apt-get install wmctrl
 
-在 ~/.vimrc 中加上：
-" 最大化窗口
-function Maximize_Window()
-  silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
-  endfunction
-
-在 ~/.bashrc 中加上：
-alias gvim='gvim -c "call Maximize_Window()"'
-
-gvim -c "call Maximize_Window()"   
+" Fullscreen mode for GVIM and Terminal, need 'wmctrl' in you PATH
+if executable('wmctrl')
+    map <silent> <F11> :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
+    map <silent> <C-F11> :call system("wmctrl -ir " . v:windowid . " -b toggle,maximized_vert,maximized_horz")<CR>
+endif
 ------------------------------------------------------------------------------------------------------
 
 当 前目录有main.c，其中调用了cstest.c中的print()，此函数在cstest.h中进行了声明。
