@@ -802,4 +802,524 @@ NOTES
 
 
 
-Git 1.7.10.4                                              11/24/2012                                                   GIT(1)
+3. Set up your Git repository
+
+The first step to using Git with Wine is to set up a local Git repository.
+
+3.1. Downloading and installing Git
+
+It's recommended to install git via your distribution's package manager.
+
+warning: Older versions of Git will not work. You need version 1.4.1 or higher (which was released in July 2006). Old distributions may provide a more recent package as a back port.
+
+If you want to install from source, you can download the latest version of Git from http://www.kernel.org/pub/software/scm/git/ . It installs into ~/bin by default. Building and running Git now requires libcurl and curl to be installed. Debian users can apt-get libcurl3-dev and curl.
+
+warning: It is recommended to use a libcurl version ≥ 7.16 as older versions may contain a bug that will cause git to hang.
+
+3.2. Cloning the Wine Git repository
+
+Checking out from the WineHQ Git repository:
+
+git clone git://source.winehq.org/git/wine.git ~/wine-git
+cd ~/wine-git
+
+For older versions of git, or if you are stuck behind a firewall with an uncooperative proxy, you may need to replace git: with http:.
+
+This should leave you with a checked out Wine Git repository in the directory wine-git, which you can then build. The clone takes around 30 minutes for me on an ADSL connection, and transfers around 175MB of data, the size of the complete WineHQ repository.
+
+If all goes well, the output of git config remote.origin.url should be:
+
+$ git config remote.origin.url
+git://source.winehq.org/git/wine.git
+
+and you will have a single branch named "master", which can be revealed by running git branch.
+
+3.3. Further configuration
+
+If you plan on sharing or committing any patches at all, you should set your name and email address using:
+
+git config --global user.name "Your Name"
+git config --global user.email "me@example.com"
+
+A useful feature of git is its ability to color the output of various commands (diff, status, branch, etc). To enable colors in all commands that support it, when running them from a terminal:
+
+git config --global color.ui auto
+
+Particularly useful is the colored output of the git diff command, as it also highlights trailing whitespace in patches.
+
+Most mail agents now automatically convert patches to mime-type x-diff, however this makes it impossible to quickly read or apply a patch from the wine-patches archive. The trick to work around this is setting the patch extension to .txt with the following command:
+
+git config --global format.suffix .txt
+
+4. Glossary
+
+See also the official Git glossary.
+
+    A blob is a git technical term meaning "file" (sort of).
+
+    A commit (or changeset, or revision) is a snapshot of a codebase. Each commit has a name -- its commit id -- which is a SHA1 hash. Commits can have other names (tags, etc). See the "Specifying revisions" section of the git rev-parse page for details on how refer to commits. The verb to commit means to create a commit.
+
+    A diff (or patch) is a file describing the differences between two sets of files. They are created with the diff -u, git diff or git format-patch commands. If you have code in the "before" state, you can apply the patch (with patch, git apply or git am) and you end up with code in the "after" state.
+
+    The HEAD (or tip) of a branch is the most recent commit. On its own, HEAD means the tip of the current branch.
+
+    master is the main branch. SVN/CVS calls this "trunk".
+
+    The parent of a commit is the one before it in the history. (Commits can technically have more than one parent, but the Wine repo avoids using this feature, preferring a linear history.) Given a commit X, its parent is referred to as X^, and its great-grandparent is referred to as X^^^ or X~3.
+
+    A repository (or repo) is a database storing the source code of every available version of a program, and the author of every change.
+
+    A tree is a git technical term meaning "directory" (sort of), and sometimes means the whole codebase of a project ("the Wine tree").
+
+    The working copy or working tree refers to the files and directories on your file system, the ones you can see and change with the file manager. The git status command will refer to changes to these files as "Changed but not updated". 
+
+5. Managing your changes - the simple way
+
+5.1. Commiting a patch into your local tree
+
+After editing the checked out tree, you can use git status to see which files have changed:
+
+git status
+
+Or you can examine the difference by using git diff:
+
+git diff
+
+To then commit all changed files to your local tree, use the git commit command with the -a option:
+
+git commit -a
+
+If you only wish to commit some files, use:
+
+git commit file1 file2...
+
+or:
+
+git add file1 file2...
+git commit
+
+You can get a list of all the commits in the tree using git whatchanged or git log:
+
+git whatchanged     # list of commits, which shows what files were altered
+git log             # list of commits
+git log --stat      # list of commits, with diffstats
+git log --stat -p   # list of commits, with diffstats and patches
+
+5.2. Commit early, commit often
+
+Your local git tree is yours. You should feel free to commit patches frequently, as it's not until you mail them in that they have a chance of being committed.
+
+5.3. Reverting changes in your working copy
+
+If you have edited some files, but decided you don't like the changes you've made and want to undo all the changes that you've made to your working copy, you can use git checkout:
+
+git checkout -f             # revert everything
+git checkout file-name      # revert one file
+
+Alternatively, use git reset:
+
+git reset --hard HEAD       # revert everything
+
+5.4. Undoing commits
+
+If you want to undo your most recent commit, you can use the git reset command:
+
+git reset HEAD^          # undo commit, but keep changes to working files
+git reset --hard HEAD^   # undo commit, and reset working files as well
+git reset --hard HEAD~5  # undo 5 commits
+git reset --hard origin  # scrap all changes and start all over again
+
+5.5. Editing commits
+
+To edit the most recent commit:
+
+vi file.c                        # edit the file
+git commit --amend file.c        # redo the commit
+
+To edit earlier commits (or reorder or delete them) use the -i (aka --interactive) option to git rebase. So if you are interested in altering the 5 most recent commits use:
+
+git rebase --interactive HEAD~5
+
+This will open your editor, with a list of commits prefixed with pick. To delete a commit, just remove its line. To reorder them, just rearrange the lines. To edit commits, change pick to edit.
+
+Be sure to follow the instructions carefully when doing git-rebase -i. Specifically, when you are editing a commit (that you explicitly requested to edit) and are satisfied with the changes, you must use:
+
+git add file1 file2...
+git commit --amend
+git rebase --continue
+
+However, when git-rebase -i asks you to edit a commit that you have not requested to edit (e.g. there is a conflict), you must use:
+
+git add file1 file2...
+git rebase --continue
+
+This is quite important - not following this carefully will result in merged patches.
+
+5.6. Editing commits (the hard way)
+
+Instructions for those who don't want to use git rebase -i:
+
+If the commit is not the most recent one, but say 5th from the top then you can:
+
+git checkout -b tmp HEAD~5              # rewind to the commit in question
+vi file.c                               # edit the file
+git commit --amend file.c               # redo the commit without deleting the commit
+git rebase --onto tmp master~5 master   # replay the later changes
+git branch -D tmp                       # clean up the temporary branch
+
+Where there are a number of files to amend you are probably better off using:
+
+git checkout -b tmp HEAD~5              # rewind to the commit in question
+git reset HEAD^                         # delete the commit at the now current point
+vi file1.c                              # edit
+vi file2.c                              #      the files
+git commit -a -c ORIG_HEAD              # redo the commit incorporating all changed files
+git rebase --onto tmp master~5 master   # replay the later changes
+git branch -D tmp                       # clean up the temporary branch
+
+Where the commit is not the most recent one, but say 5th from the top and you wish to insert a new commit, then you can:
+
+git checkout -b tmp HEAD~5              # rewind to the commit in question
+vi new_file.c                           # create the new file
+git commit -m "New commit of file new_file.c" new-file.c # create a new commit or a series of commits
+git rebase --onto tmp master~5 master   # replay the later changes
+git branch -D tmp                       # clean up the temporary branch
+
+Likewise if you want to delete a commit that is not the most recent one, then you can:
+
+git checkout -b tmp HEAD~5              # rewind to the commit in question
+git reset HEAD^                         # delete the commit at the now current point
+git checkout path/file1 path/file2 etc  # delete the changed files
+git rebase --onto tmp master~5 master   # replay the later changes
+git branch -D tmp                       # clean up the temporary branch
+
+and the commit is gone. You need to checkout all the changed files though and the rebase may throw some errors for you to resolve as it applies later commits.
+
+5.7. Removing trailing whitespace
+
+Thank you to Mike Kaplinskiy for this very helpful hint:
+
+git rebase --whitespace=fix origin/master
+
+"It fixes whitespace on all the commits that you've made. I think it's pretty good about merge conflicts due to whitespace as well. I don't know of a way of doing this at commit time though."
+
+This is essential for submitting your patches to the Wine project. Please see this post for more information from Mike himself: http://www.winehq.org/pipermail/wine-devel/2010-July/084870.html
+
+Trailing whitespace is highlighted in the output of the git diff command when colored output is enabled (more about this in the Further configuration section).
+
+5.8. Sending patches: generating a patchset
+
+After checking in your local changes (in multiple small commits), you can generate a list of the patches you need to send upstream (i.e. to wine-patches) with the git format-patch command:
+
+git format-patch --keep-subject -o out origin
+
+"origin" is the default name of the upstream WineHQ branch. One file per patch will be created in the directory "out", which you can then load into your mailer and send to wine-patches.
+
+(!) Hint: If you have not already, SubmittingPatches is worth a good look.
+
+5.8.1. Sending the patches using imap
+
+You should be able to put patches directly into an IMAP drafts folder using git imap-send.
+
+git format-patch --stdout --keep-subject origin | git imap-send
+
+Set up the imap server by editing wine/.git/config and adding entries something like this:
+
+[user]
+        Name = "Your Name Here"
+        email = "your@email.here.com"
+[imap]
+        folder = "INBOX.Drafts"
+        tunnel = "ssh -C -q user@imapserver.net /usr/bin/imapd ./Maildir 2> /dev/null"
+[format]
+        headers = "To: wine-patches <wine-patches@winehq.org>\nReply-To: wine-devel <wine-devel@winehq.org>\n"
+
+The above works for Courier imap; for Dovecot, change the [imap] section to something like this:
+
+[imap]
+        host   = dummy
+        folder = "Drafts"
+        tunnel = "ssh user@dovecotserver.net /usr/libexec/dovecot/imap  2> /dev/null"
+
+If you would like to send patches directly to your Drafts folder on gmail, change the [imap] section to something like the following:
+
+[imap]
+        folder = "[Gmail]/Drafts"
+        host = imaps://imap.gmail.com
+        user = user
+        pass = pass
+        port = 993
+        sslverify = false
+
+Using Mozilla, sending patches is then just a matter of clicking on "Edit Draft", reviewing the mail and then clicking "Send". If you're using Evolution, you can drag and drop the .patch files into your drafts folder. Patches in the Drafts folder will have the date and time of the timestamp of the commit, hence if you generate multiple times you will have many copies of the same patch with the same date and time. This will be the case until you amend the commit and get a new commit timestamp.
+
+    Important note: Many email clients will alter your email in ways that will prevent them from applying to git. For example, Thunderbird will wrap emails and send them with 'format=flowed', which will make them unusable by git. For Thunderbird, you can follow these instructions to send patches. If all else fails, you can add --attach to your git-format-patch command to send the emails as attachments. 
+
+Setting up ssh simplifies the patch generation by removing the need to enter a password. Use ssh-keygen to create your keys and copy ~/.ssh/id_rsa.pub to ~/.ssh/authorized_keys to allow the tunnel to be created without entering a password.
+
+Using local Thunderbird folders, you can use the following approach to add your patches to the Drafts folder (without using imap):
+
+git format-patch --stdout --attach --keep-subject origin | formail -ds >>"/home/username/.thunderbird/12345678.default/Mail/Local Folders/Drafts"
+
+note: Sometimes you have to rebuild the index of the Drafts folder in Thunderbird to see the mails added this way.
+
+Using local KMail folders, you can use the following approach:
+
+git format-patch --stdout --keep-subject origin | formail -s procmail
+
+Assuming you don't already use procmail to sort your email, you can use the following .procmailrc
+
+:0
+/home/username/.maildir/
+
+Now, all you need to do is to set up a new receiving account in KMail that collects mail from /home/username/.maildir and filter emails coming in on that account to your drafts folder.
+
+5.8.2. Sending the patches using SMTP
+
+To reduce the number of arguments you need to provide to the command git send-email you can add an configuration entry:
+
+[format]
+        headers = "Reply-To: wine-devel <wine-devel@winehq.org>\n"
+[sendemail]
+        from=user@example.org
+        to = wine-patches <wine-patches@winehq.org>
+        smtpserver = smtp.example.org
+        smtpuser = userName
+        chainreplyto = false
+        thread = true
+
+You can then send the patches in the folder out with the command: git send-email out
+
+If you have written an introductional message then you can make the patches a reply to it, by using the following command instead of the first one: git send-email out --in-reply-to "<message id of your introductional email>"
+
+If you want to check your patches first (e.g. to alter subject line), just use the --annotate option to git-send-email.
+
+If you get an error message "relay not permitted" it may help to upgrade to a newer git version.
+
+5.9. Keeping up to date with the Wine Git repository
+
+So now you have a copy of the Wine Git tree, you need to get the patches Alexandre commits to WineHQ. You do this using:
+
+git fetch
+git rebase origin
+
+git fetch retrieves new files from the WineHQ Git repository; this should always be a safe operation as it does not change your local file system.
+
+git rebase origin reapplies any local commits you have made onto the latest WineHQ branch. (Technically, it creates a new branch on 'origin', reapplies all the patches in your current HEAD to the new branch, then changes HEAD to the new branch.) Patches already applied upstream will not be reapplied.
+
+A common mistake is to use git fetch by itself. It will only download updates but will not apply them. Another common problem is trying to rebase while having uncommitted changes. To fix this you need to:
+
+git commit -a         # commit changes
+git rebase origin     # rebase
+git reset HEAD^       # uncommit changes
+
+In old (before v1.4.2) versions of git, if you have not committed any patches to your tree, and you do a fetch and rebase, rebase will deceptively tell you "Nothing to do." This is means "there are no patches to apply to your new tree", not that the tree has not been changed. The rebase was successful.
+
+When you send patches, inevitably, some of your patches will be rejected, while others will be accepted. If you have written a series of patches, but only some of those are rejected, it can be annoying to reorder them, fix one or two problems and resubmit. The main git tools that you can use to help solve this problem are git rebase and git cherry-pick. See here for a discussion on the Git mailing list about rebasing on local branches.
+
+5.10. Resolving merge conflicts
+
+When rebasing, sometimes upstream changes prevent your patches from applying. If there is a conflict, you will see something like this:
+
+Applying <patchname>
+error: patch failed: <file>:<line>
+error: <file>: patch does not apply
+Using index info to reconstruct a base tree...
+Falling back to patching base and 3-way merge...
+Auto-merged <file>
+CONFLICT (content): Merge conflict in <file>
+Failed to merge in the changes.
+Patch failed at <msgnum>.
+When you have resolved this problem run "git rebase --continue".
+If you would prefer to skip this patch, instead run "git rebase --skip".
+To restore the original branch and stop rebasing run "git rebase --abort".
+
+There are two choices now: resolve the conflict or skip the patch. The file in question will contain conflict markers where the patch failed:
+
+<<<<<<<
+[code that caused patch not to be applied]
+=======
+[what would have been here if the patch had been applied]
+>>>>>>>
+
+To resolve the conflict you have to manually merge the code between the conflict markers, leaving the file in a compilable state. After that, run
+
+git add <file>
+git rebase --continue
+
+to remove the merge-conflict state and continue with the operation.
+
+Patches can be skipped as follows:
+
+(git reset --hard  # removes the patch)
+git rebase --skip  # for older Git version use "am" instead of "rebase" here
+
+6. Managing branches
+
+6.1. Creating a branch
+
+To create a branch, use git checkout with the -b option. For example:
+
+git checkout -b new-branch HEAD~5
+
+This winds back the working directory to HEAD~5, and forks the history there, creating the branch new-branch. The new branch is then becomes current.
+
+6.2. Navigating branches
+
+Use git branch to list all branches.
+
+git branch              # local branches only
+git branch -a           # both local and remote branches
+
+To change branch, use git checkout:
+
+git checkout master     # change to branch master
+
+6.3. Merging and rebasing branches
+
+Git allows you to merge branches together; this is not done in the WineHQ repository, so it is easier to just rebase/cherry-pick instead.
+
+6.4. Deleting branches
+
+git branch -D new-branch
+
+6.5. Advanced branching
+
+For more information on managing branches in git, see the GitBranches page.
+
+7. Other useful operations
+
+7.1. Picking patches from another branch
+
+You can cherry pick (apply) a patch from another branch into your current branch using:
+
+git cherry-pick <commit-id>
+
+This will create a new commit, but with authorship information from the original patch.
+
+7.2. Getting rid of timestamp changes
+
+Git considers a file changed if its date is different from that in the Git index file. "git diff-index HEAD" may show files have changed if you have edited them and reverted the changes (or even just touched the file). You can remove this difference using:
+
+git reset
+
+7.3. Regression testing
+
+    See RegressionTesting for instructions. 
+
+Regression testing is really easy with Git. It's done with the help of git bisect that does all the magic. So all that's left to do is to compile and test. Even non-developers can do it.
+
+7.4. Viewing the Git tree
+
+You can browse the WineHQ Git repositories on the web at http://source.winehq.org/git. If you have a webserver running, git instaweb allows you to view your local tree in your web browser.
+
+There's a nice tool to view your Git repository named gitk, written in tcl/tk. AJ suggests using something like gitk wine-1.0.. to make it go faster (please note that the trailing .. is important).
+
+qgit also provides similar functionality, but in a Qt based interface. It appears to be faster than gitk and has additional features such as an annotation facility to identify which change introduced each line of a file.
+
+If you prefer using your terminal, "git lol" and "git lola" are useful aliases you can add to your ~/.gitconfig file:
+
+[alias]
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+7.5. Committer statistics
+
+To see a list of committers in the last 5 years, sorted by number of commits:
+
+git shortlog -s -n --since="(5years)"
+
+7.6. Finding who changed what
+
+git log /path/           # log of changes to files in /path/
+git log /path/file       # log of changes to /path/file
+git blame /path/file     # show per-line authorship info
+git blame -w /path/file  # ditto, but ignoring whitespace changes
+
+8. Working with GitHub
+
+8.1. Introduction
+
+GitHub, through its ability to "fork" an existing project, provides a good way to work on the Wine project when, for example, the project itself is in "code freeze" due to proximity to a release milestone.
+
+You will find the WineHQ repository on a GitHub mirror.
+
+To fork, simply register. It is free for open source projects as of Jul 14, 2010. Once registered, click on the "Fork" button in the upper right hand side of the Wine repository link above.
+
+8.2. Once you have forked
+
+You will find helpful information on forking a project at GitHub.
+
+Once forking is complete, you will find an SSH url listed, that has Read+Write access, of the form:
+
+git@github.com:username/wine.git
+
+First, you must check out your new repository. To do so, type:
+
+git clone git@github.com:username/wine.git local-folder-name
+
+It is advantageous to add the WineHQ GIT repository as an upstream repository, rather than the GitHub mirror. Additionally, we will rebase with this repository to ensure that the HEAD of our repository is up to date with WineHQ. To do this, use the following commands:
+
+git remote add upstream git://source.winehq.org/git/wine.git
+git fetch upstream
+git rebase upstream/master
+
+to include the upstream (main) Wine repository as a "remote" in your fork.
+
+Once you have made some local changes, committed them locally, and want to commit them to your GitHub fork, use the following command:
+
+git push origin master
+
+Finally, to update your local branch to match the WineHQ repository, use:
+
+git pull
+
+8.3. Generating a patchset
+
+It is useful, when working with a forked repository, to be able to send only a few patches from the part of your repository that is closest to the upstream wine repository.
+
+It is, in fact, highly recommended to only send a few patches at a time (2-3).
+
+First, please follow the instructions for sending patches using imap. Next, you can use the following commands to send the first 2 patches in your repository that are not present in WineHQ upstream:
+
+NUMBER_OF_PATCHES_TO_SEND=2
+FIRST_PATCH=`git rev-list upstream/master..origin | wc -l`
+LAST_PATCH=`expr $FIRST_PATCH - $NUMBER_OF_PATCHES_TO_SEND`
+git format-patch --attach -n --stdout HEAD~$FIRST_PATCH..HEAD~$LAST_PATCH | git imap-send
+
+Please note that the above syntax HEAD~nnn refers to the patch that is nnn patches behind the current HEAD of your local repository. Thus, the number FIRST_PATCH will be greater than the number LAST_PATCH.
+
+Finally, if you need to resend a patchset, the following will allow you to automatically append a try number to your patches (2 in the example below):
+
+TRY=2
+NUMBER_OF_PATCHES_TO_SEND=2
+FIRST_PATCH=`git rev-list upstream/master..origin | wc -l`
+LAST_PATCH=`expr $FIRST_PATCH - $NUMBER_OF_PATCHES_TO_SEND`
+git format-patch --attach -n --stdout HEAD~$FIRST_PATCH..HEAD~$LAST_PATCH | sed "s/\(Subject: .*\)/\1 (try $TRY)/" | git imap-send
+
+8.4. Useful morsels
+
+Output all your patches in the out directory:
+
+git format-patch -k -o out upstream/master
+
+Save all your patches as one big file (for your own easy reference/viewing):
+
+git log upstream/master..origin -p > /path/to/file 2>&1
+
+Count the number of patches in your repository but not in upstream Wine (useful for keeping track of any disappearing patches):
+
+git rev-list upstream/master..origin | wc -l
+
+Perform an interactive rebase of your commits using git rebase:
+
+git rebase -i upstream/master
+
+Finally, if you would like to force commits onto GitHub (e.g., edited patches), use:
+
+git push -f origin master
+
+Personally, I (MishaKoshelev) use the following each time I have some new patches that I would like to send to my GitHub repository. This ensures that all patches are forced, and trailing whitespace is removed:
+
+git rebase --whitespace=fix upstream/master
+git push -f origin master
