@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdio.h>
 
+/* 若strspn()返回的数值为n，则代表字符串s 开头连续有n 个字符都是属于字符串accept内的字符. */
+/* 注意是 开头连续有 */
 #if 0
 /* the proto of function strspn */
 int strspn(const char *s,const char *accept)
