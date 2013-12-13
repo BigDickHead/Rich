@@ -1,0 +1,20 @@
+gnome-keyring-daemon(1)                                                                        gnome-keyring-daemon(1)
+
+
+
+NAME
+       gnome-keyring-daemon - keep password and other secrets for users
+
+DESCRIPTION
+       gnome-keyring-daemon  is  a  daemon  in the session, similar to ssh-agent, and other applications can use it to
+       store passwords and other sensitive information.
+
+AUTHORS
+       gnome-keyring-daemon was written by Alexander Larsson <alexl@redhat.com> and others.
+
+       This manual page was written by Sven Arvidsson <sa@whiz.se>, for the Debian project (but may be  used  by  oth‐
+       ers).
+
+
+
+GNOME                                                 2007-05-05                               gnome-keyring-daemon(1)
