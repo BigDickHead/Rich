@@ -1,0 +1,10 @@
+unetbootin − program to install Linux/BSD distributions to a partition or USB drive
+SYNOPSIS
+
+unetbootin
+DESCRIPTION
+
+This manual page documents briefly the unetbootin command.
+
+unetbootin allows for the installation of various Linux/BSD distributions to a partition or USB drive, so it’s no different from a standard install, only it doesn’t need a CD. It can create a dual-boot install, or replace the existing OS entirely.
+AUTHOR

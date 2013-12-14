@@ -1,0 +1,43 @@
+netsed - network packet stream editor
+
+netsed proto lport rhost rport rule1 [rule2] ...
+
+NetSED is small and handful utility designed to alter the contents of packets forwarded thru your network in real time. It is really useful for network hackers in following applications:
+
+black-box protocol auditing
+    whenever there are two or more propertiary boxes communicating over undocumented protocol (by enforcing changes in ongoing transmissions, you will be able to test if tested application is secure)
+fuzz-alike experiments, integrity tests
+    whenever you want to test stability of the application and see how it ensures data integrity,
+other common applications
+    fooling other people, content filtering, etc etc - choose whatever you want to.
+
+It perfectly fits netgrep, netcat and tcpdump tools suite :P
+OPTIONS
+
+proto
+    protocol specification (tcp or udp)
+lport
+    local port to listen on (see README for transparent traffic intercepting on some systems)
+rhost
+    where connection should be forwarded (0 = use destination address of incoming connection, see README)
+rport
+    destination port (0 = dst port of incoming connection)
+ruleN
+    replacement rules (see below)
+
+General replacement rules syntax: s/pat1/pat2[/expire]
+
+This will replace all occurences of pat1 with pat2 in matching packets. Additional parameter (count) can be used to expire rule after 'count' succesful substitutions. Eight-bit characters, including NULL and '/', can be passed using HTTP-alike hex escape sequences (eg. %0a%0d). Single '%' can be reached by using '%%'. Examples:
+
+'s/andrew/mike/1'
+    replace 'andrew' with 'mike' (once)
+'s/andrew/mike'
+    replace all occurences of 'andrew' with 'mike'
+'s/andrew/mike%00'
+    replace 'andrew' with 'mike\x00\x00' (to keep orig. size)
+'s/%%/%2f/20'
+    replace '%' with '/' in first 20 packets
+
+Rules are not working on cross-packet boundaries and are evaluated from first to last not expired rule.
+SEE ALSO
+ngrep(8), nc(1),

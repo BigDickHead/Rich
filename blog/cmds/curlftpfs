@@ -1,0 +1,55 @@
+CurlFtpFS - A FTP filesystem based on cURL and FUSE
+
+Description
+
+CurlFtpFS is a filesystem for accessing FTP hosts based on FUSE and libcurl.
+
+
+CurlFtpFS differentiates itself from other FTP filesystems because it features:
+
+    SSLv3 and TLSv1 support
+    connecting through tunneling HTTP proxies
+    automatically reconnection if the server times out
+    transform absolute symlinks to point back into the ftp file system
+
+
+Examples
+
+Using CurlFtpFS is quite simple. Take a look at this example:
+
+$ mkdir sunet
+$ curlftpfs ftp://ftp.sunet.se/ sunet/
+$ cd sunet/
+$ ls -l
+total 0
+Dr-xr-xr-x   3 root root        96 Feb 23  2004 bin
+dr-xr-xr-x   2 root root        72 Mar  2  2004 dev
+dr-xr-xr-x   2 root root        48 Feb 23  2004 etc
+dr-xr-xr-x   2 root root       120 Feb 23  2004 lib
+-rw-r--r--   1 root root 622187310 Mar 11 06:13 ls-lR
+-rw-r--r--   1 root root  76389037 Mar 11 06:15 ls-lR.gz
+drwxrwxr-x  37 root root      1272 Feb 27 14:17 pub
+dr-xr-xr-x   3 root root        72 Feb 23  2004 usr
+$ cd ..
+$ fusermount -u sunet/
+or umount sunet/
+
+Can use curlftpfs to mount ftp server in network.
+curlftpfs -o codepage=utf8 ftp://username:password@192.168.192.168 /ftp
+
+
+    How do I specify a user name and password?
+    There are two ways. First using the url, as in ftp://user:pass@site.com/. The second is using the option -o user, as in -o user="user:pass".
+    How can I prevent the password from showing in the process list?
+      
+
+    How can I make CurlFtpFS mount automatically at startup?
+    You can add it to /etc/fstab. Example:
+
+      curlftpfs#ftp.host.com /mnt/host fuse rw,uid=500,user,noauto 0 0
+      
+
+    My FTP server puts me in my home dir. How do I mount the root directory?
+    Just use as many ".." as necessary. Example:
+
+      curlftpfs ftp://ftp.myserver.com/../../.. /mnt/ftp
