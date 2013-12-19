@@ -1,3 +1,20 @@
 sudo ntpdate ntp.ubuntu.com
 
 sudo ntpdate-debian
+
+
+
+
+#if has error occur like "the NTP socket is in use, exiting"
+
+Solved:
+#The -u option will use a different port.
+ntpdate -u ntp.ubuntu.com
+
+OR
+
+$ sudo service ntp stop
+[ ok ] Stopping NTP server: ntpd.
+$ sudo ntpdate ntp.ubuntu.com
+19 dec 02:04:31 ntpdate[16795]: adjust time server 91.189.89.199 offset -0.120510 sec
+$ sudo service ntp start
