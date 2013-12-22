@@ -111,6 +111,178 @@ root@debian:~# iptables-save > /etc/iptables
 　
 iptables -F  //将内存中iptables的所有配置清空，效果等同于停止了iptables
 **************************************************************************************
+
+使用iptables限制IP上传下载速度
+
+iptables限制某IP的上传速度为1000KB/秒（8Mbps，流入服务器带宽），即在此IP所在的服务器或VPS上wget的速度
+iptables -A FORWARD -m limit -d 208.8.14.53 --limit 700/s --limit-burst 100 -j ACCEPT
+iptables -A FORWARD -d 208.8.14.53 -j DROP
+
+取消iptables限速：
+iptables -D FORWARD -m limit -d 208.8.14.53 --limit 700/s --limit-burst 100 -j ACCEPT
+iptables -D FORWARD -d 208.8.14.53 -j DROP
+
+ 
+
+限制某IP的上传速度为2000KB/秒（16Mbps，流入服务器带宽），即在此IP所在的服务器或VPS上wget的速度
+iptables -A FORWARD -m limit -d 208.8.14.53 --limit 1400/s --limit-burst 100 -j ACCEPT
+iptables -A FORWARD -d 208.8.14.53 -j DROP
+
+取消限制：
+iptables -D FORWARD -m limit -d 208.8.14.53 --limit 1400/s --limit-burst 100 -j ACCEPT
+iptables -D FORWARD -d 208.8.14.53 -j DROP
+
+如果要限制某IP下载速度（即网友通过网页下载的带宽/速度）参考
+
+iptables -A FORWARD -s 208.8.14.36 -m limit --limit 700/s -j ACCEPT
+iptables -A FORWARD -s 208.8.14.36 -j DROP
+
+Iptables 的limit匹配ctohome.com大致介绍
+
+限制匹配数据包的频率或速率,看清楚了,它是用来限制匹配的数据包的频率和速率的.这里“limit”这个词经常给别人“限制”的误解， 其实准确说，应该是“按一定速率去匹配”,至于“限制”还是“放行”是后面 -j 动作来实现的,limit 仅仅是个 match 模块，他的功能是匹配，匹配方式是按一定速率.
+
+用iptables的limit模块,目标是ACCEPT.当你设置300/s时,它大约每3ms发出一个令牌,获得令牌的包可以发出去,没有获得令牌的包只能等待下一个令牌到来,这样不会造成一些包丢失,更不会造成所谓“断线”的.
+
+以下2条是对icmp的burst限制
+iptables -A INPUT -p icmp -m limit --limit 1/sec --limit-burst 10 -j ACCEPT
+iptables -A INPUT -p icmp -j DROP
+
+第一条ipables的意思是限制ping包每一秒钟一个，10个后重新开始.
+
+同时可以限制IP碎片，每秒钟只允许100个碎片，用来防止DoS攻击.
+iptables -A INPUT -f -m limit --limit 100/sec --limit-burst 100 -j ACCEPT
+
+
+下面ctohome.com详细的讲述一下iptables的limit模块的功能:
+
+
+限制 ping (echo-request) 传入的速度
+限制前, 可正常每 0.2 秒 ping 一次
+ping your.linux.ip -i 0.2
+
+限制每秒只接受一个 icmp echo-request 封包
+iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s --limit-burst 1 -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+
+--limit 1/s 表示每秒一次; 1/m 则为每分钟一次
+--limit-burst 表示允许触发 limit 限制的最大次数 (预设 5)
+
+再以每 0.2 秒 ping 一次, 得到的响应是每秒一次
+ping your.linux.ip -i 0.2
+
+下面规则亦可达到每秒只接受一个 echo-request 封包
+iptables -N pinglimit
+iptables -A pinglimit -m limit --limit 1/s --limit-burst 1 -j ACCEPT
+iptables -A pinglimit -j DROP
+iptables -A INPUT -p icmp --icmp-type echo-request -j pinglimit
+
+
+iptables限速原理解释：
+
+iptables limit 参数
+· 限制特定封包传入速度
+· 限制特定端口口连入频率
+· iptables Log 记录参数备忘
+· 自定 Chain 使用备忘
+· 防治 SYN-Flood 碎片攻击
+限制 ping (echo-request) 传入的速度
+限制前, 可正常每 0.2 秒 ping 一次
+ping your.linux.ip -i 0.2
+限制每秒只接受一个 icmp echo-request 封包
+iptables -A INPUT -p icmp –icmp-type echo-request -m limit –limit 1/s –limit-burst 1 -j ACCEPT
+iptables -A INPUT -p icmp –icmp-type echo-request -j DROP
+–limit 1/s 表示每秒一次; 1/m 则为每分钟一次
+–limit-burst 表示允许触发 limit 限制的最大次数 (预设 5)
+再以每 0.2 秒 ping 一次, 得到的响应是每秒一次
+ping your.linux.ip -i 0.2
+
+
+限制 ssh 连入频率
+建立自订 Chain, 限制 tcp 联机每分钟一次, 超过者触发 Log 记录 (记录在 /var/log/messages)
+iptables -N ratelimit
+iptables -A ratelimit -p tcp -m state –state ESTABLISHED,RELATED -j ACCEPT 
+iptables -A ratelimit -p tcp –syn -m limit –limit 1/m –limit-burst 1 -j ACCEPT
+iptables -A ratelimit -p tcp -j LOG –log-level “NOTICE” –log-prefix “[RATELIMIT]”
+iptables -A ratelimit -p tcp -j DROP
+
+
+引用自订 Chain, 限制 ssh (tcp port 22) 连入频率
+iptables -A INPUT -p tcp –dport 22 -s 192.168.0.0/16 -j ACCEPT (特定 IP 来源不受限制)
+iptables -A INPUT -p tcp –dport 22 -j ratelimit
+
+sshd_config 设定备忘:
+· LoginGraceTime 30 密码输入时限为 30 秒
+· MaxAuthTries 2 最多只能输入 3 次密码
+同理可证
+iptables -N pinglimit
+iptables -A pinglimit -m limit –limit 1/s –limit-burst 1 -j ACCEPT
+iptables -A pinglimit -j DROP
+iptables -A INPUT -p icmp –icmp-type echo-request -j pinglimit
+亦可达到每秒只接受一个 echo-request 封包
+补充: 清除自订 Chain
+iptables -L -n –line-number
+iptables -D INPUT n
+iptables -F ratelimit
+iptables -X ratelimit
+
+
+防治 SYN-Flood 碎片攻击
+iptables -N syn-flood
+iptables -A syn-flood -m limit –limit 100/s –limit-burst 150 -j RETURN
+iptables -A syn-flood -j DROP
+iptables -I INPUT -j syn-flood
+模拟攻击
+wget http://www.xfocus.net/tools/200102/naptha-1.1.tgz
+wget ftp://rpmfind.net/linux/freshrpms/redhat/7.0/libnet/libnet-1.0.1b-1.src.rpm
+tar -zxf naptha-1.1.tgz
+rpmbuild –recompile libnet-1.0.1b-1.src.rpm
+cp -r /var/tmp/libnet-buildroot/usr/* /usr/local/
+cd naptha-1.1
+make
+./synsend your.linux.host.ip 80 local.host.eth0.ip 0.1
+若成功抵挡, 不久后会出现 Can’t send packet!: Operation not permitted 的讯息
+
+
+**************************************************************************************
+A SYN flood is a form of denial-of-service attack in which an attacker sends a succession of SYN requests to a target's system. This is a well known type of attack and is generally not effective against modern networks. It works if a server allocates resources after receiving a SYN, but before it has received the ACK.
+
+if Half-open connections bind resources on the server, it may be possible to take up all these resources by flooding the server with SYN messages. Syn flood is common attack and it can be block with following iptables rules:
+
+iptables -A INPUT -p tcp --syn -m limit --limit 1/s --limit-burst 3 -j RETURN
+All incoming connection are allowed till limit is reached:
+
+    --limit 1/s: Maximum average matching rate in seconds
+    --limit-burst 3: Maximum initial number of packets to match
+
+# Limit the number of incoming tcp connections
+# Interface 0 incoming syn-flood protection
+iptables -N syn_flood
+iptables -A INPUT -p tcp --syn -j syn_flood
+iptables -A syn_flood -m limit --limit 1/s --limit-burst 3 -j RETURN
+iptables -A syn_flood -j DROP
+#Limiting the incoming icmp ping request:
+iptables -A INPUT -p icmp -m limit --limit  1/s --limit-burst 1 -j ACCEPT
+iptables -A INPUT -p icmp -m limit --limit 1/s --limit-burst 1 -j LOG --log-prefix PING-DROP:
+iptables -A INPUT -p icmp -j DROP
+iptables -A OUTPUT -p icmp -j ACCEPT
+
+First rule will accept ping connections to 1 per second, with an initial burst of 1. If this level crossed it will log the packet with PING-DROP in /var/log/message file. Third rule will drop packet if it tries to cross this limit. Fourth and final rule will allow you to use the continue established ping request of existing connection.
+Where,
+
+    ‐‐limit rate: Maximum average matching rate: specified as a number, with an optional ‘/second’, ‘/minute’, ‘/hour’, or ‘/day’ suffix; the default is 3/hour.
+    ‐‐limit‐burst number: Maximum initial number of packets to match: this number gets recharged by one every time the limit specified above is not reached, up to this number; the default is 5.
+
+You need to adjust the –limit-rate and –limit-burst according to your network traffic and requirements.
+
+Let us assume that you need to limit incoming connection to ssh server (port 22) no more than 10 connections in a 10 minute:
+
+iptables -I INPUT -p tcp -s 0/0 -d $SERVER_IP --sport 513:65535 --dport 22 -m state --state NEW,ESTABLISHED -m recent --set -j ACCEPT
+iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 600 --hitcount 11 -j DROP
+iptables -A OUTPUT -p tcp -s $SERVER_IP -d 0/0 --sport 22 --dport 513:65535 -m state --state ESTABLISHED -j ACCEPT
+**************************************************************************************
+
+
+
 IPTABLES(8)                                            iptables 1.4.14                                            IPTABLES(8)
 
 
