@@ -111,7 +111,434 @@ root@debian:~# iptables-save > /etc/iptables
 　
 iptables -F  //将内存中iptables的所有配置清空，效果等同于停止了iptables
 **************************************************************************************
-IPTABLES(8)                                            iptables 1.4.14                                            IPTABLES(8)
+
+使用iptables限制IP上传下载速度
+
+iptables限制某IP的上传速度为1000KB/秒（8Mbps，流入服务器带宽），即在此IP所在的服务器或VPS上wget的速度
+iptables -A FORWARD -m limit -d 208.8.14.53 --limit 700/s --limit-burst 100 -j ACCEPT
+iptables -A FORWARD -d 208.8.14.53 -j DROP
+
+取消iptables限速：
+iptables -D FORWARD -m limit -d 208.8.14.53 --limit 700/s --limit-burst 100 -j ACCEPT
+iptables -D FORWARD -d 208.8.14.53 -j DROP
+
+ 
+
+限制某IP的上传速度为2000KB/秒（16Mbps，流入服务器带宽），即在此IP所在的服务器或VPS上wget的速度
+iptables -A FORWARD -m limit -d 208.8.14.53 --limit 1400/s --limit-burst 100 -j ACCEPT
+iptables -A FORWARD -d 208.8.14.53 -j DROP
+
+取消限制：
+iptables -D FORWARD -m limit -d 208.8.14.53 --limit 1400/s --limit-burst 100 -j ACCEPT
+iptables -D FORWARD -d 208.8.14.53 -j DROP
+
+如果要限制某IP下载速度（即网友通过网页下载的带宽/速度）参考
+
+iptables -A FORWARD -s 208.8.14.36 -m limit --limit 700/s -j ACCEPT
+iptables -A FORWARD -s 208.8.14.36 -j DROP
+
+Iptables 的limit匹配ctohome.com大致介绍
+
+限制匹配数据包的频率或速率,看清楚了,它是用来限制匹配的数据包的频率和速率的.这里“limit”这个词经常给别人“限制”的误解， 其实准确说，应该是“按一定速率去匹配”,至于“限制”还是“放行”是后面 -j 动作来实现的,limit 仅仅是个 match 模块，他的功能是匹配，匹配方式是按一定速率.
+
+用iptables的limit模块,目标是ACCEPT.当你设置300/s时,它大约每3ms发出一个令牌,获得令牌的包可以发出去,没有获得令牌的包只能等待下一个令牌到来,这样不会造成一些包丢失,更不会造成所谓“断线”的.
+
+以下2条是对icmp的burst限制
+iptables -A INPUT -p icmp -m limit --limit 1/sec --limit-burst 10 -j ACCEPT
+iptables -A INPUT -p icmp -j DROP
+
+第一条ipables的意思是限制ping包每一秒钟一个，10个后重新开始.
+
+同时可以限制IP碎片，每秒钟只允许100个碎片，用来防止DoS攻击.
+iptables -A INPUT -f -m limit --limit 100/sec --limit-burst 100 -j ACCEPT
+
+
+下面ctohome.com详细的讲述一下iptables的limit模块的功能:
+
+
+限制 ping (echo-request) 传入的速度
+限制前, 可正常每 0.2 秒 ping 一次
+ping your.linux.ip -i 0.2
+
+限制每秒只接受一个 icmp echo-request 封包
+iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s --limit-burst 1 -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+
+--limit 1/s 表示每秒一次; 1/m 则为每分钟一次
+--limit-burst 表示允许触发 limit 限制的最大次数 (预设 5)
+
+再以每 0.2 秒 ping 一次, 得到的响应是每秒一次
+ping your.linux.ip -i 0.2
+
+下面规则亦可达到每秒只接受一个 echo-request 封包
+iptables -N pinglimit
+iptables -A pinglimit -m limit --limit 1/s --limit-burst 1 -j ACCEPT
+iptables -A pinglimit -j DROP
+iptables -A INPUT -p icmp --icmp-type echo-request -j pinglimit
+
+
+iptables限速原理解释：
+
+iptables limit 参数
+· 限制特定封包传入速度
+· 限制特定端口口连入频率
+· iptables Log 记录参数备忘
+· 自定 Chain 使用备忘
+· 防治 SYN-Flood 碎片攻击
+限制 ping (echo-request) 传入的速度
+限制前, 可正常每 0.2 秒 ping 一次
+ping your.linux.ip -i 0.2
+限制每秒只接受一个 icmp echo-request 封包
+iptables -A INPUT -p icmp –icmp-type echo-request -m limit –limit 1/s –limit-burst 1 -j ACCEPT
+iptables -A INPUT -p icmp –icmp-type echo-request -j DROP
+–limit 1/s 表示每秒一次; 1/m 则为每分钟一次
+–limit-burst 表示允许触发 limit 限制的最大次数 (预设 5)
+再以每 0.2 秒 ping 一次, 得到的响应是每秒一次
+ping your.linux.ip -i 0.2
+
+
+限制 ssh 连入频率
+建立自订 Chain, 限制 tcp 联机每分钟一次, 超过者触发 Log 记录 (记录在 /var/log/messages)
+iptables -N ratelimit
+iptables -A ratelimit -p tcp -m state –state ESTABLISHED,RELATED -j ACCEPT 
+iptables -A ratelimit -p tcp –syn -m limit –limit 1/m –limit-burst 1 -j ACCEPT
+iptables -A ratelimit -p tcp -j LOG –log-level “NOTICE” –log-prefix “[RATELIMIT]”
+iptables -A ratelimit -p tcp -j DROP
+
+
+引用自订 Chain, 限制 ssh (tcp port 22) 连入频率
+iptables -A INPUT -p tcp –dport 22 -s 192.168.0.0/16 -j ACCEPT (特定 IP 来源不受限制)
+iptables -A INPUT -p tcp –dport 22 -j ratelimit
+
+sshd_config 设定备忘:
+· LoginGraceTime 30 密码输入时限为 30 秒
+· MaxAuthTries 2 最多只能输入 3 次密码
+同理可证
+iptables -N pinglimit
+iptables -A pinglimit -m limit –limit 1/s –limit-burst 1 -j ACCEPT
+iptables -A pinglimit -j DROP
+iptables -A INPUT -p icmp –icmp-type echo-request -j pinglimit
+亦可达到每秒只接受一个 echo-request 封包
+补充: 清除自订 Chain
+iptables -L -n –line-number
+iptables -D INPUT n
+iptables -F ratelimit
+iptables -X ratelimit
+
+
+防治 SYN-Flood 碎片攻击
+iptables -N syn-flood
+iptables -A syn-flood -m limit –limit 100/s –limit-burst 150 -j RETURN
+iptables -A syn-flood -j DROP
+iptables -I INPUT -j syn-flood
+模拟攻击
+wget http://www.xfocus.net/tools/200102/naptha-1.1.tgz
+wget ftp://rpmfind.net/linux/freshrpms/redhat/7.0/libnet/libnet-1.0.1b-1.src.rpm
+tar -zxf naptha-1.1.tgz
+rpmbuild –recompile libnet-1.0.1b-1.src.rpm
+cp -r /var/tmp/libnet-buildroot/usr/* /usr/local/
+cd naptha-1.1
+make
+./synsend your.linux.host.ip 80 local.host.eth0.ip 0.1
+若成功抵挡, 不久后会出现 Can’t send packet!: Operation not permitted 的讯息
+
+
+**************************************************************************************
+A SYN flood is a form of denial-of-service attack in which an attacker sends a succession of SYN requests to a target's system. This is a well known type of attack and is generally not effective against modern networks. It works if a server allocates resources after receiving a SYN, but before it has received the ACK.
+
+if Half-open connections bind resources on the server, it may be possible to take up all these resources by flooding the server with SYN messages. Syn flood is common attack and it can be block with following iptables rules:
+
+iptables -A INPUT -p tcp --syn -m limit --limit 1/s --limit-burst 3 -j RETURN
+All incoming connection are allowed till limit is reached:
+
+    --limit 1/s: Maximum average matching rate in seconds
+    --limit-burst 3: Maximum initial number of packets to match
+
+# Limit the number of incoming tcp connections
+# Interface 0 incoming syn-flood protection
+iptables -N syn_flood
+iptables -A INPUT -p tcp --syn -j syn_flood
+iptables -A syn_flood -m limit --limit 1/s --limit-burst 3 -j RETURN
+iptables -A syn_flood -j DROP
+#Limiting the incoming icmp ping request:
+iptables -A INPUT -p icmp -m limit --limit  1/s --limit-burst 1 -j ACCEPT
+iptables -A INPUT -p icmp -m limit --limit 1/s --limit-burst 1 -j LOG --log-prefix PING-DROP:
+iptables -A INPUT -p icmp -j DROP
+iptables -A OUTPUT -p icmp -j ACCEPT
+
+First rule will accept ping connections to 1 per second, with an initial burst of 1. If this level crossed it will log the packet with PING-DROP in /var/log/message file. Third rule will drop packet if it tries to cross this limit. Fourth and final rule will allow you to use the continue established ping request of existing connection.
+Where,
+
+    ‐‐limit rate: Maximum average matching rate: specified as a number, with an optional ‘/second’, ‘/minute’, ‘/hour’, or ‘/day’ suffix; the default is 3/hour.
+    ‐‐limit‐burst number: Maximum initial number of packets to match: this number gets recharged by one every time the limit specified above is not reached, up to this number; the default is 5.
+
+You need to adjust the –limit-rate and –limit-burst according to your network traffic and requirements.
+
+Let us assume that you need to limit incoming connection to ssh server (port 22) no more than 10 connections in a 10 minute:
+
+iptables -I INPUT -p tcp -s 0/0 -d $SERVER_IP --sport 513:65535 --dport 22 -m state --state NEW,ESTABLISHED -m recent --set -j ACCEPT
+iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 600 --hitcount 11 -j DROP
+iptables -A OUTPUT -p tcp -s $SERVER_IP -d 0/0 --sport 22 --dport 513:65535 -m state --state ESTABLISHED -j ACCEPT
+**************************************************************************************
+
+25 practical iptables rules
+1. Delete Existing Rules
+
+Before you start building new set of rules, you might want to clean-up all the default rules, and existing rules. Use the iptables flush command as shown below to do this.
+
+iptables -F
+(or)
+iptables --flush
+
+2. Set Default Chain Policies
+
+The default chain policy is ACCEPT. Change this to DROP for all INPUT, FORWARD, and OUTPUT chains as shown below.
+
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+When you make both INPUT, and OUTPUT chain’s default policy as DROP, for every firewall rule requirement you have, you should define two rules. i.e one for incoming and one for outgoing.
+
+In all our examples below, we have two rules for each scenario, as we’ve set DROP as default policy for both INPUT and OUTPUT chain.
+
+If you trust your internal users, you can omit the last line above. i.e Do not DROP all outgoing packets by default. In that case, for every firewall rule requirement you have, you just have to define only one rule. i.e define rule only for incoming, as the outgoing is ACCEPT for all packets.
+
+Note: If you don’t know what a chain means, you should first familiarize yourself with the IPTables fundamentals.
+3. Block a Specific ip-address
+
+Before we proceed further will other examples, if you want to block a specific ip-address, you should do that first as shown below. Change the “x.x.x.x” in the following example to the specific ip-address that you like to block.
+
+BLOCK_THIS_IP="x.x.x.x"
+iptables -A INPUT -s "$BLOCK_THIS_IP" -j DROP
+
+This is helpful when you find some strange activities from a specific ip-address in your log files, and you want to temporarily block that ip-address while you do further research.
+
+You can also use one of the following variations, which blocks only TCP traffic on eth0 connection for this ip-address.
+
+iptables -A INPUT -i eth0 -s "$BLOCK_THIS_IP" -j DROP
+iptables -A INPUT -i eth0 -p tcp -s "$BLOCK_THIS_IP" -j DROP
+
+4. Allow ALL Incoming SSH
+
+The following rules allow ALL incoming ssh connections on eth0 interface.
+
+iptables -A INPUT -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+Note: If you like to understand exactly what each and every one of the arguments means, you should read How to Add IPTables Firewall Rules
+5. Allow Incoming SSH only from a Sepcific Network
+
+The following rules allow incoming ssh connections only from 192.168.100.X network.
+
+iptables -A INPUT -i eth0 -p tcp -s 192.168.100.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+In the above example, instead of /24, you can also use the full subnet mask. i.e “192.168.100.0/255.255.255.0″.
+6. Allow Incoming HTTP and HTTPS
+
+The following rules allow all incoming web traffic. i.e HTTP traffic to port 80.
+
+iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+
+The following rules allow all incoming secure web traffic. i.e HTTPS traffic to port 443.
+
+iptables -A INPUT -i eth0 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+
+7. Combine Multiple Rules Together using MultiPorts
+
+When you are allowing incoming connections from outside world to multiple ports, instead of writing individual rules for each and every port, you can combine them together using the multiport extension as shown below.
+
+The following example allows all incoming SSH, HTTP and HTTPS traffic.
+
+iptables -A INPUT -i eth0 -p tcp -m multiport --dports 22,80,443 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp -m multiport --sports 22,80,443 -m state --state ESTABLISHED -j ACCEPT
+
+8. Allow Outgoing SSH
+
+The following rules allow outgoing ssh connection. i.e When you ssh from inside to an outside server.
+
+iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+Please note that this is slightly different than the incoming rule. i.e We allow both the NEW and ESTABLISHED state on the OUTPUT chain, and only ESTABLISHED state on the INPUT chain. For the incoming rule, it is vice versa.
+9. Allow Outgoing SSH only to a Specific Network
+
+The following rules allow outgoing ssh connection only to a specific network. i.e You an ssh only to 192.168.100.0/24 network from the inside.
+
+iptables -A OUTPUT -o eth0 -p tcp -d 192.168.100.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+10. Allow Outgoing HTTPS
+
+The following rules allow outgoing secure web traffic. This is helpful when you want to allow internet traffic for your users. On servers, these rules are also helpful when you want to use wget to download some files from outside.
+
+iptables -A OUTPUT -o eth0 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+
+Note: For outgoing HTTP web traffic, add two additional rules like the above, and change 443 to 80.
+11. Load Balance Incoming Web Traffic
+
+You can also load balance your incoming web traffic using iptables firewall rules.
+
+This uses the iptables nth extension. The following example load balances the HTTPS traffic to three different ip-address. For every 3th packet, it is load balanced to the appropriate server (using the counter 0).
+
+iptables -A PREROUTING -i eth0 -p tcp --dport 443 -m state --state NEW -m nth --counter 0 --every 3 --packet 0 -j DNAT --to-destination 192.168.1.101:443
+iptables -A PREROUTING -i eth0 -p tcp --dport 443 -m state --state NEW -m nth --counter 0 --every 3 --packet 1 -j DNAT --to-destination 192.168.1.102:443
+iptables -A PREROUTING -i eth0 -p tcp --dport 443 -m state --state NEW -m nth --counter 0 --every 3 --packet 2 -j DNAT --to-destination 192.168.1.103:443
+
+12. Allow Ping from Outside to Inside
+
+The following rules allow outside users to be able to ping your servers.
+
+iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+
+13. Allow Ping from Inside to Outside
+
+The following rules allow you to ping from inside to any of the outside servers.
+
+iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+
+14. Allow Loopback Access
+
+You should allow full loopback access on your servers. i.e access using 127.0.0.1
+
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+15. Allow Internal Network to External network.
+
+On the firewall server where one ethernet card is connected to the external, and another ethernet card connected to the internal servers, use the following rules to allow internal network talk to external network.
+
+In this example, eth1 is connected to external network (internet), and eth0 is connected to internal network (For example: 192.168.1.x).
+
+iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT
+
+16. Allow outbound DNS
+
+The following rules allow outgoing DNS connections.
+
+iptables -A OUTPUT -p udp -o eth0 --dport 53 -j ACCEPT
+iptables -A INPUT -p udp -i eth0 --sport 53 -j ACCEPT
+
+17. Allow NIS Connections
+
+If you are running NIS to manage your user accounts, you should allow the NIS connections. Even when the SSH connection is allowed, if you don’t allow the NIS related ypbind connections, users will not be able to login.
+
+The NIS ports are dynamic. i.e When the ypbind starts it allocates the ports.
+
+First do a rpcinfo -p as shown below and get the port numbers. In this example, it was using port 853 and 850.
+
+rpcinfo -p | grep ypbind
+
+Now allow incoming connection to the port 111, and the ports that were used by ypbind.
+
+iptables -A INPUT -p tcp --dport 111 -j ACCEPT
+iptables -A INPUT -p udp --dport 111 -j ACCEPT
+iptables -A INPUT -p tcp --dport 853 -j ACCEPT
+iptables -A INPUT -p udp --dport 853 -j ACCEPT
+iptables -A INPUT -p tcp --dport 850 -j ACCEPT
+iptables -A INPUT -p udp --dport 850 -j ACCEPT
+
+The above will not work when you restart the ypbind, as it will have different port numbers that time.
+
+There are two solutions to this: 1) Use static ip-address for your NIS, or 2) Use some clever shell scripting techniques to automatically grab the dynamic port number from the “rpcinfo -p” command output, and use those in the above iptables rules.
+18. Allow Rsync From a Specific Network
+
+The following rules allows rsync only from a specific network.
+
+iptables -A INPUT -i eth0 -p tcp -s 192.168.101.0/24 --dport 873 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 873 -m state --state ESTABLISHED -j ACCEPT
+
+19. Allow MySQL connection only from a specific network
+
+If you are running MySQL, typically you don’t want to allow direct connection from outside. In most cases, you might have web server running on the same server where the MySQL database runs.
+
+However DBA and developers might need to login directly to the MySQL from their laptop and desktop using MySQL client. In those case, you might want to allow your internal network to talk to the MySQL directly as shown below.
+
+iptables -A INPUT -i eth0 -p tcp -s 192.168.100.0/24 --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 3306 -m state --state ESTABLISHED -j ACCEPT
+
+20. Allow Sendmail or Postfix Traffic
+
+The following rules allow mail traffic. It may be sendmail or postfix.
+
+iptables -A INPUT -i eth0 -p tcp --dport 25 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 25 -m state --state ESTABLISHED -j ACCEPT
+
+21. Allow IMAP and IMAPS
+
+The following rules allow IMAP/IMAP2 traffic.
+
+iptables -A INPUT -i eth0 -p tcp --dport 143 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 143 -m state --state ESTABLISHED -j ACCEPT
+
+The following rules allow IMAPS traffic.
+
+iptables -A INPUT -i eth0 -p tcp --dport 993 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 993 -m state --state ESTABLISHED -j ACCEPT
+
+22. Allow POP3 and POP3S
+
+The following rules allow POP3 access.
+
+iptables -A INPUT -i eth0 -p tcp --dport 110 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 110 -m state --state ESTABLISHED -j ACCEPT
+
+The following rules allow POP3S access.
+
+iptables -A INPUT -i eth0 -p tcp --dport 995 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 995 -m state --state ESTABLISHED -j ACCEPT
+
+23. Prevent DoS Attack
+
+The following iptables rule will help you prevent the Denial of Service (DoS) attack on your webserver.
+
+iptables -A INPUT -p tcp --dport 80 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+
+In the above example:
+
+    -m limit: This uses the limit iptables extension
+    –limit 25/minute: This limits only maximum of 25 connection per minute. Change this value based on your specific requirement
+    –limit-burst 100: This value indicates that the limit/minute will be enforced only after the total number of connection have reached the limit-burst level.
+
+24. Port Forwarding
+
+The following example routes all traffic that comes to the port 442 to 22. This means that the incoming ssh connection can come from both port 22 and 422.
+
+iptables -t nat -A PREROUTING -p tcp -d 192.168.102.37 --dport 422 -j DNAT --to 192.168.102.37:22
+
+If you do the above, you also need to explicitly allow incoming connection on the port 422.
+
+iptables -A INPUT -i eth0 -p tcp --dport 422 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 422 -m state --state ESTABLISHED -j ACCEPT
+
+25. Log Dropped Packets
+
+You might also want to log all the dropped packets. These rules should be at the bottom.
+
+First, create a new chain called LOGGING.
+
+iptables -N LOGGING
+
+Next, make sure all the remaining incoming connections jump to the LOGGING chain as shown below.
+
+iptables -A INPUT -j LOGGING
+
+Next, log these packets by specifying a custom “log-prefix”.
+
+iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
+
+Finally, drop these packets.
+
+iptables -A LOGGING -j DROP
+**************************************************************************************
+
+iptables(8)                                            iptables 1.4.14                                            iptables(8)
 
 
 
@@ -2249,3 +2676,5 @@ VERSION
        This manual page applies to iptables @PACKAGE_VERSION@.
 
 iptables          iptables-apply    iptables-restore  iptables-save     iptables-xml 
+
+vim:nospell:
