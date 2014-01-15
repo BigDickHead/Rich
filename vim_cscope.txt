@@ -5,19 +5,37 @@ sudo apt-get remove vim-tiny vim-common vim-gui-common
 # Download and build a new vim
 sudo apt-get install libncurses5-dev libgnome2-dev libgnomeui-dev \
 libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
-libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev ruby-dev mercurial
+libcairo2-dev libx11-dev libxpm-dev libxt-dev \
+python-dev ruby-dev libperl-dev lua5.2 liblua5.2-dev mercurial
 
-# Install lua from binaries (these are out-of-date but at least they worked).
-sudo apt-get install lua5.2 liblua5.2-dev
+# If compile vim with python3 feature
+sudo apt-get install python3.2 python3.2-dev
+# Note: When Python 2 and Python 3 are both supported they must be loaded dynamically. like +python/dyn +python3/dyn
+# Replaced --enable-pythoninterp... with --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.2/config/
+
 
 hg clone https://vim.googlecode.com/hg/ vim
 
 ./configure --prefix=/usr --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-perlinterp=yes --enable-rubyinterp=yes --enable-luainterp=yes --with-lua-prefix=/usr/local --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config/ --enable-tclinterp=yes --enable-gpm --enable-gui=gtk2 
 
+
 # If the process of configuration cannot find out the lua.h
 ln -s /usr/include/lua5.2/ /usr/local/include/
 
+
+# If you don't get gvim working
+try changing --enable-gui=gtk2 to --enable-gui=gnome2
+
+
+# Set vim as your default editor with update-alternatives.
+sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim 1
+sudo update-alternatives --set editor /usr/bin/vim
+sudo update-alternatives --install /usr/bin/vi vi /usr/bin/vim 1
+sudo update-alternatives --set vi /usr/bin/vim
+
+
 ------------------------------------------------------------------------------------------------------
+
 gvim最大化
 apt-get install wmctrl
 
