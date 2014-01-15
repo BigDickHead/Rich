@@ -19,6 +19,10 @@ hg clone https://vim.googlecode.com/hg/ vim
 ./configure --prefix=/usr --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-perlinterp=yes --enable-rubyinterp=yes --enable-luainterp=yes --with-lua-prefix=/usr/local --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config/ --enable-tclinterp=yes --enable-gpm --enable-gui=gtk2 
 
 
+make VIMRUNTIMEDIR=/usr/share/vim/vim74
+sudo make install
+
+
 # If the process of configuration cannot find out the lua.h
 ln -s /usr/include/lua5.2/ /usr/local/include/
 
@@ -32,7 +36,6 @@ sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim 1
 sudo update-alternatives --set editor /usr/bin/vim
 sudo update-alternatives --install /usr/bin/vi vi /usr/bin/vim 1
 sudo update-alternatives --set vi /usr/bin/vim
-
 
 ------------------------------------------------------------------------------------------------------
 
